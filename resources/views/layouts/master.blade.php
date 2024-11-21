@@ -8,10 +8,10 @@
 <meta content="" name="author" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
-<link href="{{ asset('assets/libs/simple-datatables/style.css') }}" rel="stylesheet" type="text/css') }}" />
-<link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css') }}" />
-<link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css') }}" />
-<link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css') }}" />
+<link href="{{ asset('assets/libs/simple-datatables/style.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
 
 </head>
 <body>
@@ -20,9 +20,11 @@
 <div class="page-wrapper">
   <div class="page-content">
     @yield('content')
+    @include('layouts.footer')
+
   </div>
 </div>
-@include('layouts.footer')
+
 
 <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
