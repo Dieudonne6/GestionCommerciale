@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
-
+use App\Http\Controllers\ProduitsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,4 +18,4 @@ use App\Http\Controllers\FournisseurController;
 //     return view('welcome');
 // });
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
-
+Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
