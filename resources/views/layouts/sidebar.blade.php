@@ -10,17 +10,17 @@
             </button>
           </li>
           <li class="mx-3 welcome-text">
-            <h3 class="mb-0 fw-bold text-truncate">Good Morning, James!</h3>
+            {{-- <h3 class="mb-0 fw-bold text-truncate">Good Morning, James!</h3> --}}
             <!-- <h6 class="mb-0 fw-normal text-muted text-truncate fs-14">Here's your overview this week.</h6> -->
           </li>
         </ul>
         <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
-          <li class="hide-phone app-search">
+          {{-- <li class="hide-phone app-search">
             <form role="search" action="#" method="get">
               <input type="search" name="search" class="form-control top-search mb-0" placeholder="Search here...">
               <button type="submit"><i class="iconoir-search"></i></button>
             </form>
-          </li>
+          </li> --}}
           <li class="dropdown">
             <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
               aria-haspopup="false" aria-expanded="false">
@@ -29,10 +29,10 @@
             <div class="dropdown-menu">
               <a class="dropdown-item" href="#"><img src="assets/images/flags/us_flag.jpg" alt="" height="15"
                   class="me-2">English</a>
-              <a class="dropdown-item" href="#"><img src="assets/images/flags/spain_flag.jpg" alt="" height="15"
+              {{-- <a class="dropdown-item" href="#"><img src="assets/images/flags/spain_flag.jpg" alt="" height="15"
                   class="me-2">Spanish</a>
               <a class="dropdown-item" href="#"><img src="assets/images/flags/germany_flag.jpg" alt="" height="15"
-                  class="me-2">German</a>
+                  class="me-2">German</a> --}}
               <a class="dropdown-item" href="#"><img src="assets/images/flags/french_flag.jpg" alt="" height="15"
                   class="me-2">French</a>
             </div>
@@ -55,25 +55,25 @@
 
               <h5 class="dropdown-item-text m-0 py-3 d-flex justify-content-between align-items-center">
                 Notifications <a href="#" class="badge text-body-tertiary badge-pill">
-                  <i class="iconoir-plus-circle fs-4"></i>
+                  {{-- <i class="iconoir-plus-circle fs-4"></i> --}}
                 </a>
               </h5>
               <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-1" role="tablist">
                 <li class="nav-item" role="presentation">
                   <a class="nav-link mx-0 active" data-bs-toggle="tab" href="#All" role="tab" aria-selected="true">
-                    All <span class="badge bg-primary-subtle text-primary badge-pill ms-1">24</span>
+                    Tous <span class="badge bg-primary-subtle text-primary badge-pill ms-1">24</span>
                   </a>
                 </li>
                 <li class="nav-item" role="presentation">
                   <a class="nav-link mx-0" data-bs-toggle="tab" href="#Projects" role="tab" aria-selected="false"
                     tabindex="-1">
-                    Projects
+                    Livraison
                   </a>
                 </li>
                 <li class="nav-item" role="presentation">
                   <a class="nav-link mx-0" data-bs-toggle="tab" href="#Teams" role="tab" aria-selected="false"
                     tabindex="-1">
-                    Team
+                    Produit
                   </a>
                 </li>
               </ul>
@@ -227,7 +227,7 @@
               </div>
               <!-- All-->
               <a href="pages-notifications.html" class="dropdown-item text-center text-dark fs-13 py-2">
-                View All <i class="fi-arrow-right"></i>
+                Voir Tout <i class="fi-arrow-right"></i>
               </a>
             </div>
           </li>
@@ -243,26 +243,26 @@
                   <img src="assets/images/users/avatar-1.jpg" alt="" class="thumb-md rounded-circle">
                 </div>
                 <div class="flex-grow-1 ms-2 text-truncate align-self-center">
-                  <h6 class="my-0 fw-medium text-dark fs-13">William Martin</h6>
-                  <small class="text-muted mb-0">Front End Developer</small>
+                  <h6 class="my-0 fw-medium text-dark fs-13">C Box</h6>
+                  {{-- <small class="text-muted mb-0">Front End Developer</small> --}}
                 </div><!--end media-body-->
               </div>
               <div class="dropdown-divider mt-0"></div>
-              <small class="text-muted px-2 pb-1 d-block">Account</small>
+              <small class="text-muted px-2 pb-1 d-block">Compte</small>
               <a class="dropdown-item" href="pages-profile.html"><i
-                  class="las la-user fs-18 me-1 align-text-bottom"></i> Profile</a>
+                  class="las la-user fs-18 me-1 align-text-bottom"></i> Profil</a>
               <a class="dropdown-item" href="pages-faq.html"><i class="las la-wallet fs-18 me-1 align-text-bottom"></i>
-                Earning</a>
-              <small class="text-muted px-2 py-1 d-block">Settings</small>
+                Modifier mot de passe</a>
+              {{-- <small class="text-muted px-2 py-1 d-block">Settings</small>
               <a class="dropdown-item" href="pages-profile.html"><i
                   class="las la-cog fs-18 me-1 align-text-bottom"></i>Account Settings</a>
               <a class="dropdown-item" href="pages-profile.html"><i
                   class="las la-lock fs-18 me-1 align-text-bottom"></i> Security</a>
               <a class="dropdown-item" href="pages-faq.html"><i
-                  class="las la-question-circle fs-18 me-1 align-text-bottom"></i> Help Center</a>
+                  class="las la-question-circle fs-18 me-1 align-text-bottom"></i> Help Center</a> --}}
               <div class="dropdown-divider mb-0"></div>
               <a class="dropdown-item text-danger" href="auth-login.html"><i
-                  class="las la-power-off fs-18 me-1 align-text-bottom"></i> Logout</a>
+                  class="las la-power-off fs-18 me-1 align-text-bottom"></i> Deconnexion</a>
             </div>
           </li>
         </ul><!--end topbar-nav-->
