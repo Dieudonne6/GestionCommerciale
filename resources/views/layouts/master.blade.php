@@ -36,3 +36,25 @@
 </body>
 
 </html>
+<style>
+  .taille{
+    width: 200px !important;
+    height: 150px !important;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const logoImage = document.getElementById('logo-image');
+    const menuToggleButton = document.querySelector('.mobile-menu-btn'); // Assurez-vous que c'est le bon sélecteur
+  
+    menuToggleButton.addEventListener('click', function() {
+      if (document.body.getAttribute('data-sidebar-size') === 'default') {
+        logoImage.src = 'logo.png';
+        logoImage.classList.add('taille');
+      } else {
+        logoImage.src = 'assets/logoo.jpg';
+        logoImage.classList.remove('taille');
+      }
+    });
+  });
+</script>

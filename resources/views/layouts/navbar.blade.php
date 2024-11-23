@@ -1,9 +1,15 @@
+<style>
+  .taille{
+    width: 200px !important;
+    height: 100px !important;
+  }
+</style>
 <div class="startbar d-print-none">
     <!--start brand-->
     <div class="brand">
       <a href="index.html" class="logo">
         <span>
-          <img src="logo.png" style="width: 220px; height: 155px;" alt="logo-small" class="logo-sm">
+          <img id="logo-image" src="logo.png" class="taille">
         </span>
       </a>
     </div>
@@ -14,17 +20,10 @@
         <div class="d-flex align-items-start flex-column w-100">
           <!-- Navigation -->
           <ul class="navbar-nav mb-auto w-100">
-            <li class="menu-label pt-0 mt-0">
-              <!-- <small class="label-border">
-                                    <div class="border_left hidden-xs"></div>
-                                    <div class="border_right"></div>
-                                </small> -->
-              <span>Main Menu</span>
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="index.html">
                 <i class="iconoir-home-simple menu-icon"></i>
-                <span>Dashboards</span>
+                <span>Tableaux de bord</span>
               </a>
             </li><!--end nav-item-->
             <li class="nav-item">
