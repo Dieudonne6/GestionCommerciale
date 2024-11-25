@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitsController;
+use App\Http\Controllers\CategoriesProduitsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +20,4 @@ use App\Http\Controllers\ProduitsController;
 // });
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
