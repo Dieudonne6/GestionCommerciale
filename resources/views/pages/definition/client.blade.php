@@ -16,7 +16,7 @@
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
-              <h4 class="card-title">Listes des Fournisseurs</h4>
+              <h4 class="card-title">Listes des Clients</h4>
             </div><!--end col-->
             <div class="col-auto">
               <div class="col-auto">
@@ -37,26 +37,26 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach ($allfournisseurs as $allfournisseur)
+                @foreach ($allclients as $allclient)
                 <tr>
                   <td class="ps-0">
                     <p class="d-inline-block align-middle mb-0">
-                      <span class="font-13 fw-medium">{{ $allfournisseur->NomF }}</span>
+                      <span class="font-13 fw-medium">{{ $allclient->NomCl }}</span>
                     </p>
                   </td>
                   <td class="ps-0">
                     <p class="d-inline-block align-middle mb-0">
-                      <span class="font-13 fw-medium">{{ $allfournisseur->PrenomF }}</span>
+                      <span class="font-13 fw-medium">{{ $allclient->PrenomCl }}</span>
                     </p>
                   </td>
-                  <td>{{ $allfournisseur->AdresseF }}</td>
-                  <td>{{ $allfournisseur->ContactF }}</td>
+                  <td>{{ $allclient->AdresseCl }}</td>
+                  <td>{{ $allclient->ContactCl }}</td>
                   <td class="text-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allfournisseur->idF}}"> Modifier</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allfournisseur->idF}}"> Supprimer</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allclient->idCl}}"> Modifier</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allclient->idCl}}"> Supprimer</button>
                   </td>
                 </tr>
-                <div class="modal fade" id="ModifyBoardModal{{$allfournisseur->idF}}" tabindex="-1" aria-labelledby="ModifyBoardModal{{$allfournisseur->idF}}" aria-hidden="true">
+                <div class="modal fade" id="ModifyBoardModal{{$allclient->idCl}}" tabindex="-1" aria-labelledby="ModifyBoardModal{{$allclient->idCl}}" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -64,21 +64,21 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       
-                      <form action="{{url('/modifyfournisseur')}}" method="POST">
+                      <form action="{{url('/modifyclient')}}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="modal-body">
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Nom" name="NomF" value="{{ $allfournisseur->NomF }}">
+                            <input type="text" class="form-control"  placeholder="Nom" name="NomCl" value="{{ $allclient->NomCl }}">
                           </div>
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF" value="{{ $allfournisseur->PrenomF }}">
+                            <input type="text" class="form-control"  placeholder="Prenom" name="PrenomCl" value="{{ $allclient->PrenomCl }}">
                           </div>
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Adresse" name="AdresseF" value="{{ $allfournisseur->AdresseF }}">
+                            <input type="text" class="form-control"  placeholder="Adresse" name="AdresseCl" value="{{ $allclient->AdresseCl }}">
                           </div>
                           <div>
-                            <input type="text" class="form-control"  placeholder="Contact" name="ContactF" value="{{ $allfournisseur->ContactF }}">
+                            <input type="text" class="form-control"  placeholder="Contact" name="ContactCl" value="{{ $allclient->ContactCl }}">
                           </div>
                         </div>
                         <div class="modal-footer">
@@ -89,7 +89,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="modal fade" id="deleteBoardModal{{$allfournisseur->idF}}" tabindex="-1" aria-labelledby="deleteBoardModal{{$allfournisseur->idF}}" aria-hidden="true">
+                <div class="modal fade" id="deleteBoardModal{{$allclient->idCl}}" tabindex="-1" aria-labelledby="deleteBoardModal{{$allclient->idCl}}" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -101,10 +101,10 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <form action="{{ url('/supprimerforunisseur')}}" method="POST">
+                        <form action="{{ url('/supprimerclient')}}" method="POST">
                           @csrf
                           @method('DELETE')
-                          <input type="hidden" name="idF" value="{{$allfournisseur->idF}}">
+                          <input type="hidden" name="idCl" value="{{$allclient->idCl}}">
                           <input type="submit" class="btn btn-danger" value="Confirmer">
                         </form>  
                       </div>
@@ -128,16 +128,16 @@
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Nom" name="NomF">
+                    <input type="text" class="form-control"  placeholder="Nom" name="NomCl">
                   </div>
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF">
+                    <input type="text" class="form-control"  placeholder="Prenom" name="PrenomCl">
                   </div>
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Adresse" name="AdresseF">
+                    <input type="text" class="form-control"  placeholder="Adresse" name="AdresseCl">
                   </div>
                   <div>
-                    <input type="text" class="form-control"  placeholder="Contact" name="ContactF">
+                    <input type="text" class="form-control"  placeholder="Contact" name="ContactCl">
                   </div>
                 </div>
                 <div class="modal-footer">
