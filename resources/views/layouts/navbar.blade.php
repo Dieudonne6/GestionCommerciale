@@ -8,6 +8,9 @@
         </span>
       </a>
     </div>
+    @php
+    $routesFacture = ['fournisseur', 'clients'];
+    @endphp
     <!--end brand-->
     <!--start startbar-menu-->
     <div class="startbar-menu">
@@ -62,7 +65,7 @@
                 <i class="iconoir-journal-page menu-icon"></i>
                 <span>Définitions</span>
               </a>
-              <div class="collapse " id="sidebarForms">
+              <div class="collapse" id="sidebarForms">
                 <ul class="nav flex-column">
                   <li class="nav-item">
                     <a class="nav-link" href="forms-elements.html">Clients</a>
@@ -71,10 +74,10 @@
                     <a class="nav-link" href="forms-advanced.html">Fournisseurs</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="forms-validation.html">Catégories</a>
+                    <a class="nav-link" href="{{ url('categories') }}">Catégories</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="forms-wizard.html">Produits</a>
+                    <a class="nav-link" href="{{ url('produits') }}">Produits</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/caisses') }}">Caisses</a>

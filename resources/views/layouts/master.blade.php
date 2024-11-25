@@ -15,16 +15,15 @@
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
 
 </head>
-<body data-sidebar-size="default">
+<body>
 @include('layouts.sidebar')
 @include('layouts.navbar')
 <div class="page-wrapper">
   <div class="page-content">
     @yield('content')
     @include('layouts.footer')
-
-        </div>
-    </div>
+  </div>
+</div>
 
 
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
