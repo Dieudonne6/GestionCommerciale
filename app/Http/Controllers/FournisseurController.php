@@ -10,7 +10,14 @@ use App\Http\Requests\FournisseurRequest;
 class FournisseurController extends Controller
 {
     public function fournisseur(){
-        return view('pages.discipline.fournisseur');
+        return view('pages.definition.fournisseur');
+    }
+
+    public function client(){
+        return view('pages.definition.client');
+    }
+    public function  ajouterfournisseurs(){
+        return view('pages.definition.fournisseur');
     }
 
 

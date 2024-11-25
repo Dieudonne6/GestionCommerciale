@@ -8,6 +8,9 @@
         </span>
       </a>
     </div>
+    @php
+    $routesFacture = ['fournisseur', 'clients'];
+    @endphp
     <!--end brand-->
     <!--start startbar-menu-->
     <div class="startbar-menu">
@@ -57,12 +60,12 @@
               </div><!--end startbarAdvancedUI-->
             </li><!--end nav-item-->
             <li class="nav-item">
-              <a class="nav-link" href="#sidebarForms" data-bs-toggle="collapse" role="button" aria-expanded="false"
+              <a class="nav-link {{ request()->is('creerprofil') || request()->is('creerprofil'), $routesFacture) ? 'active' : '' }}" href="#sidebarForms" data-bs-toggle="collapse" role="button" aria-expanded="false"
                 aria-controls="sidebarForms">
                 <i class="iconoir-journal-page menu-icon"></i>
                 <span>Définitions</span>
               </a>
-              <div class="collapse " id="sidebarForms">
+              <div class="collapse" id="sidebarForms">
                 <ul class="nav flex-column">
                   <li class="nav-item">
                     <a class="nav-link" href="forms-elements.html">Clients</a>
@@ -75,6 +78,9 @@
                   </li><!--end nav-item-->
                   <li class="nav-item">
                     <a class="nav-link" href="forms-wizard.html">Produits</a>
+                  </li><!--end nav-item-->
+                  <li class="nav-item">
+                    <a class="nav-link" href="forms-caisse.html">Caisses</a>
                   </li><!--end nav-item-->
                 </ul><!--end nav-->
               </div><!--end startbarForms-->
