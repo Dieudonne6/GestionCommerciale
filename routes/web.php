@@ -29,6 +29,7 @@ Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFour
 Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur']);
 
 // clientcontroller
+Route::get('/client', [ClientController::class, 'client']);
 Route::post('/ajouterClient', [ClientController::class, 'ajouterClient']);
 Route::delete('suppClient/{id}', [ClientController::class, 'deleteClient']);
 Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
