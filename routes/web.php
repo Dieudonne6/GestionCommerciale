@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitsController;
+use App\Http\Controllers\TableauController;
+use App\Http\Controllers\ParamController;
+use App\Http\Controllers\Controller;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +22,6 @@ use App\Http\Controllers\ProduitsController;
 // });
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
+Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs']);
+Route::get('/caisses', [Controller::class, 'caisses']);
