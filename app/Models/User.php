@@ -17,28 +17,19 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+     protected $primaryKey = 'idU'; // Clé primaire de votre table
+
     protected $fillable = [
-        'name',
-        'email',
+        'login',
+        'nomU',
+        'adresseU',
+        'telephone',
         'password',
+        'roleID',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
+
 }

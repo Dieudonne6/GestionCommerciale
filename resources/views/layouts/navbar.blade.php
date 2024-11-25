@@ -9,7 +9,8 @@
     <div class="brand">
       <a href="index.html" class="logo">
         <span>
-          <img id="logo-image" src="logo.png" class="taille">
+
+          <img id="logo-image" src="{{asset('logo.png')}}"  class="taille">
         </span>
       </a>
     </div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitsController;
+use App\Http\Controllers\ApprovisionnementController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +20,9 @@ use App\Http\Controllers\ProduitsController;
 // });
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+
+
+// ApprovisionnementController
+Route::get('Approvisionnement/commandeAchat', [ApprovisionnementController::class, 'commandeAchat'])->name('commandeAchat');
+
+
