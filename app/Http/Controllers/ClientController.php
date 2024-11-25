@@ -58,6 +58,8 @@ class ClientController extends Controller
             $modifClient->PrenomCl = $request->input('PrenomCl');
             $modifClient->AdresseCl = $request->input('AdresseCl');
             $modifClient->ContactCl = $request->input('ContactCl');
-            $modifClient->update();    
+            $modifClient->update();  
+            return back()->with("status", "Le client a ete modifier avec succes");
+  
         }
 }
