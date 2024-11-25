@@ -6,6 +6,7 @@ use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParamController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApprovisionnementController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
