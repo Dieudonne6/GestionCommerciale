@@ -1,15 +1,10 @@
-<style>
-  .taille{
-    width: 200px !important;
-    height: 100px !important;
-  }
-</style>
+
 <div class="startbar d-print-none">
     <!--start brand-->
     <div class="brand">
       <a href="index.html" class="logo">
         <span>
-          <img id="logo-image" src="logo.png" class="taille">
+          <img id="logo-image" src="assets/logoo.jpg">
         </span>
       </a>
     </div>

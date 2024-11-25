@@ -14,7 +14,7 @@
 <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
 
 </head>
-<body>
+<body data-sidebar-size="default">
 @include('layouts.sidebar')
 @include('layouts.navbar')
 <div class="page-wrapper">
@@ -46,7 +46,9 @@
   document.addEventListener('DOMContentLoaded', function() {
     const logoImage = document.getElementById('logo-image');
     const menuToggleButton = document.querySelector('.mobile-menu-btn'); // Assurez-vous que c'est le bon sélecteur
-  
+    const startbar = document.querySelector('.startbar'); // Sélecteur pour l'élément avec la classe startbar
+
+    // Gestionnaire pour le bouton du menu
     menuToggleButton.addEventListener('click', function() {
       if (document.body.getAttribute('data-sidebar-size') === 'default') {
         logoImage.src = 'logo.png';
@@ -55,6 +57,25 @@
         logoImage.src = 'assets/logoo.jpg';
         logoImage.classList.remove('taille');
       }
+    });
+
+    // Gestionnaire pour l'effet hover sur la startbar
+    startbar.addEventListener('mouseover', function() {
+        logoImage.src = 'logo.png'; // Image pour l'effet hover
+        logoImage.classList.add('taille'); // Classe pour un style spécifique
+      
+    });
+
+    startbar.addEventListener('mouseout', function() {
+      if (document.body.getAttribute('data-sidebar-size') === 'default') {
+        logoImage.src = 'logo.png';
+        logoImage.classList.add('taille');
+      } 
+      else {
+        logoImage.src = 'assets/logoo.jpg';
+        logoImage.classList.remove('taille');
+      }
+
     });
   });
 </script>
