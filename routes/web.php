@@ -25,4 +25,7 @@ Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
 Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs']);
-Route::get('/caisses', [Controller::class, 'caisses']);
+Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
+Route::post('/caisses', [Controller::class, 'store'])->name('caisses.store');
+Route::put('/caisses/{id}', [Controller::class, 'update'])->name('caisses.update');
+Route::delete('/caisses/{id}', [Controller::class, 'destroy'])->name('caisses.destroy');
