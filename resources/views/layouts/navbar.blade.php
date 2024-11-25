@@ -74,13 +74,13 @@
                     <a class="nav-link" href="forms-advanced.html">Fournisseurs</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="forms-validation.html">Catégories</a>
+                    <a class="nav-link" href="{{ url('categories') }}">Catégories</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="forms-wizard.html">Produits</a>
+                    <a class="nav-link" href="{{ url('produits') }}">Produits</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="forms-caisse.html">Caisses</a>
+                    <a class="nav-link" href="{{ url('/caisses') }}">Caisses</a>
                   </li><!--end nav-item-->
                 </ul><!--end nav-->
               </div><!--end startbarForms-->

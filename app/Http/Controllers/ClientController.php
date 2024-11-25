@@ -19,6 +19,7 @@ class ClientController extends Controller
 
         public function ajouterClient( ClientRequest $request ) {
 
+
             // Vérifier si le client existe déjà
             $clientExiste = Client::where('NomCl', $request->input('NomCl'))
             ->where('PrenomCl', $request->input('PrenomCl'))
@@ -26,7 +27,7 @@ class ClientController extends Controller
     
             if ($clientExiste) {
                 // Retourner une erreur si le client existe déjà
-                return back()->with(['erreur' => 'Ce client existe déjà.']);
+                return back()->with(['errors' => 'Ce client existe déjà.']);
             }
     
             // creer un nouveau client dans le cas echeant
@@ -50,7 +51,7 @@ class ClientController extends Controller
         }
     
     
-        // modification fournisseur
+        // modification client
     
         public function updateClient ( ClientRequest $request, $id ) {
             $modifClient = Client::where('idCl', $id)->first();

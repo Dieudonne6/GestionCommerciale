@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitsController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParamController;
 use App\Http\Controllers\Controller;
@@ -36,6 +37,9 @@ Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
 
 
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
+// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
+Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
 
 
@@ -45,4 +49,8 @@ Route::get('Approvisionnement/commandeAchat', [ApprovisionnementController::clas
 
 Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
 Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs']);
+Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
+Route::post('/caisses', [Controller::class, 'store'])->name('caisses.store');
+Route::put('/caisses/{id}', [Controller::class, 'update'])->name('caisses.update');
+Route::delete('/caisses/{id}', [Controller::class, 'destroy'])->name('caisses.destroy');
 Route::get('/caisses', [Controller::class, 'caisses']);
