@@ -9,6 +9,12 @@ use App\Http\Requests\ClientRequest;
 
 class ClientController extends Controller
 {
+
+    public function client(){
+
+        $allclients = Client::get();
+        return view('pages.definition.client', compact('allclients'));
+    }
         // creation client
 
         public function ajouterClient( ClientRequest $request ) {
