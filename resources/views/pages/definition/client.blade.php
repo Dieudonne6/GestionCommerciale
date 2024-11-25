@@ -9,7 +9,6 @@
   }
 </style>
 <div class="container-xxl">
-  
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="card">
@@ -20,7 +19,7 @@
             </div><!--end col-->
             <div class="col-auto">
               <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un Fournisseur</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un Client</button>
               </div><!--end col-->
             </div><!--end col-->
           </div><!--end row-->
@@ -60,10 +59,9 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Fournisseur</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Client</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      
                       <form action="{{url('/modifyclient')}}" method="POST">
                         @csrf
                         @method('PUT')
@@ -120,7 +118,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Fournisseur</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Client</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               

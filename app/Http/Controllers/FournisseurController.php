@@ -16,9 +16,7 @@ class FournisseurController extends Controller
     public function client(){
         return view('pages.definition.client');
     }
-    public function  ajouterfournisseurs(){
-        return view('pages.definition.fournisseur');
-    }
+   
 
 
     // creation fournisseur
