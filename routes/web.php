@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ApprovisionnementController;
 /*
@@ -18,7 +19,18 @@ use App\Http\Controllers\ApprovisionnementController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+//fournisseurcontroller
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
+Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur']);
+Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
+Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur']);
+
+// clientcontroller
+Route::post('/ajouterClient', [ClientController::class, 'ajouterClient']);
+Route::delete('suppClient/{id}', [ClientController::class, 'deleteClient']);
+Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
+
+
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 
 
