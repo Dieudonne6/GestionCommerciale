@@ -57,6 +57,42 @@ class CategoriesController extends Controller
         $category->delete();
 
         // Retourner à la liste avec un message de succès
-        return redirect()->route('categories')->with('success', 'Catégorie supprimée avec succès !');
+        return redirect()->route('categories')->with('error', 'Catégorie supprimée avec succès !');
     }
+
+// Dans CategoryController.php
+
+public function update(Request $request, $id)
+{
+    $category = Categorie::findOrFail($id);
+
+    // Validation des données du formulaire
+    $request->validate([
+        'categoryName' => 'required|string|max:255',
+        'categoryImage' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+    ]);
+
+    // Mise à jour des données de la catégorie
+    $category->NomC = $request->categoryName;
+
+    if ($request->hasFile('categoryImage')) {
+        // Si une nouvelle image est envoyée, la traiter et la sauvegarder
+        $imagePath = $request->file('categoryImage')->store('categories', 'public');
+        $category->imgC = $imagePath;
+    }
+
+    $category->save();
+
+    return redirect()->route('categories')->with('success', 'Catégorie mise à jour avec succès!');
+}
+
+
+public function edit($id)
+{
+    // Récupérer la catégorie par ID
+    $category = Categorie::findOrFail($id);
+
+    // Retourner la vue avec les données de la catégorie
+    return view('categories', compact('category'));
+}
 }
