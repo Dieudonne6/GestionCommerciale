@@ -68,7 +68,7 @@
               <div class="collapse" id="sidebarForms">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link" href="forms-elements.html">Clients</a>
+                    <a class="nav-link" href="{{ url('client') }}">Clients</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('fournisseur') }}">Fournisseurs</a>
