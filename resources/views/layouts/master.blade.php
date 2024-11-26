@@ -51,6 +51,22 @@
     height: 150px !important;
   }
 </style>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoImage = document.getElementById('logo-image');
+            // Assurez-vous que l'attribut 'data-sidebar-size' est initialisé à 'default' au chargement
+            if (!document.body.hasAttribute('data-sidebar-size') || document.body.getAttribute('data-sidebar-size') !== 'default') {
+            document.body.setAttribute('data-sidebar-size', 'default');
+            logoImage.src = 'logo.png';
+            logoImage.classList.add('taille');
+            }
+
+        });
+
+</script>
+
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const logoImage = document.getElementById('logo-image');
@@ -87,10 +103,18 @@
       
     });
   });
-  var statusAlert = document.getElementById('statusAlert');
-  if (statusAlert) {
-    setTimeout(function() {
-      statusAlert.style.display = 'none';
-    }, 4000);
-  }
+
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var alerts = document.querySelectorAll('.alert-dismissible');
+      alerts.forEach(function(alert) {
+        setTimeout(function() {
+          alert.style.display = 'none';
+        }, 6000);
+      });
+    });
+</script>
+
+
