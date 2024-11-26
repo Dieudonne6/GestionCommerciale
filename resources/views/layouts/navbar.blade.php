@@ -60,7 +60,7 @@
               </div><!--end startbarAdvancedUI-->
             </li><!--end nav-item-->
             <li class="nav-item">
-              <a class="nav-link {{ request()->is('creerprofil') || request()->is('creerprofil'), $routesFacture) ? 'active' : '' }}" href="#sidebarForms" data-bs-toggle="collapse" role="button" aria-expanded="false"
+              <a class="nav-link" href="#sidebarForms" data-bs-toggle="collapse" role="button" aria-expanded="false"
                 aria-controls="sidebarForms">
                 <i class="iconoir-journal-page menu-icon"></i>
                 <span>Définitions</span>
