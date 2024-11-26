@@ -85,15 +85,15 @@
           <input type="checkbox" class="form-check-input" name="select-all" id="select-all">                                                    
         </div>
       </th>
-      <th>Code du Produit</th>
-      <th class="ps-0">Nom du produit</th>
-      <th>Description</th>
-      <th>Image</th>
-      <th>Quantite</th>
-      <th>Catégorie</th>
-      <th>Prix de vente</th>
-      <th>Stockdown</th>
-      <th class="text-end">Action</th>
+      <th class="text-center">Code du Produit</th>
+      <th class="ps-0 text-center">Nom du produit</th>
+      <th class="text-center">Description</th>
+      <th class="text-center">Image</th>
+      <th class="text-center">Quantite</th>
+      <th class="text-center">Catégorie</th>
+      <th class="text-center">Prix de vente</th>
+      <th class="text-center">Stockdown</th>
+      <th class="text-center">Action</th>
     </tr>
   </thead>
   <tbody>

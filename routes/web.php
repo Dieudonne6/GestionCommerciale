@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitsController;
-use App\Http\Controllers\CategoriesProduitsController;
+use App\Http\Controllers\CategoriesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,3 +21,5 @@ use App\Http\Controllers\CategoriesProduitsController;
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
+// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
+Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
