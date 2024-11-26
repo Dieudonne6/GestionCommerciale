@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Categorie extends Model
+class Role extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'idC'; // Clé primaire de votre table
+    protected $primaryKey = 'id'; // Clé primaire de votre table
 
     protected $fillable = [
-        'NomC',
-        'imgC',
+        'libelleRole',
     ];
 }
