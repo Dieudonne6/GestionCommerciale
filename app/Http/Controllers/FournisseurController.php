@@ -19,6 +19,8 @@ class FournisseurController extends Controller
 
     public function ajouterFournisseur( FournisseurRequest $request ) {
 
+        $request->validated();
+
         // Vérifier si le fournisseur existe déjà
         $fournisseurExiste = Fournisseur::where('NomF', $request->input('NomF'))
         ->where('PrenomF', $request->input('PrenomF'))
@@ -58,7 +60,9 @@ class FournisseurController extends Controller
         $modifFournisseur->PrenomF = $request->input('PrenomF');
         $modifFournisseur->AdresseF = $request->input('AdresseF');
         $modifFournisseur->ContactF = $request->input('ContactF');
-        $modifFournisseur->update();    
+        $modifFournisseur->update();  
+        return back()->with("status", "Le fournisseur a ete modifier avec succes");
+  
     }
 
 

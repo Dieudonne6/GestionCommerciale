@@ -18,6 +18,20 @@
             <div class="col">
               <h4 class="card-title">Listes des Fournisseurs</h4>
             </div><!--end col-->
+
+            @if (Session::has('status'))
+            <br>
+            <div class="alert alert-success">
+              {{Session::get('status')}}
+            </div>
+            @endif
+
+            @if (Session::has('erreur'))
+            <br>
+            <div class="alert alert-danger">
+              {{Session::get('erreur')}}
+            </div>
+            @endif
             <div class="col-auto">
               <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un Fournisseur</button>
@@ -30,28 +44,29 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th class="ps-0">Nom et prénoms</th>
-                  <th>Adresse</th>
-                  <th>Contact</th>
-                  <th class="text-end">Action</th>
+                  <th >Nom</th>
+                  <th >Prénoms</th>
+                  <th >Adresse</th>
+                  <th >Contact</th>
+                  <th >Action</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($allfournisseurs as $allfournisseur)
                 <tr>
-                  <td class="ps-0">
+                  <td >
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $allfournisseur->NomF }}</span>
                     </p>
                   </td>
-                  <td class="ps-0">
+                  <td >
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $allfournisseur->PrenomF }}</span>
                     </p>
                   </td>
-                  <td>{{ $allfournisseur->AdresseF }}</td>
-                  <td>{{ $allfournisseur->ContactF }}</td>
-                  <td class="text-end">
+                  <td >{{ $allfournisseur->AdresseF }}</td>
+                  <td >{{ $allfournisseur->ContactF }}</td>
+                  <td >
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allfournisseur->idF}}"> Modifier</button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allfournisseur->idF}}"> Supprimer</button>
                   </td>
@@ -60,11 +75,29 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Fournisseur</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier un Fournisseur</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                       </div>
+                      @if($errors->any())
+                      <div id="statusAlert" class="alert alert-danger">
+                          <ul>
+                              @foreach($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                      @endif
+                      <?php $error = Session::get('error');?>
+            
+                      @if(Session::has('error'))
+                      <div id="statusAlert" class="alert alert-danger">
+                        {{ Session::get('error')}}
+                      </div>
+                      @endif
                       
-                      <form action="{{url('/modifyfournisseur')}}" method="POST">
+                      
+                      <form action="{{url('modifFournisseur/'.$allfournisseur->idF)}}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="modal-body">
@@ -83,7 +116,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                          <button type="button" class="btn btn-primary">Envoyer</button>
+                          <button type="submit" class="btn btn-primary">Modifier</button>
                         </div>
                       </form>
                     </div>
@@ -97,11 +130,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        Êtes-vous sûr de vouloir supprimer cette série ?
+                        Êtes-vous sûr de vouloir supprimer ce fournisseur ?
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <form action="{{ url('/supprimerforunisseur')}}" method="POST">
+
+                        <form action="{{ url('suppFournisseur/'.$allfournisseur->idF)}}" method="POST">
                           @csrf
                           @method('DELETE')
                           <input type="hidden" name="idF" value="{{$allfournisseur->idF}}">
@@ -123,8 +157,17 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Fournisseur</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+              @if ($errors->any())
+                  <div class="alert alert-danger">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                              <li>{{ $error }}</li>
+                          @endforeach
+                      </ul>
+                  </div>
+              @endif
               
-              <form action="{{url('/savepaiementcontrat')}}" method="POST">
+              <form action="{{url('/ajouterFournisseur')}}" method="POST">
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
@@ -142,7 +185,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                  <button type="button" class="btn btn-primary">Envoyer</button>
+                  <button type="submit" class="btn btn-primary">Envoyer</button>
                 </div>
               </form>
             </div>
@@ -153,3 +196,20 @@
   </div>
   
   @endsection
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
+
+    @if ($error || $errors->any())
+        myModal.show();
+    @endif
+
+    // Réinitialiser les champs du formulaire à la fermeture du modal
+    // document.getElementById('exampleModalNuveau').addEventListener('hidden.bs.modal', function () {
+    //     document.getElementById('myformclas').reset();
+    //     document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
+    // });
+});
+</script>

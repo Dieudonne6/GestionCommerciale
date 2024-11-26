@@ -38,6 +38,7 @@ Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
 
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
+Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');

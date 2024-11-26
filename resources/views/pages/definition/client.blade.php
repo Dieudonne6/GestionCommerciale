@@ -1,13 +1,6 @@
 @extends('layouts.master')
 @section('content')
-<style>
-  .modal-header {
-    background-color: #fff !important;
-  }
-  .modal-title {
-    color: #000 !important;
-  }
-</style>
+
 <div class="container-xxl">
   <div class="row justify-content-center">
     <div class="col-12">
@@ -24,12 +17,27 @@
             </div><!--end col-->
           </div><!--end row-->
         </div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+        @endif
+        @if(Session::has('status'))
+        <div id="statusAlert" class="alert alert-success">
+          {{ Session::get('status')}}
+        </div>
+        @endif
         <div class="card-body pt-0">
           <div class="table-responsive">
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th class="ps-0">Nom et prénoms</th>
+                  <th class="ps-0">Nom</th>
+                  <th>Prénoms</th>
                   <th>Adresse</th>
                   <th>Contact</th>
                   <th class="text-end">Action</th>
@@ -62,7 +70,7 @@
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Client</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <form action="{{url('/modifyclient')}}" method="POST">
+                      <form action="{{url('modifClient/'.$allclient->idCl)}}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="modal-body">
@@ -81,7 +89,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                          <button type="button" class="btn btn-primary">Envoyer</button>
+                          <button type="submit" class="btn btn-primary">Envoyer</button>
                         </div>
                       </form>
                     </div>
@@ -95,12 +103,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        Êtes-vous sûr de vouloir supprimer cette série ?
+                        Êtes-vous sûr de vouloir supprimer cette client?
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <form action="{{ url('/supprimerclient')}}" method="POST">
-                          @csrf
+                        <form action="{{ url('suppClient/'.$allclient->idCl)}}" method="POST">
+                          @csrf 
                           @method('DELETE')
                           <input type="hidden" name="idCl" value="{{$allclient->idCl}}">
                           <input type="submit" class="btn btn-danger" value="Confirmer">
@@ -122,7 +130,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               
-              <form action="{{url('/savepaiementcontrat')}}" method="POST">
+              <form action="{{url('ajouterClient')}}" method="POST">
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
@@ -140,7 +148,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                  <button type="button" class="btn btn-primary">Envoyer</button>
+                  <button type="submit" class="btn btn-primary">Envoyer</button>
                 </div>
               </form>
             </div>
