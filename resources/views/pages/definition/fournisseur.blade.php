@@ -44,7 +44,7 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th >identité</th>
+                  <th >Identité</th>
                   {{-- <th >Prénoms</th> --}}
                   <th >Adresse</th>
                   <th >Contact</th>
@@ -102,7 +102,7 @@
                         @method('PUT')
                         <div class="modal-body">
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="identiteF" name="identiteF" value="{{ $allfournisseur->identiteF }}">
+                            <input type="text" class="form-control"  placeholder="Identite" name="identiteF" value="{{ $allfournisseur->identiteF }}">
                           </div>
                           {{-- <div class="mb-2">
                             <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF" value="{{ $allfournisseur->PrenomF }}">
@@ -171,7 +171,7 @@
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="identiteF" name="identiteF">
+                    <input type="text" class="form-control"  placeholder="Identite" name="identiteF">
                   </div>
                   {{-- <div class="mb-2">
                     <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF">

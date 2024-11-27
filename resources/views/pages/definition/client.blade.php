@@ -33,8 +33,7 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th class="ps-0">Nom</th>
-                  <th>Prénoms</th>
+                  <th class="ps-0">Identité</th>
                   <th>Adresse</th>
                   <th>Contact</th>
                   <th class="text-end">Action</th>
@@ -45,12 +44,7 @@
                 <tr>
                   <td class="ps-0">
                     <p class="d-inline-block align-middle mb-0">
-                      <span class="font-13 fw-medium">{{ $allclient->NomCl }}</span>
-                    </p>
-                  </td>
-                  <td class="ps-0">
-                    <p class="d-inline-block align-middle mb-0">
-                      <span class="font-13 fw-medium">{{ $allclient->PrenomCl }}</span>
+                      <span class="font-13 fw-medium">{{ $allclient->identiteCl }}</span>
                     </p>
                   </td>
                   <td>{{ $allclient->AdresseCl }}</td>
@@ -73,11 +67,9 @@
                         @method('PUT')
                         <div class="modal-body">
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Nom" name="NomCl" value="{{ $allclient->NomCl }}" required>
+                            <input type="text" class="form-control"  placeholder="Identité" name="identiteCl" value="{{ $allclient->identiteCl }}" required>
                           </div>
-                          <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Prenom" name="PrenomCl" value="{{ $allclient->PrenomCl }}" required>
-                          </div>
+                         
                           <div class="mb-2">
                             <input type="text" class="form-control"  placeholder="Adresse" name="AdresseCl" value="{{ $allclient->AdresseCl }}" required>
                           </div>
@@ -87,7 +79,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                          <button type="submit" class="btn btn-primary">Envoyer</button>
+                          <button type="submit" class="btn btn-primary">Modifier</button>
                         </div>
                       </form>
                     </div>
@@ -140,11 +132,9 @@
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Nom" name="NomCl">
+                    <input type="text" class="form-control"  placeholder="Identité" name="identiteCl">
                   </div>
-                  <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Prenom" name="PrenomCl">
-                  </div>
+                 
                   <div class="mb-2">
                     <input type="text" class="form-control"  placeholder="Adresse" name="AdresseCl">
                   </div>
@@ -154,7 +144,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                  <button type="submit" class="btn btn-primary">Envoyer</button>
+                  <button type="submit" class="btn btn-primary">Ajouter</button>
                 </div>
               </form>
             </div>
