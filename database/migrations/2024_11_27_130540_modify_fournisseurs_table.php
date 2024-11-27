@@ -12,8 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('fournisseurs', function (Blueprint $table) {
-            $table->dropColumn(['NomF', 'PrenomF']); // Supprimer les colonnes existantes
-            $table->string('identiteF')->after('idF'); // Ajouter la nouvelle colonne après 'idF'
+            if (Schema::hasColumn('fournisseurs', 'NomF')) {
+                $table->dropColumn('NomF'); // Supprimer 'NomF' si elle existe
+            }
+            if (Schema::hasColumn('fournisseurs', 'PrenomF')) {
+                $table->dropColumn('PrenomF'); // Supprimer 'PrenomF' si elle existe
+            }
+            if (!Schema::hasColumn('fournisseurs', 'identiteF')) {
+                $table->string('identiteF', 191)->after('idF');
+            }
         });
     }
 

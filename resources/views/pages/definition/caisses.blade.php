@@ -47,7 +47,6 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-group mb-3">
-                                    <label for="codeCais">Code de la Caisse</label>
                                     <input type="text" id="codeCais" name="codeCais"
                                         class="form-control @error('codeCais') is-invalid @enderror"
                                         placeholder="Code de la caisse" 
@@ -58,7 +57,6 @@
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="libelleCais">Libellé de la Caisse</label>
                                     <input type="text" id="libelleCais" name="libelleCais"
                                         class="form-control @error('libelleCais') is-invalid @enderror"
                                         placeholder="Libellé de la caisse" 
@@ -133,7 +131,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Annuler</button>
-                                                    <button type="submit" class="btn btn-success">Sauvegarder</button>
+                                                    <button type="submit" class="btn btn-success">Modifier</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -156,7 +154,6 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     Êtes-vous sûr de vouloir supprimer cette caisse ?
-                                                    Cette action est irréversible.
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"

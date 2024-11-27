@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Categorie;
 
@@ -23,10 +24,11 @@ class CategoriesController extends Controller
     {
         // Validation des données
         $request->validate([
+            'categoryCode' => 'required|string|max:255', // Validation pour le code de la catégorie
             'categoryName' => 'required|string|max:255',  // Validation pour le nom de la catégorie
             'categoryImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation pour l'image
         ]);
-        dd($request->all());
+       // dd($request->all());
         // Gérer l'upload de l'image
         if ($request->hasFile('categoryImage')) {
             // Stocker l'image dans le dossier 'public/categories'
@@ -35,6 +37,7 @@ class CategoriesController extends Controller
     
         // Créer une nouvelle catégorie
         $category = new Categorie();
+        $category->codeC = $request->input('categoryCode');  // Utiliser 'codeC' comme nom de la colonne dans la base
         $category->NomC = $request->input('categoryName');  // Utiliser 'NomC' comme nom de la colonne dans la base
         $category->imgC = $imagePath;  // Utiliser 'imgC' pour l'image
         $category->save();  // Enregistrer la catégorie dans la base de données
@@ -47,16 +50,20 @@ class CategoriesController extends Controller
     {
         // Récupérer la catégorie à supprimer
         $category = Categorie::findOrFail($id);
-
-        // Supprimer l'image associée à la catégorie si elle existe
-        if (File::exists(public_path('storage/' . $category->imgC))) {
-            File::delete(public_path('storage/' . $category->imgC));
+    
+        // Vérifier si une image existe pour cette catégorie
+        if ($category->imgC) {
+            // Utiliser Storage pour supprimer l'image
+            if (Storage::disk('public')->exists($category->imgC)) {
+                // Supprimer l'image
+                Storage::disk('public')->delete($category->imgC);
+            }
         }
-
+    
         // Supprimer la catégorie
         $category->delete();
-
-        // Retourner à la liste avec un message de succès
+    
+        // Retourner avec succès
         return redirect()->route('categories')->with('success', 'Catégorie supprimée avec succès !');
     }
 
@@ -68,12 +75,14 @@ public function update(Request $request, $id)
 
     // Validation des données du formulaire
     $request->validate([
+        'categoryCode' => 'required|string|max:255', // Validation pour le code de la catégorie
         'categoryName' => 'required|string|max:255',
         'categoryImage' => 'nullable|image|mimes:jpeg,png,jpg,gif',
     ]);
 
     // Mise à jour des données de la catégorie
     $category->NomC = $request->categoryName;
+    $category->codeC = $request->categoryCode;
 
     if ($request->hasFile('categoryImage')) {
         // Si une nouvelle image est envoyée, la traiter et la sauvegarder

@@ -1,5 +1,13 @@
 @extends('layouts.master')
 @section('content')
+<style>
+  .modal-header {
+    background-color: #fff !important;
+  }
+  .modal-title {
+    color: #000 !important;
+  }
+</style>
     <div class="container-xxl">
         <div class="row">
             @if (session('success'))
@@ -40,7 +48,7 @@
                                             </div>
                                         </th>
                                         <th class="text-center">Code</th>
-                                        <th class="ps-0 text-center">Nom Catégorie</th>
+                                        <th class="ps-0 text-center">Nom</th>
                                         <th class="text-center">Image</th>
                                         <th class="text-center">Action</th>
                                     </tr>
@@ -54,7 +62,7 @@
                                                         id="customCheck1">
                                                 </div>
                                             </td>
-                                            <td>{{ $category->idC }}</td>
+                                            <td>{{ $category->codeC }}</td>
                                             <td>{{ $category->NomC }}</td>
                                             <td class="ps-0">
                                                 <img src="{{ asset('storage/' . $category->imgC) }}"
@@ -105,6 +113,15 @@
                                                             enctype="multipart/form-data">
                                                             @csrf
                                                             @method('PUT')
+
+                                                            <!-- Champ pour le code de la catégorie -->
+                                                            <div class="mb-3">
+                                                                <label for="editCategoryCode" class="form-label">Code de la
+                                                                    catégorie</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="editCategoryCode" name="categoryCode"
+                                                                    value="{{ $category->codeC }}" required>
+                                                            </div>                                                            
 
                                                             <!-- Champ pour le nom de la catégorie -->
                                                             <div class="mb-3">
@@ -194,6 +211,10 @@
                 <div class="modal-body">
                     <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
                         @csrf
+                        <div class="mb-3">
+                            <label for="categoryCode" class="form-label">Code de la catégorie</label>
+                            <input type="text" class="form-control" id="categoryCode" name="categoryCode" required>
+                        </div>
                         <div class="mb-3">
                             <label for="categoryName" class="form-label">Nom de la catégorie</label>
                             <input type="text" class="form-control" id="categoryName" name="categoryName" required>
