@@ -17,18 +17,15 @@
             </div><!--end col-->
           </div><!--end row-->
         </div>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-          <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-          </ul>
-        </div>
-        @endif
+       
         @if(Session::has('status'))
         <div id="statusAlert" class="alert alert-success">
           {{ Session::get('status')}}
+        </div>
+        @endif
+        @if(Session::has('erreur'))
+        <div id="statusAlert" class="alert alert-danger">
+          {{ Session::get('erreur')}}
         </div>
         @endif
         <div class="card-body pt-0">
@@ -67,24 +64,25 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Client</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier un Client</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
+                      
                       <form action="{{url('modifClient/'.$allclient->idCl)}}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="modal-body">
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Nom" name="NomCl" value="{{ $allclient->NomCl }}">
+                            <input type="text" class="form-control"  placeholder="Nom" name="NomCl" value="{{ $allclient->NomCl }}" required>
                           </div>
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Prenom" name="PrenomCl" value="{{ $allclient->PrenomCl }}">
+                            <input type="text" class="form-control"  placeholder="Prenom" name="PrenomCl" value="{{ $allclient->PrenomCl }}" required>
                           </div>
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Adresse" name="AdresseCl" value="{{ $allclient->AdresseCl }}">
+                            <input type="text" class="form-control"  placeholder="Adresse" name="AdresseCl" value="{{ $allclient->AdresseCl }}" required>
                           </div>
                           <div>
-                            <input type="text" class="form-control"  placeholder="Contact" name="ContactCl" value="{{ $allclient->ContactCl }}">
+                            <input type="text" class="form-control"  placeholder="Contact" name="ContactCl" value="{{ $allclient->ContactCl }}" required>
                           </div>
                         </div>
                         <div class="modal-footer">
@@ -129,7 +127,15 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Client</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              
+              @if ($errors->any())
+              <div class="alert alert-danger alert-dismissible">
+                <ul>
+                  @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+              @endif
               <form action="{{url('ajouterClient')}}" method="POST">
                 @csrf
                 <div class="modal-body">
@@ -159,3 +165,13 @@
   </div>
   
   @endsection
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
+      @if ($errors->any())
+      myModal.show();
+      @endif
+    });
+
+  </script>

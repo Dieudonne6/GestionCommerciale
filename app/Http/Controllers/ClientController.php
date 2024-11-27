@@ -27,7 +27,7 @@ class ClientController extends Controller
     
             if ($clientExiste) {
                 // Retourner une erreur si le client existe déjà
-                return back()->with(['errors' => 'Ce client existe déjà.']);
+                return back()->with(['erreur' => 'Ce client existe déjà.']);
             }
     
             // creer un nouveau client dans le cas echeant
@@ -53,7 +53,7 @@ class ClientController extends Controller
     
         // modification client
     
-        public function updateClient ( ClientRequest $request, $id ) {
+        public function updateClient ( Request $request, $id ) {
             $modifClient = Client::where('idCl', $id)->first();
             $modifClient->NomCl = $request->input('NomCl');
             $modifClient->PrenomCl = $request->input('PrenomCl');

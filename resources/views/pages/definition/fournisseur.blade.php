@@ -202,7 +202,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
 
-    @if ($error || $errors->any())
+    @if ($errors->any())
         myModal.show();
     @endif
 
