@@ -1,9 +1,6 @@
 @extends('layouts.master')
 @section('content')
-    <div class="page-wrapper">
 
-        <!-- Page Content-->
-        <div class="page-content">
             <div class="container-xxl">
                 <div class="row">
                     @if (session('success'))
@@ -22,7 +19,7 @@
                                 <h1 class="mb-2">Gestion des Categories</h1>
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        
+
                                     </div><!--end col-->
                                     <div class="col-auto">
                                         <form class="row g-2">
@@ -139,89 +136,109 @@
                                                         <!-- Formulaire pour supprimer une catégorie -->
                                                         <form action="{{ route('categories.destroy', $category->idC) }}"
                                                             class="btn btn-danger" data-bs-toggle="modal"
-                                                            data-bs-target="#deleteModal{{$category->idC}}"
+                                                            data-bs-target="#deleteModal{{ $category->idC }}"
                                                             method="POST" style="display:inline-block;">
                                                             @csrf
                                                             @method('DELETE')
-                                                                <span>Supprimer</span>
+                                                            <span>Supprimer</span>
                                                         </form>
                                                         <!-- <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
-                                                            <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a> -->
+                                                                <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a> -->
                                                     </td>
                                                 </tr>
 
-                                                            <!-- Modal de modification de catégorie -->
-            <div class="modal fade" id="editCategoryModal{{ $category->idC }}" tabindex="-1"
-                aria-labelledby="editCategoryModalLabel{{ $category->idC }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editCategoryModalLabel">Modifier la catégorie
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Formulaire pour modifier la catégorie -->
-                            <form method="POST" action="{{ route('categories.update', $category->idC) }}"
-                                enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
+                                                <!-- Modal de modification de catégorie -->
+                                                <div class="modal fade" id="editCategoryModal{{ $category->idC }}"
+                                                    tabindex="-1"
+                                                    aria-labelledby="editCategoryModalLabel{{ $category->idC }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="editCategoryModalLabel">
+                                                                    Modifier la catégorie
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Formulaire pour modifier la catégorie -->
+                                                                <form method="POST"
+                                                                    action="{{ route('categories.update', $category->idC) }}"
+                                                                    enctype="multipart/form-data">
+                                                                    @csrf
+                                                                    @method('PUT')
 
-                                <!-- Champ pour le nom de la catégorie -->
-                                <div class="mb-3">
-                                    <label for="editCategoryName" class="form-label">Nom de la catégorie</label>
-                                    <input type="text" class="form-control" id="editCategoryName" name="categoryName"
-                                        value="{{ $category->NomC }}" required>
-                                </div>
+                                                                    <!-- Champ pour le nom de la catégorie -->
+                                                                    <div class="mb-3">
+                                                                        <label for="editCategoryName"
+                                                                            class="form-label">Nom de la catégorie</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="editCategoryName" name="categoryName"
+                                                                            value="{{ $category->NomC }}" required>
+                                                                    </div>
 
-                                <!-- Champ pour télécharger une nouvelle image (optionnel) -->
-                                <div class="mb-3">
-                                    <label for="editCategoryImage" class="form-label">Nouvelle image</label>
-                                    <input type="file" class="form-control" id="editCategoryImage"
-                                        name="categoryImage" accept="image/*">
-                                </div>
+                                                                    <!-- Champ pour télécharger une nouvelle image (optionnel) -->
+                                                                    <div class="mb-3">
+                                                                        <label for="editCategoryImage"
+                                                                            class="form-label">Nouvelle image</label>
+                                                                        <input type="file" class="form-control"
+                                                                            id="editCategoryImage" name="categoryImage"
+                                                                            accept="image/*">
+                                                                    </div>
 
 
-                                <div class="mb-3">
-                                    <label for="currentCategoryImage" class="form-label">Image actuelle</label>
-                                    <br>
-                                    <img src="{{ asset('storage/' . $category->imgC) }}" class="img-fluid"
-                                        style="max-width: 200px; max-height: 200px;" />
-                                </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="currentCategoryImage"
+                                                                            class="form-label">Image actuelle</label>
+                                                                        <br>
+                                                                        <img src="{{ asset('storage/' . $category->imgC) }}"
+                                                                            class="img-fluid"
+                                                                            style="max-width: 200px; max-height: 200px;" />
+                                                                    </div>
 
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Annuler</button>
-                                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                            <div class="modal fade" id="deleteModal{{$category->idC}}" tabindex="-1" aria-labelledby="deleteModal{{$category->idC}}" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        Êtes-vous sûr de vouloir supprimer cette categorie?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <form action="{{ route('categories.destroy', $category->idC) }}" method="POST">
-                          @csrf 
-                          @method('DELETE')
-                          <input type="hidden" name="id" value="{{$category->idC}}">
-                          <input type="submit" class="btn btn-danger" value="Confirmer">
-                        </form>  
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Annuler</button>
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary">Mettre à jour</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="deleteModal{{ $category->idC }}"
+                                                    tabindex="-1" aria-labelledby="deleteModal{{ $category->idC }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                                    Confirmation de suppression</h1>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Êtes-vous sûr de vouloir supprimer cette categorie?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Annuler</button>
+                                                                <form
+                                                                    action="{{ route('categories.destroy', $category->idC) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $category->idC }}">
+                                                                    <input type="submit" class="btn btn-danger"
+                                                                        value="Confirmer">
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -255,7 +272,8 @@
                                         accept="image/*" required>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Annuler</button>
                                     <button type="submit" class="btn btn-primary">Ajouter</button>
                                 </div>
                             </form>
@@ -263,7 +281,6 @@
                     </div>
                 </div>
             </div>
-
         @endsection
 
         @section('styles')
