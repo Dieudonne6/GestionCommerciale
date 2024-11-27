@@ -72,4 +72,4 @@ Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
 Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
 Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
 Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
-Route::get('/reception', [ApprovisionnementController::class, 'reception'])->name('reception');
+Route::get('/Approvisionnement/reception', [ApprovisionnementController::class, 'reception'])->name('reception');
