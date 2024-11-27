@@ -15,7 +15,7 @@ class Produit extends Model
         'NomP',
         'descP',
         'imgP',
-        'qteP',
+        // 'qteP',
         'stockDown',
         'PrixVente',
         'categorieP',

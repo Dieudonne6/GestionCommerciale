@@ -22,8 +22,8 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'NomCl' => 'required',
-            'PrenomCl' => 'required',
+            'identiteCl' => 'required',
+            // 'PrenomCl' => 'required',
             'AdresseCl' => 'required',
             'ContactCl' => 'required',
         ];
@@ -33,8 +33,8 @@ class ClientRequest extends FormRequest
         return[
 
             // 'classe.required' => 'La classe de l\'élève est obligatoire.',
-            'NomCl.required' => 'Le nom est obligatoire.',
-            'PrenomCl.required' => 'Le prenom est obligatoire.',
+            'identiteCl.required' => 'L\'identité est obligatoire.',
+            // 'PrenomCl.required' => 'Le prenom est obligatoire.',
             'AdresseCl.required' => 'L\'Adresse est obligatoire.',
             'ContactCl.required' => 'Le contact est obligatoire.',
         ];

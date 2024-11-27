@@ -25,9 +25,9 @@ use App\Http\Controllers\ApprovisionnementController;
 // });
 //fournisseurcontroller
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
-Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur']);
+Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseur.ajouter');
 Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
-Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur']);
+Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
 
 // clientcontroller
 Route::get('/client', [ClientController::class, 'client']);

@@ -44,8 +44,8 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th >Nom</th>
-                  <th >Prénoms</th>
+                  <th >identité</th>
+                  {{-- <th >Prénoms</th> --}}
                   <th >Adresse</th>
                   <th >Contact</th>
                   <th >Action</th>
@@ -56,14 +56,14 @@
                 <tr>
                   <td >
                     <p class="d-inline-block align-middle mb-0">
-                      <span class="font-13 fw-medium">{{ $allfournisseur->NomF }}</span>
+                      <span class="font-13 fw-medium">{{ $allfournisseur->identiteF }}</span>
                     </p>
                   </td>
-                  <td >
+                  {{-- <td >
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $allfournisseur->PrenomF }}</span>
                     </p>
-                  </td>
+                  </td> --}}
                   <td >{{ $allfournisseur->AdresseF }}</td>
                   <td >{{ $allfournisseur->ContactF }}</td>
                   <td >
@@ -71,7 +71,7 @@
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allfournisseur->idF}}"> Supprimer</button>
                   </td>
                 </tr>
-                <div class="modal fade" id="ModifyBoardModal{{$allfournisseur->idF}}" tabindex="-1" aria-labelledby="ModifyBoardModal{{$allfournisseur->idF}}" aria-hidden="true">
+                <div class="modal fade" id="ModifyBoardModal{{ $allfournisseur->idF }}" tabindex="-1" aria-labelledby="ModifyBoardModal{{ $allfournisseur->idF }}" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -102,11 +102,11 @@
                         @method('PUT')
                         <div class="modal-body">
                           <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Nom" name="NomF" value="{{ $allfournisseur->NomF }}">
+                            <input type="text" class="form-control"  placeholder="identiteF" name="identiteF" value="{{ $allfournisseur->identiteF }}">
                           </div>
-                          <div class="mb-2">
+                          {{-- <div class="mb-2">
                             <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF" value="{{ $allfournisseur->PrenomF }}">
-                          </div>
+                          </div> --}}
                           <div class="mb-2">
                             <input type="text" class="form-control"  placeholder="Adresse" name="AdresseF" value="{{ $allfournisseur->AdresseF }}">
                           </div>
@@ -150,7 +150,7 @@
             </table>
           </div>
         </div> 
-        <div class="modal fade" id="addBoardModal" tabindex="-1" aria-labelledby="addBoardModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addBoardModal" tabindex="-1" aria-labelledby="addBoardModal" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -171,11 +171,11 @@
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Nom" name="NomF">
+                    <input type="text" class="form-control"  placeholder="identiteF" name="identiteF">
                   </div>
-                  <div class="mb-2">
+                  {{-- <div class="mb-2">
                     <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF">
-                  </div>
+                  </div> --}}
                   <div class="mb-2">
                     <input type="text" class="form-control"  placeholder="Adresse" name="AdresseF">
                   </div>
@@ -185,7 +185,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                  <button type="submit" class="btn btn-primary">Envoyer</button>
+                  <button type="submit" class="btn btn-primary">Ajouter</button>
                 </div>
               </form>
             </div>
@@ -197,19 +197,17 @@
   
   @endsection
 
-<script>
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
-
-    @if ($errors->any())
-        myModal.show();
-    @endif
-
-    // Réinitialiser les champs du formulaire à la fermeture du modal
-    // document.getElementById('exampleModalNuveau').addEventListener('hidden.bs.modal', function () {
-    //     document.getElementById('myformclas').reset();
-    //     document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
-    // });
-});
-</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if ($errors->any())
+            var modalId = "{{ session('errorModalId') }}"; // Récupérez l'ID du modal ayant les erreurs
+            if (modalId) {
+                var modalElement = document.getElementById(modalId);
+                if (modalElement) {
+                    var myModal = new bootstrap.Modal(modalElement);
+                    myModal.show();
+                }
+            }
+        @endif
+    });
+  </script>

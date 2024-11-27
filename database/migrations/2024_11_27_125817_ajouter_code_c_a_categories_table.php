@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fournisseurs', function (Blueprint $table) {
-            $table->bigIncrements('idF');
-            $table->string('identiteF');
-            // $table->string('PrenomF');
-            $table->string('AdresseF');
-            $table->string('ContactF');
-            $table->timestamps();
+        Schema::table('categories', function (Blueprint $table) {
+            $table->string('codeC')->after('NomC'); // Ajouter la colonne après 'NomC'
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fournisseurs');
+        Schema::table('categories', function (Blueprint $table) {
+            //
+        });
     }
 };

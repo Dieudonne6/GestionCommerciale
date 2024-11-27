@@ -21,9 +21,10 @@ class FournisseurController extends Controller
 
         $request->validated();
 
+        
+
         // Vérifier si le fournisseur existe déjà
-        $fournisseurExiste = Fournisseur::where('NomF', $request->input('NomF'))
-        ->where('PrenomF', $request->input('PrenomF'))
+        $fournisseurExiste = Fournisseur::where('identiteF', $request->input('identiteF'))
         ->exists();
 
         if ($fournisseurExiste) {
@@ -31,15 +32,28 @@ class FournisseurController extends Controller
             return back()->with(['erreur' => 'Ce fournisseur existe déjà.']);
         }
 
-        // creer un nouveau fournisseur dans le cas echeant
-        $Fournisseur = new Fournisseur();
-        $Fournisseur->NomF = $request->input('NomF');
-        $Fournisseur->PrenomF = $request->input('PrenomF');
-        $Fournisseur->AdresseF = $request->input('AdresseF');
-        $Fournisseur->ContactF = $request->input('ContactF');
-        $Fournisseur->save();
 
-        return back()->with("status", "Le fournisseur a ete creer avec succes");
+        try {
+            // Votre logique pour ajouter un fournisseur
+
+             // creer un nouveau fournisseur dans le cas echeant
+            $Fournisseur = new Fournisseur();
+            $Fournisseur->identiteF = $request->input('identiteF');
+            // $Fournisseur->PrenomF = $request->input('PrenomF');
+            $Fournisseur->AdresseF = $request->input('AdresseF');
+            $Fournisseur->ContactF = $request->input('ContactF');
+            $Fournisseur->save();
+
+            return back()->with("status", "Le fournisseur a ete creer avec succes");
+
+        } catch (\Exception $e) {
+            // Stockez l'ID du modal d'ajout en cas d'erreur
+            return redirect()->back()
+                ->withErrors($e->getMessage())
+                ->with('errorModalId', 'addBoardModal'); // ID du modal d'ajout
+        }
+
+       
     }
 
 
@@ -55,13 +69,29 @@ class FournisseurController extends Controller
     // modification fournisseur
 
     public function updateFournisseur ( FournisseurRequest $request, $id ) {
-        $modifFournisseur = Fournisseur::where('idF', $id)->first();
-        $modifFournisseur->NomF = $request->input('NomF');
-        $modifFournisseur->PrenomF = $request->input('PrenomF');
-        $modifFournisseur->AdresseF = $request->input('AdresseF');
-        $modifFournisseur->ContactF = $request->input('ContactF');
-        $modifFournisseur->update();  
-        return back()->with("status", "Le fournisseur a ete modifier avec succes");
+
+        $request->validated();
+
+
+        try {
+            // Votre logique pour modifier le fournisseur
+
+            $modifFournisseur = Fournisseur::where('idF', $id)->first();
+            $modifFournisseur->identiteF = $request->input('identiteF');
+            // $modifFournisseur->PrenomF = $request->input('PrenomF');
+            $modifFournisseur->AdresseF = $request->input('AdresseF');
+            $modifFournisseur->ContactF = $request->input('ContactF');
+            $modifFournisseur->update();  
+            return back()->with("status", "Le fournisseur a ete modifier avec succes");
+
+        } catch (\Exception $e) {
+            // Stockez l'ID du modal dans la session en cas d'erreur
+            return redirect()->back()
+            ->withErrors($e->getMessage())
+            ->with('errorModalId', 'ModifyBoardModal' . $id); // ID dynamique du modal de modification
+        }
+
+
   
     }
 
