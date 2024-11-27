@@ -51,9 +51,13 @@ Route::get('Approvisionnement/commandeAchat', [ApprovisionnementController::clas
 
 
 Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
-Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs']);
 Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
 Route::post('/caisses', [Controller::class, 'store'])->name('caisses.store');
 Route::put('/caisses/{id}', [Controller::class, 'update'])->name('caisses.update');
 Route::delete('/caisses/{id}', [Controller::class, 'destroy'])->name('caisses.destroy');
-Route::get('/caisses', [Controller::class, 'caisses']);
+
+
+Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs'])->name('users.utilisateurs');
+Route::post('/parametres/utilisateurs', [ParamController::class, 'enregistre'])->name('users.enregistre');
+Route::post('/parametres/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('users.modifie');
+Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('users.supprime');

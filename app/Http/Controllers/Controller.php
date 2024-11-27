@@ -16,7 +16,7 @@ class Controller extends BaseController
     public function index()
     {
         $caisses = Caise::all();
-        return view('pages.discipline.caisses', compact('caisses'));
+        return view('pages.definition.caisses', compact('caisses'));
     }
 
     public function store(Request $request)

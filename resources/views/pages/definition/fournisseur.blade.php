@@ -21,14 +21,14 @@
 
             @if (Session::has('status'))
             <br>
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible">
               {{Session::get('status')}}
             </div>
             @endif
 
             @if (Session::has('erreur'))
             <br>
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible">
               {{Session::get('erreur')}}
             </div>
             @endif
@@ -80,7 +80,7 @@
 
                       </div>
                       @if($errors->any())
-                      <div id="statusAlert" class="alert alert-danger">
+                      <div class="alert alert-danger alert-dismissible">
                           <ul>
                               @foreach($errors->all() as $error)
                                   <li>{{ $error }}</li>
@@ -91,7 +91,7 @@
                       <?php $error = Session::get('error');?>
             
                       @if(Session::has('error'))
-                      <div id="statusAlert" class="alert alert-danger">
+                      <div class="alert alert-danger alert-dismissible">
                         {{ Session::get('error')}}
                       </div>
                       @endif
@@ -158,7 +158,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               @if ($errors->any())
-                  <div class="alert alert-danger">
+                  <div class="alert alert-danger alert-dismissible">
                       <ul>
                           @foreach ($errors->all() as $error)
                               <li>{{ $error }}</li>
@@ -202,7 +202,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
 
-    @if ($error || $errors->any())
+    @if ($errors->any())
         myModal.show();
     @endif
 
