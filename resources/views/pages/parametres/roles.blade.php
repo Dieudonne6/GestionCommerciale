@@ -3,21 +3,26 @@
 @section('content')
     <div class="container">
         <div class="card mt-4">
+            <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h4 class="card-title">Gestion des Rôles</h4>
+                  </div><!--end col-->
+                  <div class="col-auto">
+                    <div class="col-auto">
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRoleModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un rôle</button>
+                    </div><!--end col-->
+                  </div><!--end col-->
+                </div><!--end row-->
+              </div>
 
             <div class="card-body">
-                <h4>Gestion des Rôles</h4>
                 <!-- Message de succès -->
                 @if (session('success'))
                     <div class="alert alert-success" id="successMessage">
                         {{ session('success') }}
                     </div>
                 @endif
-
-                <!-- Bouton pour afficher le modal d'ajout -->
-                <div class="text-end">
-                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addRoleModal">Ajouter un
-                        rôle</button>
-                </div>
 
                 <!-- Liste des rôles -->
                 <h5>Liste des Rôles</h5>

@@ -14,12 +14,15 @@ class ParamController extends Controller
     public function utilisateurs()
     {
         $users = User::all();
-        return view('pages.parametres.utilisateurs', compact('users'));
+        $roles = Role::all();
+        return view('pages.parametres.utilisateurs', compact('users', 'roles'));
     }
 
     // Ajoute un nouvel utilisateur
     public function enregistre(Request $request)
     {
+        $users = User::all();
+        $roles = Role::all();
         $request->validate([
             'login' => 'required|string|unique:users',
             'nomU' => 'required|string|max:255',

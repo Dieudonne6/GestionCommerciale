@@ -3,21 +3,28 @@
 @section('content')
     <div class="container">
         <div class="card">
-            <div class="card-body">
-                <h4>Gestion des Caisses</h4>
+            <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h4 class="card-title">Gestion des Caisses</h4>
+                  </div><!--end col-->
+                  <div class="col-auto">
+                    <div class="col-auto">
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
+                            <i class="fa-solid fa-plus me-1"></i>
+                            Ajouter une Caisse </button>                   
+                    </div><!--end col-->
+                  </div><!--end col-->
+                </div><!--end row-->
+              </div>
 
+            <div class="card-body pt-0">
                 {{-- Notifications --}}
                 @if (session('success'))
                     <div class="alert alert-success" id="successMessage">
                         {{ session('success') }}
                     </div>
                 @endif
-
-                {{-- Bouton pour ouvrir le modal d'ajout --}}
-                <div class="col-auto" style="text-align: right;">
-                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Ajouter une
-                        Caisse</button>
-                </div>
 
                 {{-- Modal pour l'ajout --}}
                 <div class="modal" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -72,7 +79,7 @@
                                 <td>{{ $caisse->libelleCais }}</td>
                                 <td class="text-end">
                                     {{-- Bouton de modification --}}
-                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#editModal{{ $caisse->idCais }}">Modifier</button>
 
                                     {{-- Modal de modification --}}
