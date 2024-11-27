@@ -16,7 +16,7 @@
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
-              <h4 class="card-title">Listes des Fournisseurs</h4>
+              <h4 class="card-title">Listes des exercices</h4>
             </div><!--end col-->
 
             @if (Session::has('status'))
@@ -34,7 +34,7 @@
             @endif
             <div class="col-auto">
               <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un Fournisseur</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un Exercice</button>
               </div><!--end col-->
             </div><!--end col-->
           </div><!--end row-->
@@ -44,34 +44,45 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th >identité</th>
-                  {{-- <th >Prénoms</th> --}}
-                  <th >Adresse</th>
-                  <th >Contact</th>
-                  <th >Actions</th>
+                  <th >Annee</th>
+                  <th >Date debut</th>
+                  <th >Date fin</th>
+                  <th >Etat</th>
+                  <th >Action</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($allfournisseurs as $allfournisseur)
+                @foreach ($exercices as $exercice)
                 <tr>
-                  <td >
-                    <p class="d-inline-block align-middle mb-0">
-                      <span class="font-13 fw-medium">{{ $allfournisseur->identiteF }}</span>
-                    </p>
-                  </td>
+                    <td >
+                            {{ $exercice->annee }}
+                    </td>
+
                   {{-- <td >
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $allfournisseur->PrenomF }}</span>
                     </p>
                   </td> --}}
-                  <td >{{ $allfournisseur->AdresseF }}</td>
-                  <td >{{ $allfournisseur->ContactF }}</td>
-                  <td >
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allfournisseur->idF}}"> Modifier</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allfournisseur->idF}}"> Supprimer</button>
-                  </td>
+                    <td >{{ $exercice->dateDebut }}</td>
+                    <td >{{ $exercice->dateFin }}</td>
+                    <td >
+                        @if ($exercice->statut == 1)
+                            Actif
+                        @else
+                            Non Actif
+                        @endif                  
+                    </td>
+                    <td >
+                        <form action="{{ route('activerExercice', $exercice->idE) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-primary">Activer</button>
+                        </form>
+                        {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$exercice->idE}}"> Activer </button> --}}
+                        {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allfournisseur->idF}}"> Supprimer</button> --}}
+                    </td>
                 </tr>
-                <div class="modal fade" id="ModifyBoardModal{{ $allfournisseur->idF }}" tabindex="-1" aria-labelledby="ModifyBoardModal{{ $allfournisseur->idF }}" aria-hidden="true">
+                {{-- <div class="modal fade" id="ModifyBoardModal{{ $exercice->idE }}" tabindex="-1" aria-labelledby="ModifyBoardModal{{ $exercice->idE }}" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -104,9 +115,6 @@
                           <div class="mb-2">
                             <input type="text" class="form-control"  placeholder="identiteF" name="identiteF" value="{{ $allfournisseur->identiteF }}">
                           </div>
-                          {{-- <div class="mb-2">
-                            <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF" value="{{ $allfournisseur->PrenomF }}">
-                          </div> --}}
                           <div class="mb-2">
                             <input type="text" class="form-control"  placeholder="Adresse" name="AdresseF" value="{{ $allfournisseur->AdresseF }}">
                           </div>
@@ -144,7 +152,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> --}}
                 @endforeach
               </tbody>
             </table>
@@ -154,7 +162,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Fournisseur</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Exercice</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               @if ($errors->any())
@@ -167,20 +175,20 @@
                   </div>
               @endif
               
-              <form action="{{url('/ajouterFournisseur')}}" method="POST">
+              <form action="{{route('ajouterExercice')}}" method="POST">
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="identiteF" name="identiteF">
+                    <input type="text" class="form-control"  placeholder="annee" name="annee" required>
                   </div>
                   {{-- <div class="mb-2">
                     <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF">
                   </div> --}}
                   <div class="mb-2">
-                    <input type="text" class="form-control"  placeholder="Adresse" name="AdresseF">
+                    <input type="date" class="form-control"  placeholder="dateDebut" name="dateDebut" required>
                   </div>
                   <div>
-                    <input type="text" class="form-control"  placeholder="Contact" name="ContactF">
+                    <input type="date" class="form-control"  placeholder="dateFin" name="dateFin" required>
                   </div>
                 </div>
                 <div class="modal-footer">
