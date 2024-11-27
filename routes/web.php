@@ -50,7 +50,7 @@ Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients
 
 
 // ApprovisionnementController
-Route::get('Approvisionnement/commandeAchat', [ApprovisionnementController::class, 'commandeAchat'])->name('commandeAchat');
+Route::get('commandeAchat', [ApprovisionnementController::class, 'commandeAchat'])->name('commandeAchat');
 
 
 Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);

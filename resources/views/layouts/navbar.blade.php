@@ -33,7 +33,7 @@
               <div class="collapse " id="sidebarElements">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link" href="ui-alerts.html">Commande d'achats</a>
+                    <a class="nav-link" href="{{url('commandeAchat')}}">Commande d'achats</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('reception') }}">Réception</a>
