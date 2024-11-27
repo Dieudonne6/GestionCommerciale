@@ -133,7 +133,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Annuler</button>
-                                                    <button type="submit" class="btn btn-success">Sauvegarder</button>
+                                                    <button type="submit" class="btn btn-success">Modifier</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -156,7 +156,6 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     Êtes-vous sûr de vouloir supprimer cette caisse ?
-                                                    Cette action est irréversible.
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
