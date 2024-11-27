@@ -36,7 +36,7 @@
                     <a class="nav-link" href="ui-alerts.html">Commande d'achats</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="ui-avatar.html">Réception</a>
+                    <a class="nav-link" href="{{ url('reception') }}">Réception</a>
                   </li><!--end nav-item-->
               </div><!--end startbarElements-->
             </li><!--end nav-item-->

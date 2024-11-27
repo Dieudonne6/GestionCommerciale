@@ -105,9 +105,9 @@
                 <label for="categorie">Catégorie</label>
                 <select name="categorie" class="form-control">
                   @foreach ($categories as $categorie)
-                    <option value="{{ $categorie->id }}" {{ $produit->categorieP == $categorie->id ? 'selected' : '' }}>{{ $categorie->nom }}</option>
+                    <option value="{{ $categorie->id }}" {{ $categorie->NomC == $categorie->id ? 'selected' : '' }}>{{ $categorie->nom }}</option>
                   @endforeach
-                  <option value="0" {{ $produit->categorieP == 0 ? 'selected' : '' }}>Aucune</option>
+                  <option value="0" {{ $categorie->NomC == 0 ? 'selected' : '' }}>Aucune</option>
                 </select>
               </div>
               <div class="form-group">
