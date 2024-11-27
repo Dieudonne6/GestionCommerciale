@@ -11,8 +11,8 @@ class Fournisseur extends Model
     protected $primaryKey = 'idF'; // Clé primaire de votre table
 
     protected $fillable = [
-        'NomF',
-        'PrenomF',
+        'identiteF',
+        // 'PrenomF',
         'AdresseF',
         'ContactF',
     ];

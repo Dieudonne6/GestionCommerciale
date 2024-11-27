@@ -26,7 +26,7 @@ class CategoriesController extends Controller
             'categoryName' => 'required|string|max:255',  // Validation pour le nom de la catégorie
             'categoryImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation pour l'image
         ]);
-    
+        dd($request->all());
         // Gérer l'upload de l'image
         if ($request->hasFile('categoryImage')) {
             // Stocker l'image dans le dossier 'public/categories'

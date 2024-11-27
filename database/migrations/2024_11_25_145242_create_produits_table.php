@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('NomP');
             $table->string('descP');
             $table->string('imgP');
-            $table->string('qteP');
+            // $table->string('qteP');
             $table->string('stockDown');
             $table->string('PrixVente');
             $table->unsignedBigInteger('categorieP'); // Colonne pour la clé étrangère

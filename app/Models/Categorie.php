@@ -13,6 +13,7 @@ class Categorie extends Model
 
     protected $fillable = [
         'NomC',
+        'codeC',
         'imgC',
     ];
 }

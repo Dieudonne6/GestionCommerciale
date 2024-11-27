@@ -24,8 +24,8 @@ class FournisseurRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'NomF' => 'required',
-            'PrenomF' => 'required',
+            'identiteF' => 'required',
+            // 'PrenomF' => 'required',
             'AdresseF' => 'required',
             'ContactF' => 'required',
         ];
@@ -35,10 +35,21 @@ class FournisseurRequest extends FormRequest
         return[
 
             // 'classe.required' => 'La classe de l\'élève est obligatoire.',
-            'NomF.required' => 'Le nom est obligatoire.',
-            'PrenomF.required' => 'Le prenom est obligatoire.',
+            'identiteF.required' => 'L\'identité est obligatoire.',
+            // 'PrenomF.required' => 'Le prenom est obligatoire.',
             'AdresseF.required' => 'L\'Adresse est obligatoire.',
             'ContactF.required' => 'Le contact est obligatoire.',
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+{
+    $modalId = request()->route()->getName() === 'fournisseur.update'
+        ? 'ModifyBoardModal' . request()->route('id')
+        : 'addBoardModal';
+
+    session()->flash('errorModalId', $modalId);
+
+    parent::failedValidation($validator); // Gardez le comportement par défaut
+}
 }

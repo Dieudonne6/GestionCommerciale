@@ -25,9 +25,9 @@ use App\Http\Controllers\ApprovisionnementController;
 // });
 //fournisseurcontroller
 Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
-Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur']);
+Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseur.ajouter');
 Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
-Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur']);
+Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
 
 // clientcontroller
 Route::get('/client', [ClientController::class, 'client']);
@@ -37,6 +37,9 @@ Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
 
 
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
+Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
+Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy');
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
@@ -61,3 +64,11 @@ Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs'])
 Route::post('/parametres/utilisateurs', [ParamController::class, 'enregistre'])->name('users.enregistre');
 Route::post('/parametres/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('users.modifie');
 Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('users.supprime');
+
+Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
+Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
+
+Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
+Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
+Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
+Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
