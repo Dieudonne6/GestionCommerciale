@@ -57,7 +57,7 @@ class CategoriesController extends Controller
         $category->delete();
 
         // Retourner à la liste avec un message de succès
-        return redirect()->route('categories')->with('error', 'Catégorie supprimée avec succès !');
+        return redirect()->route('categories')->with('success', 'Catégorie supprimée avec succès !');
     }
 
 // Dans CategoryController.php
