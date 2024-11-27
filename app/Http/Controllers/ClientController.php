@@ -21,8 +21,7 @@ class ClientController extends Controller
 
 
             // Vérifier si le client existe déjà
-            $clientExiste = Client::where('NomCl', $request->input('NomCl'))
-            ->where('PrenomCl', $request->input('PrenomCl'))
+            $clientExiste = Client::where('identiteCl', $request->input('identiteCl'))
             ->exists();
     
             if ($clientExiste) {
@@ -32,8 +31,8 @@ class ClientController extends Controller
     
             // creer un nouveau client dans le cas echeant
             $Client = new Client();
-            $Client->NomCl = $request->input('NomCl');
-            $Client->PrenomCl = $request->input('PrenomCl');
+            $Client->identiteCl = $request->input('identiteCl');
+            // $Client->PrenomCl = $request->input('PrenomCl');
             $Client->AdresseCl = $request->input('AdresseCl');
             $Client->ContactCl = $request->input('ContactCl');
             $Client->save();
@@ -55,8 +54,8 @@ class ClientController extends Controller
     
         public function updateClient ( Request $request, $id ) {
             $modifClient = Client::where('idCl', $id)->first();
-            $modifClient->NomCl = $request->input('NomCl');
-            $modifClient->PrenomCl = $request->input('PrenomCl');
+            $modifClient->identiteCl = $request->input('identiteCl');
+            // $modifClient->PrenomCl = $request->input('PrenomCl');
             $modifClient->AdresseCl = $request->input('AdresseCl');
             $modifClient->ContactCl = $request->input('ContactCl');
             $modifClient->update();  
