@@ -4,7 +4,7 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h1>Gestion des Caisses</h1>
+                <h4>Gestion des Caisses</h4>
 
                 {{-- Notifications --}}
                 @if (session('success'))

@@ -59,3 +59,11 @@ Route::get('/parametres/utilisateurs', [ParamController::class, 'utilisateurs'])
 Route::post('/parametres/utilisateurs', [ParamController::class, 'enregistre'])->name('users.enregistre');
 Route::post('/parametres/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('users.modifie');
 Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('users.supprime');
+
+Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
+Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
+
+Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
+Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
+Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
+Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');

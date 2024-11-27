@@ -94,13 +94,13 @@
               <div class="collapse " id="sidebarCharts">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link" href="charts-apex.html">Utilisateurs</a>
+                    <a class="nav-link" href="{{ url('/parametres/utilisateurs') }}">Utilisateurs</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="charts-justgage.html">Entreprises</a>
+                    <a class="nav-link" href="{{ url('/parametres/entreprise') }}">Entreprises</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
-                    <a class="nav-link" href="charts-chartjs.html">Rôles</a>
+                    <a class="nav-link" href="{{ url('/parametres/roles') }}">Rôles</a>
                   </li><!--end nav-item-->
                 </ul><!--end nav-->
               </div><!--end startbarCharts-->
