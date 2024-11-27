@@ -11,7 +11,7 @@
                         </script>
                         Gestion Commerciale
                         <span class="text-muted d-none d-sm-inline-block float-end">
-                            tous droit reserve</span>
+                            Tous droits réservés</span>
                     </p>
                 </div>
             </div>

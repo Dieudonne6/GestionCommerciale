@@ -52,7 +52,7 @@ class ClientController extends Controller
     
         // modification client
     
-        public function updateClient ( ClientRequest $request, $id ) {
+        public function updateClient ( Request $request, $id ) {
             $modifClient = Client::where('idCl', $id)->first();
             $modifClient->identiteCl = $request->input('identiteCl');
             // $modifClient->PrenomCl = $request->input('PrenomCl');
