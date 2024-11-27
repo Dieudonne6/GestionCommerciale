@@ -5,23 +5,33 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                  <div class="col">
-                    <h4 class="card-title">Gestion des Caisses</h4>
-                  </div><!--end col-->
-                  <div class="col-auto">
-                    <div class="col-auto">
-                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
-                            <i class="fa-solid fa-plus me-1"></i>
-                            Ajouter une Caisse </button>                   
+                    <div class="col">
+                        <h4 class="card-title">Gestion des Caisses</h4>
                     </div><!--end col-->
-                  </div><!--end col-->
+                    <div class="col-auto">
+                        <div class="col-auto">
+                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
+                                <i class="fa-solid fa-plus me-1"></i>
+                                Ajouter une Caisse </button>
+                        </div><!--end col-->
+                    </div><!--end col-->
                 </div><!--end row-->
-              </div>
+            </div>
 
             <div class="card-body pt-0">
                 {{-- Notifications --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger" id="error-message">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 @if (session('success'))
-                    <div class="alert alert-success" id="successMessage">
+                    <div class="alert alert-success" id="success-message">
                         {{ session('success') }}
                     </div>
                 @endif
@@ -37,19 +47,23 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-group mb-3">
-                                    {{-- <label for="codeCais">Code de la Caisse</label> --}}
-                                    <input type="text" name="codeCais"
+                                    <label for="codeCais">Code de la Caisse</label>
+                                    <input type="text" id="codeCais" name="codeCais"
                                         class="form-control @error('codeCais') is-invalid @enderror"
-                                        placeholder="Code de la caisse" required>
+                                        placeholder="Code de la caisse" 
+                                        value="{{ old('codeCais') }}" 
+                                        required autofocus>
                                     @error('codeCais')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3">
-                                    {{-- <label for="libelleCais">Libellé de la Caisse</label> --}}
-                                    <input type="text" name="libelleCais"
+                                    <label for="libelleCais">Libellé de la Caisse</label>
+                                    <input type="text" id="libelleCais" name="libelleCais"
                                         class="form-control @error('libelleCais') is-invalid @enderror"
-                                        placeholder="Libellé de la caisse" required>
+                                        placeholder="Libellé de la caisse" 
+                                        value="{{ old('libelleCais') }}" 
+                                        required>
                                     @error('libelleCais')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -61,15 +75,15 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>                
 
                 {{-- Tableau des caisses --}}
-                <table class="table-responsive table mb-0" id="datatable_1">
+                <table class="table-responsive table mb-0" id="datatable_1" >
                     <thead class="table-light">
                         <tr>
                             <th>Code</th>
                             <th>Libellé</th>
-                            <th class="text-end">Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,7 +91,7 @@
                             <tr>
                                 <td>{{ $caisse->codeCais }}</td>
                                 <td>{{ $caisse->libelleCais }}</td>
-                                <td class="text-end">
+                                <td class="text-center">
                                     {{-- Bouton de modification --}}
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#editModal{{ $caisse->idCais }}">Modifier</button>
@@ -128,7 +142,7 @@
                                     <!-- Bouton pour ouvrir le modal de confirmation de suppression -->
                                     <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#deleteModal{{ $caisse->idCais }}">Supprimer</button>
-                                   
+
                                     {{-- Modal de confirmation de suppression --}}
                                     <div class="modal" id="deleteModal{{ $caisse->idCais }}" tabindex="-1"
                                         aria-labelledby="deleteModalLabel{{ $caisse->idCais }}" aria-hidden="true">
@@ -141,7 +155,7 @@
                                                         aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Êtes-vous sûr de vouloir supprimer cette caisse ? 
+                                                    Êtes-vous sûr de vouloir supprimer cette caisse ?
                                                     Cette action est irréversible.
                                                 </div>
                                                 <div class="modal-footer">
@@ -171,15 +185,21 @@
         </div>
     </div>
 
-
-
-
+    <!-- Ajoutez ce script pour masquer automatiquement les messages -->
     <script>
-        setTimeout(function() {
-            let successMessage = document.getElementById('successMessage');
-            if (successMessage) {
-                successMessage.style.display = 'none';
-            }
-        }, 3000); // Le message disparaît après 3 secondes (3000 ms)
+        document.addEventListener("DOMContentLoaded", function() {
+            // Masquer les messages après 3 secondes
+            setTimeout(function() {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                if (successMessage) {
+                    successMessage.style.display = 'none';
+                }
+                if (errorMessage) {
+                    errorMessage.style.display = 'none';
+                }
+            }, 3000); // 3000ms = 3 secondes
+        });
     </script>
+
 @endsection
