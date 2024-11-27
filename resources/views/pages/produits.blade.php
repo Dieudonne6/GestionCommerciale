@@ -11,7 +11,7 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col">                      
-                  <h4 class="card-title">Produits</h4>                      
+                  <h4 class="card-title">Liste des produits</h4>                      
                 </div><!--end col-->
                 <div class="col-auto"> 
                   <form class="row g-2">
