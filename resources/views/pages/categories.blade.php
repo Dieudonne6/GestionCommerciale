@@ -1,9 +1,5 @@
 @extends('layouts.master')
 @section('content')
-    <div class="page-wrapper">
-
-        <!-- Page Content-->
-        <div class="page-content">
             <div class="container-xxl">
                 <div class="row">
                     @if (session('success'))
