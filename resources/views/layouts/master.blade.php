@@ -115,12 +115,6 @@
         }, 6000);
       });
     });
-    var statusAlert = document.getElementById('statusAlert');
-        if (statusAlert) {
-            setTimeout(function() {
-                statusAlert.style.display = 'none';
-            }, 6000);
-        }
 </script>
 
 

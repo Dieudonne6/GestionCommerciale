@@ -8,7 +8,10 @@ class ExerciceController extends Controller
 {
     public function exercice () {
         $exercices = Exercice::all();
-        return view ('pages.parametres.exercice')->with('exercices', $exercices);
+        $exerciceAct =Exercice::where('statut', 1)->first();
+        $exerciceActif = $exerciceAct->annee;
+
+        return view ('pages.parametres.exercice')->with('exercices', $exercices)->with('exerciceActif', $exerciceActif);
     }
 
 

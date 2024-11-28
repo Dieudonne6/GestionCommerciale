@@ -37,10 +37,10 @@ Route::delete('suppClient/{id}', [ClientController::class, 'deleteClient']);
 Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
 
 // Exercicecontroller
-Route::get('parametre/exercice', [ExerciceController::class, 'exercice']);
-Route::post('parametre/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
+Route::get('/exercice', [ExerciceController::class, 'exercice']);
+Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
 // Route::delete('suppClient/{id}', [ExerciceController::class, 'deleteClient']);
-Route::put('parametre/activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
+Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
 
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');

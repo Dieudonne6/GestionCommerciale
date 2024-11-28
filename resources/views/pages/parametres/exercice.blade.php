@@ -1,14 +1,7 @@
 @extends('layouts.master')
 @section('content')
-<style>
-  .modal-header {
-    background-color: #fff !important;
-  }
-  .modal-title {
-    color: #000 !important;
-  }
-</style>
-<div class="container-xxl">
+
+<div class="container">
   
   <div class="row justify-content-center">
     <div class="col-12">
@@ -204,18 +197,3 @@
   </div>
   
   @endsection
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        @if ($errors->any())
-            var modalId = "{{ session('errorModalId') }}"; // Récupérez l'ID du modal ayant les erreurs
-            if (modalId) {
-                var modalElement = document.getElementById(modalId);
-                if (modalElement) {
-                    var myModal = new bootstrap.Modal(modalElement);
-                    myModal.show();
-                }
-            }
-        @endif
-    });
-  </script>
