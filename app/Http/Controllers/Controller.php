@@ -6,6 +6,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Caise;
+use App\Models\Reception;
+use App\Models\Commande; 
+use App\Models\Magasin; 
 use Illuminate\Http\Request;
 
 
@@ -69,5 +72,33 @@ class Controller extends BaseController
         $caisse->delete();
 
         return redirect()->back()->with('success', 'Caisse supprimée avec succès.');
+    }
+
+    // Afficher la page de réception
+    public function reception()
+    {
+        $receptions = Reception::with(['commande', 'magasin'])->get(); // Relations si elles existent
+        $ligneReceptions = LigneReception::all();
+        $commandes = Commande::all(); // Pour le formulaire
+        $ligneCommandes = LigneCommande::all();
+        $magasins = Magasin::all(); // Pour le formulaire
+        return view('pages.approvisionnement.receptions', compact('receptions', 'commandes', 'magasins'));
+    }
+
+    // Enregistrer une nouvelle réception
+    public function generer(Request $request)
+    {
+        $validated = $request->validate([
+            'umReception' => 'required|string|max:50',
+            'dateReception' => 'required|date',
+            'RefNum' => 'required|string|max:50',
+            'BonReception' => 'nullable|string|max:50',
+            'idCmd' => 'required|exists:commandes,id', // Vérifie que la commande existe
+            'idE' => 'required|exists:magasins,id', // Vérifie que le magasin existe
+        ]);
+
+        Reception::create($validated);
+
+        return redirect()->route('receptions.reception')->with('success', 'Réception enregistrée avec succès.');
     }
 }

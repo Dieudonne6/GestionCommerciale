@@ -11,7 +11,7 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col">                      
-                  <h4 class="card-title">Produits</h4>                      
+                  <h4 class="card-title">Liste des produits</h4>                      
                 </div><!--end col-->
                 <div class="col-auto"> 
                   <form class="row g-2">
@@ -107,7 +107,7 @@
                   @foreach ($categories as $categorie)
                     <option value="{{ $categorie->id }}" {{ $categorie->NomC == $categorie->id ? 'selected' : '' }}>{{ $categorie->nom }}</option>
                   @endforeach
-                  <option value="0" {{ $categorie->NomC == 0 ? 'selected' : '' }}>Aucune</option>
+                  <option value="0">Aucune</option>
                 </select>
               </div>
               <div class="form-group">
