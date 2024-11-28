@@ -1,5 +1,13 @@
 @extends('layouts.master')
 @section('content')
+<style>
+  .modal-header {
+    background-color: #fff !important;
+  }
+  .modal-title {
+    color: #000 !important;
+  }
+</style>
     <div class="container-xxl">
         <div class="row">
             @if (session('success'))
@@ -40,7 +48,7 @@
                                             </div>
                                         </th>
                                         <th class="text-center">Code</th>
-                                        <th class="ps-0 text-center">Nom Catégorie</th>
+                                        <th class="ps-0 text-center">Nom</th>
                                         <th class="text-center">Image</th>
                                         <th class="text-center">Action</th>
                                     </tr>

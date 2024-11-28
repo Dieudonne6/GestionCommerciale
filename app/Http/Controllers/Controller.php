@@ -6,6 +6,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Caise;
+use App\Models\Reception;
+use App\Models\Commande; 
+use App\Models\Magasin; 
 use Illuminate\Http\Request;
 
 
@@ -70,4 +73,54 @@ class Controller extends BaseController
 
         return redirect()->back()->with('success', 'Caisse supprimée avec succès.');
     }
+
+    public function reception()
+    {
+        // Récupérer les commandes et magasins
+        $commandes = Commande::all(); // Vous pouvez ajuster cette requête si nécessaire
+        $magasins = Magasin::all();  // Récupérer tous les magasins
+        
+        return view('pages.Approvisionnement.reception', compact('commandes', 'magasins'));
+    }
+
+    public function handleReception(Request $request)
+    {
+        $commandeId = $request->input('typeC');
+        $dateReception = $request->input('dateC');
+        $referenceBL = $request->input('referenceC');
+        $magasinId = $request->input('magasin');
+    
+        // Récupérer les lignes de commande associées à la commande sélectionnée
+        $commande = Commande::find($commandeId);
+        $lignesCommandes = $commande->lignesCommandes;
+    
+        // Traiter chaque ligne de commande
+        foreach ($lignesCommandes as $ligne) {
+            $quantiteRecue = $request->input('quantite_' . $ligne->id);
+            
+            // Mettre à jour les stocks dans le magasin
+            $stockMagasin = Stock::where('magasin_id', $magasinId)
+                                ->where('produit_id', $ligne->produit_id)
+                                ->first();
+    
+            if ($stockMagasin) {
+                $stockMagasin->quantite += $quantiteRecue;
+                $stockMagasin->save();
+            }
+    
+            // Enregistrer la réception
+            Reception::create([
+                'commande_id' => $commandeId,
+                'produit_id' => $ligne->produit_id,
+                'quantite_recue' => $quantiteRecue,
+                'date_reception' => $dateReception,
+                'reference_bl' => $referenceBL,
+                'magasin_id' => $magasinId,
+            ]);
+        }
+    
+        return redirect()->route('reception')->with('success', 'Réception enregistrée avec succès');
+    }
+    
+
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParamController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApprovisionnementController;
+use App\Http\Controllers\ExerciceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,6 +35,12 @@ Route::get('/client', [ClientController::class, 'client']);
 Route::post('/ajouterClient', [ClientController::class, 'ajouterClient']);
 Route::delete('suppClient/{id}', [ClientController::class, 'deleteClient']);
 Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
+
+// Exercicecontroller
+Route::get('parametre/exercice', [ExerciceController::class, 'exercice']);
+Route::post('parametre/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
+// Route::delete('suppClient/{id}', [ExerciceController::class, 'deleteClient']);
+Route::put('parametre/activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
 
 Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
@@ -74,4 +81,6 @@ Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
 Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
 Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
 Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
-Route::get('/reception', [ApprovisionnementController::class, 'reception'])->name('reception');
+
+Route::get('/Approvisionnement/reception', [Controller::class, 'reception'])->name('reception');
+Route::post('/Approvisionnement/reception', [Controller::class, 'handleReception'])->name('handleReception');
