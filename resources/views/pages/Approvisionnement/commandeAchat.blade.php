@@ -14,7 +14,7 @@
             </div><!--end col-->
             <div class="col-auto">
               <div class="col-auto">
-                <button type="button" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Ajouter une commande</button>
+                <a href="{{url('ajoutercommande')}}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Ajouter une commande</a>
               </div><!--end col-->
             </div><!--end col-->
           </div> <!--end row-->

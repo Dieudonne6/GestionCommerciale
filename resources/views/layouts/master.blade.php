@@ -13,11 +13,14 @@
   <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-  
+  <link href="{{ asset('assets/libs/mobius1-selectr/selectr.min.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('assets/libs/huebee/huebee.min.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('assets/libs/vanillajs-datepicker/css/datepicker.min.css') }}"  rel="stylesheet" type="text/css" />
 </head>
-<style>
 
-.modal-header {
+<style>
+  
+  .modal-header {
     background-color: #fff !important;
   }
   .modal-title {
@@ -37,11 +40,15 @@
   
   <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
-  
+  <script src="{{ asset('assets/libs/mobius1-selectr/selectr.min.js') }}"></script>
+  <script src="{{ asset('assets/libs/huebee/huebee.pkgd.min.js') }}"></script> 
   <script src="{{ asset('assets/libs/simple-datatables/umd/simple-datatables.js') }}"></script>
   <script src="{{ asset('assets/js/pages/datatable.init.js') }}"></script>
-  
+  <script src="{{ asset('assets/libs/vanillajs-datepicker/js/datepicker-full.min.js') }}"></script>
+  <script src="{{ asset('assets/js/moment.js') }}"></script>
   <script src="{{ asset('assets/js/app.js') }}"></script>
+  <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
+  <script src="{{ asset('assets/js/pages/forms-advanced.js') }}"></script>
 </body>
 
 </html>
@@ -53,17 +60,17 @@
 </style>
 
 <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoImage = document.getElementById('logo-image');
-            // Assurez-vous que l'attribut 'data-sidebar-size' est initialisé à 'default' au chargement
-            if (!document.body.hasAttribute('data-sidebar-size') || document.body.getAttribute('data-sidebar-size') !== 'default') {
-            document.body.setAttribute('data-sidebar-size', 'default');
-            logoImage.src = 'logo.png';
-            logoImage.classList.add('taille');
-            }
-
-        });
-
+  document.addEventListener('DOMContentLoaded', function() {
+    const logoImage = document.getElementById('logo-image');
+    // Assurez-vous que l'attribut 'data-sidebar-size' est initialisé à 'default' au chargement
+    if (!document.body.hasAttribute('data-sidebar-size') || document.body.getAttribute('data-sidebar-size') !== 'default') {
+      document.body.setAttribute('data-sidebar-size', 'default');
+      logoImage.src = 'logo.png';
+      logoImage.classList.add('taille');
+    }
+    
+  });
+  
 </script>
 
 
@@ -103,24 +110,24 @@
       
     });
   });
-
+  
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var alerts = document.querySelectorAll('.alert-dismissible');
-      alerts.forEach(function(alert) {
-        setTimeout(function() {
-          alert.style.display = 'none';
-        }, 6000);
-      });
+  document.addEventListener('DOMContentLoaded', function() {
+    var alerts = document.querySelectorAll('.alert-dismissible');
+    alerts.forEach(function(alert) {
+      setTimeout(function() {
+        alert.style.display = 'none';
+      }, 6000);
     });
-    var statusAlert = document.getElementById('statusAlert');
-        if (statusAlert) {
-            setTimeout(function() {
-                statusAlert.style.display = 'none';
-            }, 6000);
-        }
+  });
+  var statusAlert = document.getElementById('statusAlert');
+  if (statusAlert) {
+    setTimeout(function() {
+      statusAlert.style.display = 'none';
+    }, 6000);
+  }
 </script>
 
 

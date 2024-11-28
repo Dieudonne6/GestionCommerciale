@@ -51,7 +51,9 @@ Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients
 
 // ApprovisionnementController
 Route::get('commandeAchat', [ApprovisionnementController::class, 'commandeAchat'])->name('commandeAchat');
+Route::get('ajoutercommande', [ApprovisionnementController::class, 'ajoutercommande'])->name('ajoutercommande');
 
+Route::post('/ajouterlignCmd', [ApprovisionnementController::class, 'ajouterLignCmd']);
 
 Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
 Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
