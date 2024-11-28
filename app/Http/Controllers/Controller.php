@@ -74,31 +74,53 @@ class Controller extends BaseController
         return redirect()->back()->with('success', 'Caisse supprimée avec succès.');
     }
 
-    // Afficher la page de réception
     public function reception()
     {
-        $receptions = Reception::with(['commande', 'magasin'])->get(); // Relations si elles existent
-        $ligneReceptions = LigneReception::all();
-        $commandes = Commande::all(); // Pour le formulaire
-        $ligneCommandes = LigneCommande::all();
-        $magasins = Magasin::all(); // Pour le formulaire
-        return view('pages.approvisionnement.receptions', compact('receptions', 'commandes', 'magasins'));
+        // Récupérer les commandes et magasins
+        $commandes = Commande::all(); // Vous pouvez ajuster cette requête si nécessaire
+        $magasins = Magasin::all();  // Récupérer tous les magasins
+        
+        return view('pages.Approvisionnement.reception', compact('commandes', 'magasins'));
     }
 
-    // Enregistrer une nouvelle réception
-    public function generer(Request $request)
+    public function handleReception(Request $request)
     {
-        $validated = $request->validate([
-            'umReception' => 'required|string|max:50',
-            'dateReception' => 'required|date',
-            'RefNum' => 'required|string|max:50',
-            'BonReception' => 'nullable|string|max:50',
-            'idCmd' => 'required|exists:commandes,id', // Vérifie que la commande existe
-            'idE' => 'required|exists:magasins,id', // Vérifie que le magasin existe
-        ]);
-
-        Reception::create($validated);
-
-        return redirect()->route('receptions.reception')->with('success', 'Réception enregistrée avec succès.');
+        $commandeId = $request->input('typeC');
+        $dateReception = $request->input('dateC');
+        $referenceBL = $request->input('referenceC');
+        $magasinId = $request->input('magasin');
+    
+        // Récupérer les lignes de commande associées à la commande sélectionnée
+        $commande = Commande::find($commandeId);
+        $lignesCommandes = $commande->lignesCommandes;
+    
+        // Traiter chaque ligne de commande
+        foreach ($lignesCommandes as $ligne) {
+            $quantiteRecue = $request->input('quantite_' . $ligne->id);
+            
+            // Mettre à jour les stocks dans le magasin
+            $stockMagasin = Stock::where('magasin_id', $magasinId)
+                                ->where('produit_id', $ligne->produit_id)
+                                ->first();
+    
+            if ($stockMagasin) {
+                $stockMagasin->quantite += $quantiteRecue;
+                $stockMagasin->save();
+            }
+    
+            // Enregistrer la réception
+            Reception::create([
+                'commande_id' => $commandeId,
+                'produit_id' => $ligne->produit_id,
+                'quantite_recue' => $quantiteRecue,
+                'date_reception' => $dateReception,
+                'reference_bl' => $referenceBL,
+                'magasin_id' => $magasinId,
+            ]);
+        }
+    
+        return redirect()->route('reception')->with('success', 'Réception enregistrée avec succès');
     }
+    
+
 }
