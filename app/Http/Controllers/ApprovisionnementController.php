@@ -32,6 +32,7 @@ class ApprovisionnementController extends Controller
         'price' => 'required|numeric|min:0',
     ]);
 
+
     // Traitement des données
     $line = [
         'idP' => $request->idP,
@@ -47,6 +48,46 @@ class ApprovisionnementController extends Controller
         'line' => $line
     ]);
 }
+
+
+
+public function ajouterLigneCommande(Request $request)
+{
+    $validated = $request->validate([
+        'idP' => 'required|exists:produits,idP',
+        'quantity' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+        'tva' => 'required|numeric|min:0',
+    ]);
+
+    $produit = Produit::where('idP',$validated['idP'])->first();
+    // dd($produit);
+    // $tva = $produit->tva;
+    $nomProduit = $produit->NomP;
+    $montantHT = $validated['quantity'] * $validated['price'];
+    // $tva = $montantHT * $tva; // Exemple : TVA 20%
+    $montantTTC = $validated['quantity'] * $validated['price'] * $validated['tva'];
+
+    // Ajout logique pour sauvegarder la ligne dans la base
+    $ligneCommande = LigneCommande::create([
+        'qteCmd' => $validated['quantity'],
+        'prix' => $validated['price'],
+        // 'montant_ht' => $montantHT,
+        'TVA' => $validated['tva'],
+        'idP' => $validated['idP'],
+        // 'montant_ttc' => $montantTTC,
+    ]);
+
+    return response()->json([
+        // 'id' => $ligneCommande->id,
+        'produit' => $nomProduit,
+        'quantite' => $validated['quantity'],
+        'montant_ht' => $montantHT,
+        'tva' => $validated['tva'],
+        'montant_ttc' => $montantTTC,
+    ]);
+}
+
 
     
 }

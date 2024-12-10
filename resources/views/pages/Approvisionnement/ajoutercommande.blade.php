@@ -95,7 +95,7 @@
             </ul>
           </div>
           @endif
-          <form id="addLineForm" method="POST">
+          <form  method="POST" >
             @csrf
             <div class="modal-body">
               <div class="mb-2">
@@ -112,6 +112,9 @@
               <div class="mb-2">
                   <input type="number" class="form-control" placeholder="Prix" name="price" id="price">
               </div>
+              <div class="mb-2">
+                  <input type="number" class="form-control" placeholder="TVA" name="tva" id="tva">
+              </div>
           </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -123,63 +126,104 @@
     </div>
   </div> 
   @endsection
-  <script>
-    document.getElementById('addLineForm').addEventListener('submit', function (e) {
-      e.preventDefault(); // Empêche le rechargement de la page
+  {{-- <script>
+    // document.getElementById('addLineForm').addEventListener('submit', function (e) {
+    //   e.preventDefault(); // Empêche le rechargement de la page
       
-      // Récupération des données du formulaire
-      const idP = document.getElementById('productSelect').value;
-      const quantity = document.getElementById('quantity').value;
-      const price = document.getElementById('price').value;
-      const token = document.querySelector('input[name="_token"]').value;
+    //   // Récupération des données du formulaire
+    //   const idP = document.getElementById('productSelect').value;
+    //   const quantity = document.getElementById('quantity').value;
+    //   const price = document.getElementById('price').value;
+    //   const token = document.querySelector('input[name="_token"]').value;
       
-      // Vérification des champs requis
-      if (!idP || !quantity || !price) {
-        alert('Veuillez remplir tous les champs');
-        return;
-      }
+    //   // Vérification des champs requis
+    //   if (!idP || !quantity || !price) {
+    //     alert('Veuillez remplir tous les champs');
+    //     return;
+    //   }
       
-      // Requête AJAX
-      fetch('/ajouterlignCmd', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': token
-        },
-        body: JSON.stringify({
-          idP: idP,
-          quantity: quantity,
-          price: price
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Ajout de la ligne au tableau
-          const table = document.querySelector('#datatable_1 tbody');
-          const newRow = `
-                <tr>
-                    <td>${data.line.id}</td>
-                    <td>${data.line.product}</td>
-                    <td>${data.line.quantity}</td>
-                    <td>${data.line.price}</td>
-                    <td>${data.line.tva}</td>
-                    <td>${data.line.ttc}</td>
-                </tr>
-            `;
-          table.insertAdjacentHTML('beforeend', newRow);
+    //   // Requête AJAX
+    //   fetch('{{ route("ajouterLignCmd") }}', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'X-CSRF-TOKEN': token
+    //     },
+    //     body: JSON.stringify({
+    //       idP: idP,
+    //       quantity: quantity,
+    //       price: price
+    //     })
+    //   })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     if (data.success) {
+    //       // Ajout de la ligne au tableau
+    //       const table = document.querySelector('#datatable_1 tbody');
+    //       const newRow = `
+    //             <tr>
+    //                 <td>${data.line.id}</td>
+    //                 <td>${data.line.product}</td>
+    //                 <td>${data.line.quantity}</td>
+    //                 <td>${data.line.price}</td>
+    //                 <td>${data.line.tva}</td>
+    //                 <td>${data.line.ttc}</td>
+    //             </tr>
+    //         `;
+    //       table.insertAdjacentHTML('beforeend', newRow);
           
-          // Réinitialisation du formulaire
-          document.getElementById('addLineForm').reset();
+    //       // Réinitialisation du formulaire
+    //       document.getElementById('addLineForm').reset();
           
-          // Fermeture du modal
-          const modal = bootstrap.Modal.getInstance(document.getElementById('addBoaModal'));
-          modal.hide();
-        } else {
-          alert('Erreur lors de l\'ajout de la ligne.');
-        }
-      })
-      .catch(error => console.error('Erreur:', error));
-    });
+    //       // Fermeture du modal
+    //       const modal = bootstrap.Modal.getInstance(document.getElementById('addBoaModal'));
+    //       modal.hide();
+    //     } else {
+    //       alert('Erreur lors de l\'ajout de la ligne.');
+    //     }
+    //   })
+    //   .catch(error => console.error('Erreur:', error));
+    // });
     
-  </script>
+  </script> --}}
+
+
+  <script>
+    document.querySelector('form[action="{{ route('ajouterLigneCommande') }}"]').addEventListener('submit', function (event) {
+        event.preventDefault(); // Empêcher le rafraîchissement de la page
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch("{{ route('ajouterLigneCommande') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                // Ajouter la nouvelle ligne au tableau
+                const tableBody = document.querySelector("#datatable_1 tbody");
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>1</td>
+                    <td>${data.produit}</td>
+                    <td>${data.quantite}</td>
+                    <td>${data.montant_ht.toFixed(2)}</td>
+                    <td>${data.tva.toFixed(2)}</td>
+                    <td>${data.montant_ttc.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(newRow);
+
+                // Réinitialiser le formulaire
+                form.reset();
+                // Fermer le modal
+                bootstrap.Modal.getInstance(document.querySelector("#addBoaModal")).hide();
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    });
+</script>
