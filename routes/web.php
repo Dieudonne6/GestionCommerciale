@@ -84,5 +84,7 @@ Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->n
 Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
 Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
 
-Route::get('/Approvisionnement/reception', [Controller::class, 'reception'])->name('reception');
-Route::post('/Approvisionnement/reception', [Controller::class, 'handleReception'])->name('handleReception');
+Route::get('/receptions', [Controller::class, 'indexReception'])->name('receptions.index');
+Route::post('/receptions', [Controller::class, 'storeReception'])->name('receptions.store');
+Route::put('/receptions/{idReception}', [Controller::class, 'updateReception'])->name('receptions.update');
+Route::delete('/receptions/{idReception}', [Controller::class, 'destroyReception'])->name('receptions.destroy');
