@@ -112,7 +112,10 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <label class="form-label">Produits</label>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label">Produits</label>
+                                        <button type="button" class="btn btn-secondary my-2 mx-3" onclick="ajouterLigne()">Ajouter une ligne</button>
+                                    </div>                                    
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
@@ -163,12 +166,13 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <button type="button" class="btn btn-secondary" onclick="ajouterLigne()">Ajouter une
-                                        ligne</button>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                            
                         </form>
                     </div>
                 </div>
