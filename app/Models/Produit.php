@@ -9,6 +9,7 @@ class Produit extends Model
 {
     use HasFactory;
 
+    protected $table = 'produits'; // Nom de la table
     protected $primaryKey = 'idP'; // Clé primaire de votre table
 
     protected $fillable = [
