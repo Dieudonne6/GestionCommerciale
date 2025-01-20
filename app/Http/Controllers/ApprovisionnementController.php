@@ -20,8 +20,16 @@ class ApprovisionnementController extends Controller
     public function ajoutercommande() {
         $allfournisseurs = Fournisseur::get();
         $allproduits = Produit::get();
+        $donneLigneCommande = [
+            'produit' => 'produit',
+            'quantite' => 'quantite',
+            'montant_ht' => 'montant_ht',
+            'tva' => 'tva',
+            'montant_ttc' => 'montant_ttc',
+        ];
+        
 
-        return view('pages.Approvisionnement.ajoutercommande', compact('allfournisseurs','allproduits'));
+        return view('pages.Approvisionnement.ajoutercommande', compact('allfournisseurs','allproduits', 'donneLigneCommande'));
     }
     public function ajouterLignCmd(Request $request)
 {
@@ -78,14 +86,25 @@ public function ajouterLigneCommande(Request $request)
         // 'montant_ttc' => $montantTTC,
     ]);
 
-    return response()->json([
-        // 'id' => $ligneCommande->id,
+    $donneLigneCommande = [
         'produit' => $nomProduit,
         'quantite' => $validated['quantity'],
         'montant_ht' => $montantHT,
         'tva' => $validated['tva'],
         'montant_ttc' => $montantTTC,
-    ]);
+    ];
+    // dd($donneLigneCommande);
+
+    return back()->with('donneLigneCommande', $donneLigneCommande);
+
+    // return response()->json([
+    //     // 'id' => $ligneCommande->id,
+    //     'produit' => $nomProduit,
+    //     'quantite' => $validated['quantity'],
+    //     'montant_ht' => $montantHT,
+    //     'tva' => $validated['tva'],
+    //     'montant_ttc' => $montantTTC,
+    // ]);
 }
 
 

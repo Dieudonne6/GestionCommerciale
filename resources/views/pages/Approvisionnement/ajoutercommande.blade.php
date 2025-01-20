@@ -66,7 +66,21 @@
               <tbody>
                 <tr>
                   <td>
-                    u
+                  </td>
+                  <td>
+                    {{ $donneLigneCommande->produit }}
+                  </td>
+                  <td>
+                    {{ $donneLigneCommande->quantite }}
+                  </td>
+                  <td>
+                    {{ $donneLigneCommande->montant_ht }}
+                  </td>
+                  <td>
+                    {{ $donneLigneCommande->tva }}
+                  </td>
+                  <td>
+                    {{ $donneLigneCommande->montant_ttc }}
                   </td>
                 </tr>
               </tbody>
@@ -95,7 +109,7 @@
             </ul>
           </div>
           @endif
-          <form  method="POST" >
+          <form  method="POST"  action="{{ route('ajouterLigneCommande') }}">
             @csrf
             <div class="modal-body">
               <div class="mb-2">
@@ -188,7 +202,7 @@
   </script> --}}
 
 
-  <script>
+  {{-- <script>
     document.querySelector('form[action="{{ route('ajouterLigneCommande') }}"]').addEventListener('submit', function (event) {
         event.preventDefault(); // Empêcher le rafraîchissement de la page
 
@@ -226,4 +240,4 @@
         })
         .catch(error => console.error('Erreur:', error));
     });
-</script>
+  </script> --}}
