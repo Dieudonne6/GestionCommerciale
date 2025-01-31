@@ -95,3 +95,10 @@ Route::get('/magasin', [Controller::class, 'magasin']);
 Route::post('/ajouterMagasin', [Controller::class, 'ajouterMagasin']);
 Route::delete('suppMagasin/{id}', [Controller::class, 'deleteMagasin']);
 Route::put('modifMagasin/{id}', [Controller::class, 'updateMagasin']);
+
+Route::post('/ajouterCmd', [Controller::class, 'storeCmd'])->name('ajouterCmd.store');
+Route::put('/ajouterCmd/{idCmd}', [Controller::class, 'updateCmd'])->name('ajouterCmd.update');
+Route::delete('/commande/{idCmd}', [Controller::class, 'destroyCommande'])->name('commande.destroy');
+Route::put('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
+Route::get('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
+Route::delete('/deleteLigneCommande/{id}', [Controller::class, 'deleteLigneCommande']);
