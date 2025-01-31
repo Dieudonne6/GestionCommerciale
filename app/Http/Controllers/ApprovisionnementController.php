@@ -6,23 +6,26 @@ use Illuminate\Http\Request;
 use App\Models\Fournisseur;
 use App\Models\Produit;
 use App\Models\LigneCommande;
-
+use App\Models\Commande;
 class ApprovisionnementController extends Controller
 {
     //
 
     public function commandeAchat() {
-        return view('pages.Approvisionnement.commandeAchat');
+        $allfournisseurs = Fournisseur::get();
+        $allproduits = Produit::get();
+        $allcommande = Commande::with('fournisseur', 'lignesCommande')->get(); // Ajout de 'lignesCommande'
+        return view('pages.Approvisionnement.commandeAchat', compact('allfournisseurs','allproduits','allcommande'));
     }
     public function reception() {
         return view('pages.Approvisionnement.reception');
     }
-    public function ajoutercommande() {
-        $allfournisseurs = Fournisseur::get();
-        $allproduits = Produit::get();
+    // public function ajoutercommande() {
+    //     $allfournisseurs = Fournisseur::get();
+    //     $allproduits = Produit::get();
 
-        return view('pages.Approvisionnement.ajoutercommande', compact('allfournisseurs','allproduits'));
-    }
+    //     return view('pages.Approvisionnement.ajoutercommande', compact('allfournisseurs','allproduits'));
+    // }
     public function ajouterLignCmd(Request $request)
 {
     // Validation des données

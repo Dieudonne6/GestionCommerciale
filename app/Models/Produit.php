@@ -11,6 +11,7 @@ class Produit extends Model
 
     protected $table = 'produits'; // Nom de la table
     protected $primaryKey = 'idP'; // Clé primaire de votre table
+    public $timestamps = false;
 
     protected $fillable = [
         'NomP',

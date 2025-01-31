@@ -10,6 +10,7 @@ class Categorie extends Model
     use HasFactory;
 
     protected $primaryKey = 'idC'; // Clé primaire de votre table
+    public $timestamps = false;
 
     protected $fillable = [
         'NomC',
