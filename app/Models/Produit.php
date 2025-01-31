@@ -23,4 +23,10 @@ class Produit extends Model
         'userId',
         'Magasin',
     ];
+
+    public function ligneCommandes()
+{
+    return $this->hasMany(LigneCommande::class, 'idP', 'idP');
+}
+
 }
