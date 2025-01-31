@@ -11,6 +11,7 @@ class Produit extends Model
 
     protected $table = 'produits'; // Nom de la table
     protected $primaryKey = 'idP'; // Clé primaire de votre table
+    public $timestamps = false;
 
     protected $fillable = [
         'NomP',
@@ -28,4 +29,9 @@ class Produit extends Model
 {
     return $this->belongsTo(Categorie::class, 'categorieP', 'idC');
 }
+    public function ligneCommandes()
+{
+    return $this->hasMany(LigneCommande::class, 'idP', 'idP');
+}
+
 }

@@ -11,6 +11,7 @@ class Reception extends Model
      
     protected $table = 'receptions'; // Nom de la table
     protected $primaryKey = 'idReception'; // Clé primaire de votre table
+    public $timestamps = false;
 
     protected $fillable = [
         'numReception',
@@ -19,4 +20,9 @@ class Reception extends Model
         'idCmd',
         'idE',
     ];
+
+    public function lignesReceptions()
+{
+    return $this->hasMany(LigneReception::class, 'idReception', 'idReception');
+}
 }
