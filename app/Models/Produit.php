@@ -23,4 +23,9 @@ class Produit extends Model
         'userId',
         'Magasin',
     ];
+
+    public function categorie()
+{
+    return $this->belongsTo(Categorie::class, 'categorieP', 'idC');
+}
 }
