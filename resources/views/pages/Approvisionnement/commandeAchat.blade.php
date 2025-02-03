@@ -140,7 +140,7 @@
               <div class="col-md-12">
                 <div class="d-flex justify-content-between align-items-center">
                   <label class="form-label">Commande</label>
-                  <button type="button" class="btn btn-secondary my-2 mx-3" onclick="ajouterCmde($allcmd->idCmd)">Ajouter une commande</button>
+                  <button type="button" class="btn btn-secondary my-2 mx-3" onclick="ajouterCmde({{ $allcmd->idCmd }})">Ajouter une commande</button>
                 </div>                                    
                 <table class="table table-bordered">
                   <thead>
@@ -152,9 +152,9 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody id="ligneProduis">
-                     @foreach ($allcmd->lignesCommande as $index => $ligne)
-                     <input type="hidden" name="lignes[{{$index}}][idLCmd]" value="{{ $ligne->idLCmd }}">
+                  <tbody id="ligneProduis{{ $allcmd->idCmd }}">
+                    @foreach ($allcmd->lignesCommande as $index => $ligne)
+                    <input type="hidden" name="lignes[{{$index}}][idLCmd]" value="{{ $ligne->idLCmd }}">
                     <tr>
                       <td>
                         <select id="productSelect" name="lignes[{{$index}}][idP]" class="form-select">
@@ -192,7 +192,7 @@
       </div>
     </div>
   </div>
-   <div class="modal fade" id="delteBoardModal{{$allcmd->idCmd}}" tabindex="-1" aria-labelledby="delteBoardModal{{$allcmd->idCmd}}" aria-hidden="true">
+  <div class="modal fade" id="delteBoardModal{{$allcmd->idCmd}}" tabindex="-1" aria-labelledby="delteBoardModal{{$allcmd->idCmd}}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -359,8 +359,16 @@
       ligneIndex++;
     }
     let ligneIndx = 1;
-  function ajouterCmde(idCmd) {
-    const lign = `<tr>
+    
+    function ajouterCmde(idCmd) {
+      const tbody = document.getElementById('ligneProduis' + idCmd);
+      if (!tbody) {
+        alert('Erreur : le conteneur des lignes de commande est introuvable.');
+        return;
+      }
+      const lign = document.createElement('tr');
+      let index = tbody.querySelectorAll('tr').length;
+      lign.innerHTML = `<tr>
                     <td>
                       <select id="productSelect" name="lignes[${ligneIndx}][idP]" class="form-select">
                         <option value="">Sélectionner un produit</option>
@@ -387,42 +395,42 @@
                       onclick="supprimerLign(this)">Supprimer</button>
                     </td>
                   </tr>`;
-      document.getElementById('ligneProduis').insertAdjacentHTML('beforeend', lign);
-      ligneIndx++;
-    }
-    
-    
-    function supprimerLigne(button) {
-      button.closest('tr').remove();
-    }
-    function supprimerLign(button) {
-      button.closest('tr').remove();
-    }
-    $(document).ready(function() {
-      $(".delete-ligne").click(function() {
-        let ligneId = $(this).data("id");
-        let row = $(this).closest("tr");
+        tbody.appendChild(lign);
         
-        $.ajax({
-          url: "{{ url('deleteLigneCommande') }}/" + ligneId, 
-          type: "DELETE",
-          data: {
-            _token: "{{ csrf_token() }}" 
-          },
-          success: function(response) {
-            if (response.success) {
-              row.remove(); 
-            } else {
-              alert("Erreur lors de la suppression !");
+      }
+      
+      
+      function supprimerLigne(button) {
+        button.closest('tr').remove();
+      }
+      function supprimerLign(button) {
+        button.closest('tr').remove();
+      }
+      $(document).ready(function() {
+        $(".delete-ligne").click(function() {
+          let ligneId = $(this).data("id");
+          let row = $(this).closest("tr");
+          
+          $.ajax({
+            url: "{{ url('deleteLigneCommande') }}/" + ligneId, 
+            type: "DELETE",
+            data: {
+              _token: "{{ csrf_token() }}" 
+            },
+            success: function(response) {
+              if (response.success) {
+                row.remove(); 
+              } else {
+                alert("Erreur lors de la suppression !");
+              }
+            },
+            error: function(xhr) {
+              alert("Une erreur s'est produite !");
             }
-          },
-          error: function(xhr) {
-            alert("Une erreur s'est produite !");
-          }
+          });
         });
       });
-    });
-  </script>
-  
-  @endsection
-  
+    </script>
+    
+    @endsection
+    
