@@ -82,6 +82,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/caisses') }}">Caisses</a>
                   </li><!--end nav-item-->
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/magasin') }}">Magasins</a>
+                  </li><!--end nav-item-->
                 </ul><!--end nav-->
               </div><!--end startbarForms-->
             </li><!--end nav-item-->

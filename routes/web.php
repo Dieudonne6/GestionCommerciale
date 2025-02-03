@@ -84,7 +84,21 @@ Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->n
 Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
 Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
 
+// Reception
 Route::get('/receptions', [Controller::class, 'indexReception'])->name('receptions.index');
 Route::post('/receptions', [Controller::class, 'storeReception'])->name('receptions.store');
 Route::put('/receptions/{idReception}', [Controller::class, 'updateReception'])->name('receptions.update');
 Route::delete('/receptions/{idReception}', [Controller::class, 'destroyReception'])->name('receptions.destroy');
+
+// Magasin
+Route::get('/magasin', [Controller::class, 'magasin']);
+Route::post('/ajouterMagasin', [Controller::class, 'ajouterMagasin']);
+Route::delete('suppMagasin/{id}', [Controller::class, 'deleteMagasin']);
+Route::put('modifMagasin/{id}', [Controller::class, 'updateMagasin']);
+
+Route::post('/ajouterCmd', [Controller::class, 'storeCmd'])->name('ajouterCmd.store');
+Route::put('/ajouterCmd/{idCmd}', [Controller::class, 'updateCmd'])->name('ajouterCmd.update');
+Route::delete('/commande/{idCmd}', [Controller::class, 'destroyCommande'])->name('commande.destroy');
+Route::put('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
+Route::get('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
+Route::delete('/deleteLigneCommande/{id}', [Controller::class, 'deleteLigneCommande']);

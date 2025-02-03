@@ -18,4 +18,9 @@ class LigneReception extends Model
         'prixUn',
         'idReception',
     ];
+
+    public function produit()
+{
+    return $this->belongsTo(Produit::class, 'idP', 'idP');
+}
 }
