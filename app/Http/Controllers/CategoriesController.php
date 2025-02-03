@@ -51,13 +51,8 @@ class CategoriesController extends Controller
         // Récupérer la catégorie à supprimer
         $category = Categorie::findOrFail($id);
     
-        // Vérifier si une image existe pour cette catégorie
-        if ($category->imgC) {
-            // Utiliser Storage pour supprimer l'image
-            if (Storage::disk('public')->exists($category->imgC)) {
-                // Supprimer l'image
-                Storage::disk('public')->delete($category->imgC);
-            }
+        if ($category->imgC && Storage::disk('public')->exists('categories/' . basename($category->imgC))) {
+            Storage::disk('public')->delete('categories/' . basename($category->imgC));
         }
     
         // Supprimer la catégorie
@@ -67,33 +62,38 @@ class CategoriesController extends Controller
         return redirect()->route('categories')->with('success', 'Catégorie supprimée avec succès !');
     }
 
-// Dans CategoryController.php
+    public function update(Request $request, $id)
+    {
+        $category = Categorie::findOrFail($id);
 
-public function update(Request $request, $id)
-{
-    $category = Categorie::findOrFail($id);
+        // Validation des données du formulaire
+        $request->validate([
+            'categoryCode' => 'required|string|max:255', // Validation pour le code de la catégorie
+            'categoryName' => 'required|string|max:255',
+            'categoryImage' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
 
-    // Validation des données du formulaire
-    $request->validate([
-        'categoryCode' => 'required|string|max:255', // Validation pour le code de la catégorie
-        'categoryName' => 'required|string|max:255',
-        'categoryImage' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-    ]);
+        // Mise à jour des données de la catégorie
+        $category->NomC = $request->categoryName;
+        $category->codeC = $request->categoryCode;
 
-    // Mise à jour des données de la catégorie
-    $category->NomC = $request->categoryName;
-    $category->codeC = $request->categoryCode;
+        // Vérifier si une nouvelle image est envoyée
+        if ($request->hasFile('categoryImage')) {
 
-    if ($request->hasFile('categoryImage')) {
-        // Si une nouvelle image est envoyée, la traiter et la sauvegarder
-        $imagePath = $request->file('categoryImage')->store('categories', 'public');
-        $category->imgC = $imagePath;
+            // Supprimer l'ancienne image si elle existe
+            if ($category->imgC && Storage::disk('public')->exists('categories/' . basename($category->imgC))) {
+                Storage::disk('public')->delete('categories/' . basename($category->imgC));
+            }
+
+            // Sauvegarder la nouvelle image
+            $imagePath = $request->file('categoryImage')->store('categories', 'public');
+            $category->imgC = $imagePath;
+        }
+
+        $category->save();
+
+        return redirect()->route('categories')->with('success', 'Catégorie mise à jour avec succès!');
     }
-
-    $category->save();
-
-    return redirect()->route('categories')->with('success', 'Catégorie mise à jour avec succès!');
-}
 
 
 public function edit($id)

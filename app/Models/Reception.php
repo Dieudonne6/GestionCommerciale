@@ -20,4 +20,9 @@ class Reception extends Model
         'idCmd',
         'idE',
     ];
+
+    public function lignesReceptions()
+{
+    return $this->hasMany(LigneReception::class, 'idReception', 'idReception');
+}
 }
