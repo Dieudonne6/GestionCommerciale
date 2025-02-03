@@ -25,6 +25,10 @@ class Produit extends Model
         'Magasin',
     ];
 
+    public function categorie()
+{
+    return $this->belongsTo(Categorie::class, 'categorieP', 'idC');
+}
     public function ligneCommandes()
 {
     return $this->hasMany(LigneCommande::class, 'idP', 'idP');

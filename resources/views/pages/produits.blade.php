@@ -2,7 +2,7 @@
 @section('content')
     <div class="container"> 
       @if(session('success'))
-      <div class="alert alert-success">
+      <div class="alert alert-success alert-dismissible">
         {{ session('success') }}
         </div>
       @endif
@@ -45,7 +45,7 @@
                 </thead>
                 <tbody>
                   @foreach ($produits as $produit)
-                  <tr>
+                  <tr class="text-center">
                     <td><input type="checkbox" class="form-check-input" name="check" id="customCheck1"></td>
                     <td>{{ $produit->NomP }}</td>
                     <td>{{ $produit->descP }}</td>
@@ -54,7 +54,7 @@
                           alt="{{ $produit->NomP }}" height="40">
                     </td>
                     <td>{{ $produit->qteP }}</td>
-                    <td>{{ $produit->categorieP }}</td>
+                    <td>{{ $produit->categorie ? $produit->categorie->NomC : 'Aucune' }}</td>
                     <td>{{ $produit->PrixVente }} FCFA</td>
                     <td>{{ $produit->stockDown }}</td>
                     <td>
@@ -102,12 +102,16 @@
                 <input type="number" name="quantite" class="form-control" required>
               </div>
               <div class="form-group">
+                <label for="stockDown">StockDown</label>
+                <input type="number" name="stockDown" class="form-control" required>
+              </div>
+              <div class="form-group">
                 <label for="categorie">Catégorie</label>
                 <select name="categorie" class="form-control">
+                  <option value="0" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
                   @foreach ($categories as $categorie)
-                    <option value="{{ $categorie->id }}" {{ $categorie->NomC == $categorie->id ? 'selected' : '' }}>{{ $categorie->nom }}</option>
+                    <option value="{{ $categorie->idC }}" {{ $categorie->NomC == $categorie->idC ? 'selected' : '' }}>{{ $categorie->NomC }}</option>
                   @endforeach
-                  <option value="0">Aucune</option>
                 </select>
               </div>
               <div class="form-group">
@@ -133,7 +137,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('produits.update', ['idP' => $produit->idP]) }}" method="POST">
+                <form action="{{ route('produits.update', ['idP' => $produit->idP]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
@@ -146,19 +150,28 @@
                     </div>
                     <div class="form-group">
                         <label for="image">Image</label>
-                        <input type="file" name="image" class="form-control" value="{{ $produit->imgP }}">
+                        <input type="file" name="image" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="currentCategoryImage" class="form-label">Image actuelle</label>
+                        <br>
+                        <img src="{{ asset('storage/' . $produit->imgP) }}" class="img-fluid" style="max-width: 200px; max-height: 200px;" />
                     </div>
                     <div class="form-group">
                         <label for="quantite">Quantité</label>
                         <input type="number" name="quantite" class="form-control" value="{{ $produit->qteP }}" required>
                     </div>
                     <div class="form-group">
+                        <label for="stockDown">StockDown</label>
+                        <input type="number" name="stockDown" class="form-control" value="{{ $produit->stockDown }}" required>
+                    </div>
+                    <div class="form-group">
                         <label for="categorie">Catégorie</label>
                         <select name="categorie" class="form-control" required>
-                            @foreach ($categories as $categorie)
-                                <option value="{{ $categorie->id }}" {{ $produit->categorieP == $categorie->id ? 'selected' : '' }}>{{ $categorie->nom }}</option>
-                            @endforeach
                             <option value="0" {{ $produit->categorieP == 0 ? 'selected' : '' }}>Aucune</option>
+                            @foreach ($categories as $categorie)
+                                <option value="{{ $categorie->idC }}" {{ $produit->categorieP == $categorie->idC ? 'selected' : '' }}>{{ $categorie->NomC }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -176,21 +189,21 @@
 </div>
 
 <div class="modal fade" id="deleteBoard{{ $produit->idP }}" tabindex="-1" role="dialog" aria-labelledby="deleteBoardLabel{{ $produit->idP }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="deleteBoardLabel{{ $produit->idP }}">Supprimer un produit</h5>
+            <h1 class="modal-title fs-5" id="deleteBoardLabel{{ $produit->idP }}">Confirmation de suppression</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Voulez-vous vraiment supprimer ce produit ?</p>
+            Êtes-vous sûr de vouloir supprimer ce produit ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             <form action="{{ route('produits.destroy', ['idP' => $produit->idP]) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <button type="submit" class="btn btn-danger">Confirmer</button>
             </form>
           </div>
         </div>
