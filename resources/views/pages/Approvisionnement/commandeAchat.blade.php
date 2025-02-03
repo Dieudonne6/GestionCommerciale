@@ -93,7 +93,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier un Commande</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier une Commande</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="{{url('modifCmd/'.$allcmd->idCmd)}}" method="POST">
@@ -106,10 +106,10 @@
                 <select id="" name="identitefr" class="form-select">
                   <option value="">Sélectionner un fournisseur</option>
                   @foreach ($allfournisseurs as $allfournisseur)
-                    <option value="{{ $allfournisseur->idF }}" 
-                            {{ $allfournisseur->idF == $allcmd->idF ? 'selected' : '' }}>
-                        {{ $allfournisseur->identiteF }}
-                    </option>
+                  <option value="{{ $allfournisseur->idF }}" 
+                    {{ $allfournisseur->idF == $allcmd->idF ? 'selected' : '' }}>
+                    {{ $allfournisseur->identiteF }}
+                  </option>
                   @endforeach
                 </select> 
               </div>
@@ -140,7 +140,7 @@
               <div class="col-md-12">
                 <div class="d-flex justify-content-between align-items-center">
                   <label class="form-label">Commande</label>
-                  <button type="button" class="btn btn-secondary my-2 mx-3" onclick="ajouterCmd()">Ajouter une commande</button>
+                  <button type="button" class="btn btn-secondary my-2 mx-3" onclick="ajouterCmde($allcmd->idCmd)">Ajouter une commande</button>
                 </div>                                    
                 <table class="table table-bordered">
                   <thead>
@@ -149,18 +149,14 @@
                       <th>Quantité</th>
                       <th>Montant HT</th>
                       <th>TVA</th>
-                      <th>Montant TTC</th>
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody id="ligneProduits">
-                    @foreach ($allcmd->lignesCommande as $index => $ligne)
-
+                  <tbody id="ligneProduis">
+                     @foreach ($allcmd->lignesCommande as $index => $ligne)
+                     <input type="hidden" name="lignes[{{$index}}][idLCmd]" value="{{ $ligne->idLCmd }}">
                     <tr>
-                      <input type="hidden" name="lignes[{{$index}}][idLCmd]" value="{{ $ligne->idLCmd }}">
-
                       <td>
-
                         <select id="productSelect" name="lignes[{{$index}}][idP]" class="form-select">
                           <option value="">Sélectionner un produit</option>
                           @foreach ($allproduits as $allproduit)
@@ -179,12 +175,11 @@
                       </td>
                       <td>
                         <button type="button" class="btn btn-danger delete-ligne" data-id="{{ $ligne->idLCmd }}">Supprimer</button>
-
-                        {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delteBoardModal{{$allcmd->idCmd}}"> Supprimer</button> --}}
+                        
                       </td>
                     </tr>
-                   
-                    @endforeach
+                    
+                    @endforeach 
                   </tbody>
                 </table> 
               </div>
@@ -197,7 +192,7 @@
       </div>
     </div>
   </div>
-  {{-- <div class="modal fade" id="delteBoardModal{{$allcmd->idCmd}}" tabindex="-1" aria-labelledby="delteBoardModal{{$allcmd->idCmd}}" aria-hidden="true">
+   <div class="modal fade" id="delteBoardModal{{$allcmd->idCmd}}" tabindex="-1" aria-labelledby="delteBoardModal{{$allcmd->idCmd}}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -217,7 +212,7 @@
         </div>
       </div>
     </div>
-  </div> --}}
+  </div> 
   @endforeach
   
   <div class="modal fade" id="addBoaModal" tabindex="-1" aria-labelledby="addBoaModal" aria-hidden="true">
@@ -285,7 +280,6 @@
                       <th>Quantité</th>
                       <th>Montant HT</th>
                       <th>TVA</th>
-                      <th>Montant TTC</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -311,10 +305,7 @@
                         <input type="number" name="lignes[0][tva]"
                         class="form-control tva">
                       </td>
-                      {{-- <td>
-                        <input type="number" step="0.01" name="lignes[0][montantttc]"
-                        class="form-control" readonly>
-                      </td> --}}
+                      
                       <td>
                         <button type="button" class="btn btn-danger"
                         onclick="supprimerLigne(this)">Supprimer</button>
@@ -336,7 +327,6 @@
 </div>
 <script>
   let ligneIndex = 1;
-  
   function ajouterCmd() {
     const ligne = `<tr>
                     <td>
@@ -368,36 +358,71 @@
       document.getElementById('ligneProduits').insertAdjacentHTML('beforeend', ligne);
       ligneIndex++;
     }
+    let ligneIndx = 1;
+  function ajouterCmde(idCmd) {
+    const lign = `<tr>
+                    <td>
+                      <select id="productSelect" name="lignes[${ligneIndx}][idP]" class="form-select">
+                        <option value="">Sélectionner un produit</option>
+                        @foreach ($allproduits as $allproduit)
+                            <option value="{{ $allproduit->idP }}">{{ $allproduit->NomP }}</option>
+                        @endforeach
+                    </select>
+                    </td>
+                    <td>
+                      <input type="number" name="lignes[${ligneIndx}][qte]"
+                      class="form-control qte">
+                    </td>
+                    <td>
+                      <input type="number" name="lignes[${ligneIndx}][montantht]"
+                      class="form-control montantht">
+                    </td>
+                    <td>
+                      <input type="number" name="lignes[${ligneIndx}][tva]"
+                      class="form-control tva">
+                    </td>
+                    
+                    <td>
+                      <button type="button" class="btn btn-danger"
+                      onclick="supprimerLign(this)">Supprimer</button>
+                    </td>
+                  </tr>`;
+      document.getElementById('ligneProduis').insertAdjacentHTML('beforeend', lign);
+      ligneIndx++;
+    }
     
     
     function supprimerLigne(button) {
       button.closest('tr').remove();
     }
-$(document).ready(function() {
-    $(".delete-ligne").click(function() {
-        let ligneId = $(this).data("id"); // Récupérer l'ID de la ligne de commande
-        let row = $(this).closest("tr"); // Trouver la ligne à supprimer
-
+    function supprimerLign(button) {
+      button.closest('tr').remove();
+    }
+    $(document).ready(function() {
+      $(".delete-ligne").click(function() {
+        let ligneId = $(this).data("id");
+        let row = $(this).closest("tr");
+        
         $.ajax({
-            url: "{{ url('deleteLigneCommande') }}/" + ligneId, 
-            type: "DELETE",
-            data: {
-                _token: "{{ csrf_token() }}" // Protection CSRF
-            },
-            success: function(response) {
-                if (response.success) {
-                    row.remove(); // Supprime la ligne du DOM sans recharger
-                } else {
-                    alert("Erreur lors de la suppression !");
-                }
-            },
-            error: function(xhr) {
-                alert("Une erreur s'est produite !");
+          url: "{{ url('deleteLigneCommande') }}/" + ligneId, 
+          type: "DELETE",
+          data: {
+            _token: "{{ csrf_token() }}" 
+          },
+          success: function(response) {
+            if (response.success) {
+              row.remove(); 
+            } else {
+              alert("Erreur lors de la suppression !");
             }
+          },
+          error: function(xhr) {
+            alert("Une erreur s'est produite !");
+          }
         });
+      });
     });
-});
   </script>
-
+  
   @endsection
   
