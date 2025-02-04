@@ -84,242 +84,308 @@ class Controller extends BaseController
         return redirect()->back()->with('success', 'Caisse supprimée avec succès.');
     }
 
-   // Affichage de la liste des réceptions
-public function indexreception()
-{
-    // Récupération des réceptions avec leurs lignes et les produits associés
-    $receptions = Reception::with(['lignesReceptions.produit'])->get();
-    $produits = Produit::all();
-    $magasins = Magasin::all();
-    $lignesReceptions = LigneReception::all();
+ // Affichage de la liste des réceptions
+ public function indexreception()
+ {
+     // Récupération des réceptions avec leurs lignes et les produits associés
+     $receptions = Reception::with(['lignesReceptions.produit'])->get();
+     $produits = Produit::all();
+     $magasins = Magasin::all();
+     // (Les lignes de réception peuvent être utiles si vous souhaitez les parcourir dans la vue)
+     $lignesReceptions = LigneReception::all();
 
-    // Calcul des quantités commandées et déjà livrées pour chaque produit
-    $ligneCommandes = LigneCommande::select('idP', 'qteCmd', 'qteLivre', 'prix')
-        ->get()
-        ->groupBy('idP');
+     // Calcul des quantités commandées et déjà livrées pour chaque produit
+     $ligneCommandes = LigneCommande::select('idP', 'qteCmd', 'qteLivre', 'prix')
+         ->get()
+         ->groupBy('idP');
 
-    foreach ($produits as $produit) {
-        $commandes = $ligneCommandes[$produit->idP] ?? collect();
-        $qteCmdTotale = $commandes->sum('qteCmd');
-        $qteLivrTotale = $commandes->sum('qteLivre');
-        $produit->qteRestante = $qteCmdTotale - $qteLivrTotale;
-        $produit->qteLivreeTotale = $qteLivrTotale;
-    }
+     foreach ($produits as $produit) {
+         $commandes = $ligneCommandes[$produit->idP] ?? collect();
+         $qteCmdTotale = $commandes->sum('qteCmd');
+         $qteLivrTotale = $commandes->sum('qteLivre');
+         // On calcule la quantité restante sur la commande
+         $produit->qteRestante = $qteCmdTotale - $qteLivrTotale;
+         $produit->qteLivreeTotale = $qteLivrTotale;
+     }
 
-    return view('pages.Approvisionnement.gestion_receptions', compact('receptions', 'produits', 'magasins', 'lignesReceptions'));
-}
+     return view('pages.Approvisionnement.gestion_receptions', compact('receptions', 'produits', 'magasins', 'lignesReceptions'));
+ }
 
-// Création d'une réception
-public function storereception(Request $request)
-{
-    // Validation des données entrantes
-    $validated = $request->validate([
-        'numReception' => 'required|string|max:50',
-        'dateReception' => 'required|date',
-        'RefNumBonReception' => 'required|string|max:255',
-        'lignes.*.idP' => 'required|exists:produits,idP',
-        'lignes.*.idMagasin' => 'required|exists:magasins,idMgs',
-        'lignes.*.qteLivre' => 'required|integer|min:1',
-    ]);
+ // Création d'une réception
+ public function storereception(Request $request)
+ {
+     // Validation des données entrantes
+     $validated = $request->validate([
+         'numReception'         => 'required|string|max:50',
+         'dateReception'        => 'required|date',
+         'RefNumBonReception'   => 'required|string|max:255',
+         'lignes.*.idP'         => 'required|exists:produits,idP',
+         'lignes.*.idMagasin'   => 'required|exists:magasins,idMgs',
+         'lignes.*.qteLivre'    => 'required|integer|min:1',
+     ]);
 
-    // Récupérer l'ensemble des lignes de commande concernées par les produits de la réception
-    $produitsIds = array_column($validated['lignes'], 'idP');
-    $ligneCommandes = LigneCommande::whereIn('idP', $produitsIds)
-        ->get()
-        ->groupBy('idP'); // Groupement des lignes de commande par produit
+     // Récupérer l'ensemble des lignes de commande concernées par les produits de la réception
+     $produitsIds = array_column($validated['lignes'], 'idP');
+     $ligneCommandes = LigneCommande::whereIn('idP', $produitsIds)
+         ->get()
+         ->groupBy('idP'); // Groupement des lignes de commande par produit
 
-    $idCmd = null;
-    foreach ($validated['lignes'] as $index => $ligne) {
-        // On suppose qu'il peut y avoir plusieurs lignes de commande pour un même produit
-        // On sélectionne ici la première ligne pour la vérification
-        $commandeGroup = $ligneCommandes[$ligne['idP']] ?? null;
-        if (!$commandeGroup || $commandeGroup->isEmpty()) {
-            return redirect()
-                ->back()
-                ->withErrors(["lignes.{$index}.idP" => "Aucune commande trouvée pour le produit ID {$ligne['idP']}."])
-                ->withInput();
-        }
-        $commande = $commandeGroup->first(); // On prend la première ligne de commande
+     $idCmd = null;
 
-        // Vérifier que tous les produits appartiennent à la même commande
-        if ($idCmd === null) {
-            $idCmd = $commande->idCmd;
-        } elseif ($idCmd !== $commande->idCmd) {
-            return redirect()
-                ->back()
-                ->withErrors(["lignes.{$index}.idP" => "Les produits sélectionnés appartiennent à des commandes différentes."])
-                ->withInput();
-        }
+     // Vérification sur chaque ligne saisie
+     foreach ($validated['lignes'] as $index => $ligne) {
+         // On récupère la première ligne de commande pour le produit
+         $commandeGroup = $ligneCommandes[$ligne['idP']] ?? null;
+         if (!$commandeGroup || $commandeGroup->isEmpty()) {
+             return redirect()
+                 ->back()
+                 ->withErrors(["lignes.{$index}.idP" => "Aucune commande trouvée pour le produit ID {$ligne['idP']}."])
+                 ->withInput();
+         }
+         $commande = $commandeGroup->first();
 
-        // Vérifier que la quantité livrée ne dépasse pas la quantité commandée restante
-        $qteCmd = $commande->qteCmd;
-        $qteLivreActuelle = $commande->qteLivre;
-        if (($qteLivreActuelle + $ligne['qteLivre']) > $qteCmd) {
-            return redirect()
-                ->back()
-                ->withErrors(["lignes.{$index}.qteLivre" => "La quantité livrée dépasse la quantité commandée (commande: {$qteCmd}, déjà livrée: {$qteLivreActuelle})."])
-                ->withInput();
-        }
-    }
+         // Vérifier que tous les produits appartiennent à la même commande
+         if ($idCmd === null) {
+             $idCmd = $commande->idCmd;
+         } elseif ($idCmd !== $commande->idCmd) {
+             return redirect()
+                 ->back()
+                 ->withErrors(["lignes.{$index}.idP" => "Les produits sélectionnés appartiennent à des commandes différentes."])
+                 ->withInput();
+         }
 
-    try {
-        DB::beginTransaction();
+         // Vérifier que la quantité livrée ne dépasse pas la quantité commandée restante
+         $qteCmd = $commande->qteCmd;
+         $qteLivreActuelle = $commande->qteLivre;
+         if (($qteLivreActuelle + $ligne['qteLivre']) > $qteCmd) {
+             return redirect()
+                 ->back()
+                 ->withErrors(["lignes.{$index}.qteLivre" => "La quantité livrée dépasse la quantité commandée (commande: {$qteCmd}, déjà livrée: {$qteLivreActuelle})."])
+                 ->withInput();
+         }
+     }
 
-        // Création de la réception
-        $reception = Reception::create([
-            'numReception' => $validated['numReception'],
-            'dateReception' => $validated['dateReception'],
-            'RefNumBonReception' => $validated['RefNumBonReception'],
-            'idCmd' => $idCmd,
-            'idE' => auth()->id(), // ou autre logique pour associer l'utilisateur/entreprise
-        ]);
+     try {
+         DB::beginTransaction();
 
-        // Enregistrement des lignes de réception et mise à jour des lignes de commande associées
-        foreach ($validated['lignes'] as $ligne) {
-            // Récupération de la première ligne de commande associée au produit
-            $commandeGroup = $ligneCommandes[$ligne['idP']];
-            $commande = $commandeGroup->first();
+         // Création de la réception
+         $reception = Reception::create([
+             'numReception'       => $validated['numReception'],
+             'dateReception'      => $validated['dateReception'],
+             'RefNumBonReception' => $validated['RefNumBonReception'],
+             'idCmd'              => $idCmd,
+             'idE'                => auth()->id(), // Associe l'utilisateur connecté
+         ]);
 
-            // Création de la ligne de réception
-            LigneReception::create([
-                'idReception' => $reception->idReception,
-                'idP' => $ligne['idP'],
-                'qteReception' => $ligne['qteLivre'],
-                'prixUn' => $commande->prix,
-            ]);
+         // Enregistrement des lignes de réception et mise à jour des lignes de commande associées
+         foreach ($validated['lignes'] as $ligne) {
+             // Récupération de la première ligne de commande associée au produit
+             $commandeGroup = $ligneCommandes[$ligne['idP']];
+             $commande = $commandeGroup->first();
 
-            // Mise à jour de la quantité livrée dans la ligne de commande
-            $commande->qteLivre += $ligne['qteLivre'];
-            $commande->save();
-        }
+             // Création de la ligne de réception
+             LigneReception::create([
+                 'idReception'   => $reception->idReception,
+                 'idP'           => $ligne['idP'],
+                 'qteReception'  => $ligne['qteLivre'],
+                 'prixUn'        => $commande->prix,
+             ]);
 
-        DB::commit();
-        return redirect()->route('receptions.index')->with('success', 'Réception enregistrée avec succès.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->withErrors(['error' => 'Une erreur est survenue lors de l\'enregistrement de la réception.'])->withInput();
-    }
-}
+             // Mise à jour de la ligne de commande : incrémenter la quantité livrée et recalculer la quantité restante
+             $commande->qteLivre += $ligne['qteLivre'];
+             $commande->qteRestant = $commande->qteCmd - $commande->qteLivre;
+             $commande->save();
+         }
+
+         DB::commit();
+         return redirect()->route('receptions.index')->with('success', 'Réception enregistrée avec succès.');
+     } catch (\Exception $e) {
+         DB::rollBack();
+         return redirect()->back()->withErrors(['error' => 'Une erreur est survenue lors de l\'enregistrement de la réception.'])->withInput();
+     }
+ }
 
 // Mise à jour d'une réception
 public function updatereception(Request $request, $idReception)
 {
+    // 1. Validation des données du formulaire
     $validated = $request->validate([
-        'numReception' => 'required|string|max:50',
-        'dateReception' => 'required|date',
-        'RefNumBonReception' => 'required|string|max:255',
-        'lignes.*.idP' => 'required|exists:produits,idP',
-        'lignes.*.idMagasin' => 'required|exists:magasins,idMgs',
-        'lignes.*.qteLivre' => 'required|integer|min:1',
+        'numReception'         => 'required|string|max:50',
+        'dateReception'        => 'required|date',
+        'RefNumBonReception'   => 'required|string|max:255',
+        'lignes.*.idP'         => 'required|exists:produits,idP',
+        'lignes.*.idMagasin'   => 'required|exists:magasins,idMgs',
+        'lignes.*.qteLivre'    => 'required|integer|min:1',
+        // Vous pouvez ajouter d'autres validations pour qteRestant ou prixUn si besoin
     ]);
 
-    try {
-        DB::beginTransaction();
+    DB::beginTransaction();
 
+    try {
+        // 2. Récupération de la réception et de ses lignes existantes
+        $reception = Reception::findOrFail($idReception);
+
+        // On indexe les lignes existantes par l'id du produit (idP)
+        $lignesReceptionExistantes = $reception->lignesReceptions->keyBy('idP');
+
+        // 3. Récupération des idP transmis et des lignes de commande correspondantes
         $produitsIds = array_column($validated['lignes'], 'idP');
+
         $ligneCommandes = LigneCommande::whereIn('idP', $produitsIds)
             ->get()
             ->groupBy('idP');
 
         $idCmd = null;
+
+        // 4. Vérification des quantités pour chaque ligne du formulaire
         foreach ($validated['lignes'] as $index => $ligne) {
+            // Vérification que le produit appartient à une commande
             $commandeGroup = $ligneCommandes[$ligne['idP']] ?? null;
             if (!$commandeGroup || $commandeGroup->isEmpty()) {
-                return redirect()
-                    ->back()
+                DB::rollBack();
+                return redirect()->back()
                     ->withErrors(["lignes.{$index}.idP" => "Aucune commande trouvée pour le produit ID {$ligne['idP']}."])
                     ->withInput();
             }
             $commande = $commandeGroup->first();
 
+            // Vérifier que tous les produits appartiennent à la même commande
             if ($idCmd === null) {
                 $idCmd = $commande->idCmd;
             } elseif ($idCmd !== $commande->idCmd) {
-                return redirect()
-                    ->back()
+                DB::rollBack();
+                return redirect()->back()
                     ->withErrors(["lignes.{$index}.idP" => "Les produits appartiennent à des commandes différentes."])
                     ->withInput();
             }
 
-            // Pour la mise à jour, il faudrait récupérer la quantité déjà livrée
-            // dans la ligne de commande et comparer avec la nouvelle quantité proposée.
-            $qteCmd = $commande->qteCmd;
-            $qteLivreActuelle = $commande->qteLivre;
-            // Ici, selon votre logique, vous pouvez déterminer si vous devez réajuster la quantité
-            // livrée dans la commande en fonction de la modification apportée à la réception.
-            if (($qteLivreActuelle + $ligne['qteLivre']) > $qteCmd) {
-                return redirect()
-                    ->back()
-                    ->withErrors(["lignes.{$index}.qteLivre" => "Quantité livrée supérieure à la commande ({$qteCmd})."])
+            // Calcul de la quantité déjà livrée pour ce produit (hors la réception en cours)
+            $totalReceptions = LigneReception::whereHas('reception', function ($query) use ($commande) {
+                    $query->where('idCmd', $commande->idCmd);
+                })
+                ->where('idP', $ligne['idP'])
+                ->sum('qteReception');
+
+            // Si la ligne existe déjà, on retire sa quantité enregistrée pour cette réception
+            $ancienneQteReception = $lignesReceptionExistantes->has($ligne['idP'])
+                ? $lignesReceptionExistantes[$ligne['idP']]->qteReception
+                : 0;
+            $totalReceptions -= $ancienneQteReception;
+
+            // Vérifier que la nouvelle quantité cumulée ne dépasse pas la quantité commandée
+            $nouveauTotal = $totalReceptions + $ligne['qteLivre'];
+            if ($nouveauTotal > $commande->qteCmd) {
+                DB::rollBack();
+                return redirect()->back()
+                    ->withErrors(["lignes.{$index}.qteLivre" => "La quantité totale livrée pour le produit ID {$ligne['idP']} dépasse la quantité commandée ({$commande->qteCmd})."])
                     ->withInput();
             }
         }
 
-        // Mise à jour de la réception
-        $reception = Reception::findOrFail($idReception);
+        // 5. Mise à jour des informations générales de la réception
         $reception->update([
-            'numReception' => $validated['numReception'],
-            'dateReception' => $validated['dateReception'],
+            'numReception'       => $validated['numReception'],
+            'dateReception'      => $validated['dateReception'],
             'RefNumBonReception' => $validated['RefNumBonReception'],
-            'idCmd' => $idCmd,
+            'idCmd'              => $idCmd,
         ]);
 
-        // Pour la mise à jour des lignes de réception, vous pouvez :
-        // - Mettre à jour les lignes existantes
-        // - Ajouter les nouvelles lignes s’il y en a de nouvelles
-        // - Eventuellement retirer celles qui ne sont plus présentes
-        $existingLignes = LigneReception::where('idReception', $reception->idReception)
-            ->pluck('idP')->toArray();
+        // Récupération des idP envoyés dans le formulaire (pour la suppression ultérieure des lignes manquantes)
+        $idPsEnvoyes = array_column($validated['lignes'], 'idP');
 
+        // 6. Mise à jour ou création des lignes de réception et mise à jour de la commande correspondante
         foreach ($validated['lignes'] as $ligne) {
             $commandeGroup = $ligneCommandes[$ligne['idP']];
             $commande = $commandeGroup->first();
 
-            if (in_array($ligne['idP'], $existingLignes)) {
-                // Mettez à jour la ligne existante (vous pouvez également ajuster la quantité livrée dans la commande)
-                LigneReception::where([
-                    'idReception' => $reception->idReception,
-                    'idP' => $ligne['idP'],
-                ])->update(['qteReception' => $ligne['qteLivre']]);
-            } else {
-                // Créez la nouvelle ligne
-                LigneReception::create([
-                    'idReception' => $reception->idReception,
-                    'idP' => $ligne['idP'],
+            if ($lignesReceptionExistantes->has($ligne['idP'])) {
+                // Mise à jour de la ligne de réception existante
+                $ligneReception = $lignesReceptionExistantes[$ligne['idP']];
+                $ligneReception->update([
                     'qteReception' => $ligne['qteLivre'],
-                    'prixUn' => $commande->prix,
+                    // Vous pouvez aussi mettre à jour d'autres champs comme idMagasin si nécessaire
+                ]);
+            } else {
+                // Création d'une nouvelle ligne de réception
+                LigneReception::create([
+                    'idReception'  => $reception->idReception,
+                    'idP'          => $ligne['idP'],
+                    'qteReception' => $ligne['qteLivre'],
+                    'prixUn'       => $commande->prix, // On récupère le prix depuis la commande
                 ]);
             }
-            // Mise à jour de la quantité livrée dans la commande (ici, il faudra adapter la logique selon l’ancienne quantité enregistrée)
-            // Par exemple, vous pourriez recalculer la somme de toutes les réceptions associées à cette ligne de commande.
+
+            // Recalcul de la quantité totale livrée pour ce produit dans la commande
+            $nouvelleQteLivre = LigneReception::whereHas('reception', function ($query) use ($commande) {
+                    $query->where('idCmd', $commande->idCmd);
+                })
+                ->where('idP', $ligne['idP'])
+                ->sum('qteReception');
+
+            // Mise à jour de la commande associée (quantité livrée et quantité restante)
+            $commande->update([
+                'qteLivre'   => $nouvelleQteLivre,
+                'qteRestant' => $commande->qteCmd - $nouvelleQteLivre,
+            ]);
+        }
+
+        // 7. Suppression des lignes de réception qui ne sont plus présentes dans le formulaire
+        $lignesASupprimer = $lignesReceptionExistantes->keys()->diff($idPsEnvoyes);
+        if ($lignesASupprimer->isNotEmpty()) {
+            foreach ($lignesASupprimer as $idP) {
+                $ligneSupp = LigneReception::where('idReception', $reception->idReception)
+                    ->where('idP', $idP)
+                    ->first();
+                if ($ligneSupp) {
+                    $ligneSupp->delete();
+
+                    // Recalcul de la quantité pour la commande correspondante
+                    $commandeGroup = $ligneCommandes[$idP] ?? null;
+                    if ($commandeGroup) {
+                        $commande = $commandeGroup->first();
+                        $nouvelleQteLivre = LigneReception::whereHas('reception', function ($query) use ($commande) {
+                                $query->where('idCmd', $commande->idCmd);
+                            })
+                            ->where('idP', $idP)
+                            ->sum('qteReception');
+                        $commande->update([
+                            'qteLivre'   => $nouvelleQteLivre,
+                            'qteRestant' => $commande->qteCmd - $nouvelleQteLivre,
+                        ]);
+                    }
+                }
+            }
         }
 
         DB::commit();
-        return redirect()->route('receptions.index')->with('success', 'Réception mise à jour avec succès.');
+        return redirect()->route('receptions.index')
+            ->with('success', 'Réception mise à jour avec succès.');
     } catch (\Exception $e) {
         DB::rollBack();
-        return redirect()->back()->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour.'])->withInput();
+        return redirect()->back()
+            ->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour : ' . $e->getMessage()])
+            ->withInput();
     }
 }
+ 
 
-// Suppression d'une réception
-public function destroyreception($idReception)
-{
-    try {
-        DB::beginTransaction();
-        $reception = Reception::findOrFail($idReception);
-        // Supprimer les lignes de réception associées
-        LigneReception::where('idReception', $idReception)->delete();
-        // Supprimer la réception
-        $reception->delete();
-        DB::commit();
-        return redirect()->back()->with('success', 'Réception supprimée avec succès.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->withErrors(['error' => 'Erreur lors de la suppression de la réception.']);
-    }
-}
-
+ // Suppression d'une réception
+ public function destroyreception($idReception)
+ {
+     try {
+         DB::beginTransaction();
+         $reception = Reception::findOrFail($idReception);
+         // Suppression des lignes de réception associées
+         LigneReception::where('idReception', $idReception)->delete();
+         // Suppression de la réception
+         $reception->delete();
+         DB::commit();
+         return redirect()->back()->with('success', 'Réception supprimée avec succès.');
+     } catch (\Exception $e) {
+         DB::rollBack();
+         return redirect()->back()->withErrors(['error' => 'Erreur lors de la suppression de la réception.']);
+     }
+ }
     public function magasin()
     {
         $allmagasins = Magasin::all();
