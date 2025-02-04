@@ -16,10 +16,21 @@ class Vente extends Model
         'descV',
         'modePaiement',
         'montantTTC',
-        'montantHT',
+        // 'montantHT',
         'dateOperation',
         'idCL',
         'idU',
         'idE',
     ];
+
+    public function client()
+{
+    return $this->belongsTo(Client::class, 'idCl', 'idCl');
+}
+
+public function lignesVente() {
+    return $this->hasMany(LigneVente::class, 'idV');
+}
+
+
 }

@@ -13,6 +13,9 @@ use App\Models\Reception;
 use App\Models\LigneReception;
 use App\Models\LigneCommande;
 use App\Models\Produit;
+use App\Models\Client;
+use App\Models\Vente;
+use App\Models\LigneVente;
 use Illuminate\Support\Facades\DB;
 
 
@@ -527,6 +530,138 @@ public function updatereception(Request $request, $idReception)
     public function deleteLigneCommande($id)
 {
     $ligne = LigneCommande::find($id);
+    if ($ligne) {
+        $ligne->delete();
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+}
+
+
+
+    public function storeVente(Request $request)
+    {
+        // Création de la vente
+        $vente = new Vente();
+        $vente->numV = $request->input('numV');
+        $vente->dateOperation = $request->input('dateOperation');
+        // $vente->dateRemise = $request->input('dateRemise');
+        $vente->descV = $request->input('descV');
+        $vente->modePaiement = $request->input('modePaiement');
+        $vente->idCl = $request->input('identitefr');
+        $vente->save();
+    
+        // Ajout des lignes de vente
+        $lignes = $request->input('lignes', []);
+        // $montantHT = 0; // Initialisation du montant total HT
+        $montantTTC = 0; // Initialisation du montant total TTC
+    
+        foreach ($lignes as $ligne) {
+            $tva = '';
+            // Calcul du montant HT et TTC pour chaque ligne
+            $prixTTC = $ligne['montantttc'];
+            // $tva = $ligne['tva'];
+            $qte = $ligne['qte'];
+    
+            // Calcul du montant total HT et TTC pour la ligne
+            $montantLigneTTC = $prixTTC * $qte;
+            // $montantLigneTTC = $montantLigneHT + ($montantLigneHT * $tva / 100);
+    
+            // Mise à jour des totaux
+            // $montantHT += $montantLigneHT;
+            $montantTTC += $montantLigneTTC;
+    
+            // Création de la ligne de commande
+            LigneVente::create([
+                'idV' => $vente->idV,
+                'idP' => $ligne['idP'],
+                'prixLVente' => $montantLigneTTC,
+                // 'TVA' => $tva,
+                'qteLVente' => $qte,
+            ]);
+        }
+    
+        // Mise à jour des montants HT et TTC dans la commande
+        // $vente->montantHT = $montantHT;
+        $vente->montantTTC = $montantTTC;
+        $vente->save();
+    
+        return back()->with('status', 'Vente ajoutée avec succès.');
+    }
+    
+    public function updateVente(Request $request, $idV)
+    {
+        $vente = Vente::find($idV);
+        
+        $vente->numV = $request->input('numV');
+        $vente->dateOperation = $request->input('dateOperation');
+        // $vente->dateRemise = $request->input('dateRemise');
+        $vente->descV = $request->input('descV');
+        $vente->modePaiement = $request->input('modePaiement');
+        $vente->idCl = $request->input('identitefr');
+        $vente->save();
+    
+        $lignes = $request->input('lignes', []);
+        
+        foreach ($lignes as $ligne) {
+            if (!empty($ligne['idLVente'])) { 
+                // Vérifier si la ligne de vente existe vraiment
+                $ligneVente = LigneVente::where('idLVente', $ligne['idLVente'])
+                                              ->where('idV', $vente->idV)
+                                              ->first();
+                
+                if ($ligneVente) {
+                    // Mise à jour de la ligne existante
+                    $ligneVente->prixLVente = $ligne['montantttc'];
+                    // $ligneVente->TVA = $ligne['tva'];
+                    $ligneVente->qteLVente = $ligne['qte'];
+                    $ligneVente->save();
+                } else {
+                    // Éviter les créations inutiles
+                    continue;
+                }
+            } else {
+                // Créer une nouvelle ligne de commande UNIQUEMENT si elle n'existe pas déjà
+                $existingLine = LigneVente::where('idV', $commande->idV)
+                                             ->where('idP', $ligne['idP'])
+                                             ->first();
+                if (!$existingLine) {
+                    LigneVente::create([
+                        'idV' => $vente->idV,
+                        'idP' => $ligne['idP'],
+                        'prixLVente' => $ligne['montantttc'],
+                        // 'TVA' => $ligne['tva'],
+                        'qteLVente' => $ligne['qte'],
+                    ]);
+                }
+            }
+        }
+    
+        // Recalcul des montants HT et TTC
+        $montantTTC = LigneVente::where('idV', $vente->idV)
+                                   ->sum(DB::raw('prixLVente * qteLVente'));
+        // $montantTTC = $montantHT + LigneVente::where('idV', $vente->idCmd)
+        //                                         ->sum(DB::raw('prix * qteCmd * TVA / 100'));
+    
+        // $vente->montantHT = $montantHT;
+        $vente->montantTTC = $montantTTC;
+        $vente->save();
+    
+        return back()->with('status', 'Vente modifiée avec succès.');
+    }
+
+    // Supprime une réception
+    public function destroyVente($idV)
+    {
+        $vente = Vente::findOrFail($idV);
+        LigneVente::where('idV', $vente->idV)->delete();
+        $vente->delete();
+        return redirect()->back()->with('success', 'Vente supprimée avec succès.');
+    }
+    
+    public function deleteLigneVente($id)
+{
+    $ligne = LigneVente::find($id);
     if ($ligne) {
         $ligne->delete();
         return response()->json(['success' => true]);
