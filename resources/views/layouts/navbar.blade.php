@@ -49,7 +49,7 @@
               <div class="collapse " id="sidebarAdvancedUI">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link" href="advanced-animation.html">Ventes</a>
+                    <a class="nav-link" href="{{ url('vente') }}">Ventes</a>
                   </li><!--end nav-item-->
                   <li class="nav-item">
                     <a class="nav-link" href="advanced-clipboard.html">Livraisons</a>

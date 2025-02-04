@@ -10,6 +10,7 @@ use App\Http\Controllers\ParamController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApprovisionnementController;
 use App\Http\Controllers\ExerciceController;
+use App\Http\Controllers\VenteController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -97,8 +98,18 @@ Route::delete('suppMagasin/{id}', [Controller::class, 'deleteMagasin']);
 Route::put('modifMagasin/{id}', [Controller::class, 'updateMagasin']);
 
 Route::post('/ajouterCmd', [Controller::class, 'storeCmd'])->name('ajouterCmd.store');
-Route::put('/ajouterCmd/{idCmd}', [Controller::class, 'updateCmd'])->name('ajouterCmd.update');
+// Route::put('/ajouterCmd/{idCmd}', [Controller::class, 'updateCmd'])->name('ajouterCmd.update');
 Route::delete('/commande/{idCmd}', [Controller::class, 'destroyCommande'])->name('commande.destroy');
 Route::put('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
 Route::get('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
 Route::delete('/deleteLigneCommande/{id}', [Controller::class, 'deleteLigneCommande']);
+// -------------------------------
+Route::post('/ajouterVente', [Controller::class, 'storeVente'])->name('ajouterVente.store');
+// Route::put('/ajouterVente/{idV}', [Controller::class, 'updateVente'])->name('ajouterVente.update');
+Route::delete('/vente/{idV}', [Controller::class, 'destroyVente'])->name('Vente.destroy');
+Route::put('modifVente/{idV}', [Controller::class, 'updateVente']);
+Route::get('modifVente/{idV}', [Controller::class, 'updateVente']);
+Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente']);
+
+// Vente 
+Route::get('vente', [VenteController::class, 'vente'])->name('vente');

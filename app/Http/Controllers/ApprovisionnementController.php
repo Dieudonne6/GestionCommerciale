@@ -81,14 +81,25 @@ public function ajouterLigneCommande(Request $request)
         // 'montant_ttc' => $montantTTC,
     ]);
 
-    return response()->json([
-        // 'id' => $ligneCommande->id,
+    $donneLigneCommande = [
         'produit' => $nomProduit,
         'quantite' => $validated['quantity'],
         'montant_ht' => $montantHT,
         'tva' => $validated['tva'],
         'montant_ttc' => $montantTTC,
-    ]);
+    ];
+    // dd($donneLigneCommande);
+
+    return back()->with('donneLigneCommande', $donneLigneCommande);
+
+    // return response()->json([
+    //     // 'id' => $ligneCommande->id,
+    //     'produit' => $nomProduit,
+    //     'quantite' => $validated['quantity'],
+    //     'montant_ht' => $montantHT,
+    //     'tva' => $validated['tva'],
+    //     'montant_ttc' => $montantTTC,
+    // ]);
 }
 
 
