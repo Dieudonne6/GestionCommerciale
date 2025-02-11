@@ -113,3 +113,6 @@ Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente'])
 
 // Vente 
 Route::get('vente', [VenteController::class, 'vente'])->name('vente');
+
+// DB_USERNAME=hlgs4475_cantinecbox
+// DB_PASSWORD=cantinecbox  

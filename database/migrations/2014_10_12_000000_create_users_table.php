@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('adresseU');
             $table->string('telephone');
             $table->string('password');
-            $table->unsignedBigInteger('roleID'); // Colonne pour la clé étrangère
-            $table->foreign('roleID')->references('id')->on('roles')->onDelete('cascade');
+            // $table->unsignedBigInteger('roleID'); // Colonne pour la clé étrangère
+            // $table->foreign('roleID')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
         });
     }

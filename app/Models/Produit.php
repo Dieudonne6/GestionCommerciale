@@ -4,34 +4,62 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CategorieProduit;
+use App\Models\FamilleProduit;
+use App\Models\DetailTransfertMagasin;
+use App\Models\Stocke;
+use App\Models\DetailInventaire;
+use App\Models\DetailVente;
+use App\Models\DetailCommandeAchat;
+use App\Models\DetailProforma;
+
 
 class Produit extends Model
 {
     use HasFactory;
 
-    protected $table = 'produits'; // Nom de la table
-    protected $primaryKey = 'idP'; // Clé primaire de votre table
-    public $timestamps = false;
+    protected $primaryKey = 'idPro'; // Clé primaire de la table
 
     protected $fillable = [
-        'NomP',
-        'descP',
-        'imgP',
-        // 'qteP',
-        'stockDown',
-        'PrixVente',
-        'categorieP',
-        'userId',
-        'Magasin',
+        'libelle',
+        'prix',
+        'desc',
+        'image',
+        'stockAlert',
+        'stockMinimum',
+        'idCatPro',
+        'idFamPro',
     ];
 
-    public function categorie()
-{
-    return $this->belongsTo(Categorie::class, 'categorieP', 'idC');
-}
-    public function ligneCommandes()
-{
-    return $this->hasMany(LigneCommande::class, 'idP', 'idP');
-}
+    public function categorieProduit() {
+        return $this->belongsTo(CategorieProduit::class, 'idCatPro');
+    }
 
+    public function familleProduit() {
+        return $this->belongsTo(FamilleProduit::class, 'idFamPro');
+    }
+
+    public function datailTransfertMag() {
+        return $this->hasMany(DetailTransfertMagasin::class, 'idPro');
+    }
+
+    public function stocke() {
+        return $this->hasMany(Stocke::class, 'idPro');
+    }
+
+    public function detailInventaire() {
+        return $this->hasMany(DetailInventaire::class, 'idPro');
+    }
+
+    public function detailVente() {
+        return $this->hasMany(DetailVente::class, 'idPro');
+    }
+
+    public function detailCommandeAchat() {
+        return $this->hasMany(DetailCommandeAchat::class, 'idPro');
+    }
+
+    public function detailProforma() {
+        return $this->hasMany(DetailProforma::class, 'idPro');
+    }
 }

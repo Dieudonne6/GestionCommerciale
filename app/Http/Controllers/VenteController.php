@@ -14,7 +14,7 @@ class VenteController extends Controller
         $allClients = Client::get();
         $allproduits = Produit::get();
         $allVente = Vente::with('client', 'lignesVente')->get(); // Ajout de 'lignesVente'
-        return view('pages.Facturation.vente', compact('allClients','allproduits','allVente'));
+        return view('pages.Facturation.vente', compact('allClients', 'allproduits', 'allVente'));
     }
 
 
