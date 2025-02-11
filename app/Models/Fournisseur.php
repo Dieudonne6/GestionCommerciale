@@ -4,24 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Commande;
+use App\Models\CategorieFournisseur;
+use App\Models\CommandeAchat;
+
 
 class Fournisseur extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idF'; // Clé primaire de votre table
-    public $timestamps = false;
+
+    protected $primaryKey = 'idF'; // Clé primaire de la table
 
     protected $fillable = [
-        'identiteF',
-        // 'PrenomF',
-        'AdresseF',
-        'ContactF',
+        'IFU',
+        'nom',
+        'adresse',
+        'telephone',
+        'mail',
+        'idCatFour',
     ];
-    public function commandes()
-{
-    return $this->hasMany(Commande::class, 'idF', 'idF');
-}
 
-}
+    public function categorieFournisseur() {
+        return $this->belongsTo(CategorieFournisseur::class, 'idCatFour');
+    }
 
+    public function commandeAchat() {
+        return $this->hasMany(CommandeAchat::class, 'idF');
+    }
+}

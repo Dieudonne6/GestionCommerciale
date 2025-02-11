@@ -4,15 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Utilisateur;
 
 class Role extends Model
 {
     use HasFactory;
-    protected $table = 'roles';
-    protected $primaryKey = 'id'; // Clé primaire de votre table
-    public $incrementing = true;
+    protected $primaryKey = 'idRole'; // Clé primaire de la table
 
     protected $fillable = [
-        'libelleRole',
+        'libelle',
     ];
+
+    public function utilisateur() {
+        return $this->hasMany(Utilisateur::class, 'idRole');
+    }
 }
