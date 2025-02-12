@@ -17,7 +17,8 @@
         <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
           <li class="hide-phone app-search">
             <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
-              aria-haspopup="false" aria-expanded="false"> {{ $exerciceActif }}
+              aria-haspopup="false" aria-expanded="false"> 
+              {{-- {{ $exerciceActif }} --}}
               {{-- <img src="assets/images/flags/us_flag.jpg" alt="" class="thumb-sm rounded-circle"> --}}
             </a>
           </li>
