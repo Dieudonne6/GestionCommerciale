@@ -11,6 +11,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApprovisionnementController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\VenteController;
+use App\Http\Controllers\FamilleProduitController;
+use App\Http\Controllers\CategorieProduitController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,12 +50,6 @@ Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
 Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
 Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy');
-Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
-Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
-Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
-Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name('categories.edit');
-// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
-Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
 
 
@@ -113,6 +109,24 @@ Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente'])
 
 // Vente 
 Route::get('vente', [VenteController::class, 'vente'])->name('vente');
+
+
+
+//familleProduitController
+Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);
+Route::post('/ajouterFamilleProduit', [FamilleProduitController::class, 'ajouterFamilleProduit'])->name('ajouterFamilleProduit');
+Route::delete('suppFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'supprimerFamilleProduit']);
+Route::put('modifFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'modifierFamilleProduit'])->name('modifierFamilleProduit');
+
+//categorieProduitController
+Route::get('/categorieProduit', [CategorieProduitController::class, 'categorieProduit']);
+Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit');
+Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit']);
+Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit');
+
+
+
+
 
 // DB_USERNAME=hlgs4475_cantinecbox
 // DB_PASSWORD=cantinecbox  
