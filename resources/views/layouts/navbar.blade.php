@@ -37,24 +37,22 @@
                         </div>
                     </li>
 
-                    <!-- GESTION COMMERCIALE -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#menuProduits" data-bs-toggle="collapse">
-                            <i class="iconoir-box menu-icon"></i>
-                            <span>Produits & Stocks</span>
-                        </a>
-                        <div class="collapse" id="menuProduits">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="#">Catégories de produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Familles de produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('produits') }}">Produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les
-                                        stocks</a></li>
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
-                            </ul>
-                        </div>
-                    </li>
+          <!-- GESTION COMMERCIALE -->
+          <li class="nav-item">
+            <a class="nav-link" href="#menuProduits" data-bs-toggle="collapse">
+              <i class="iconoir-box menu-icon"></i>
+              <span>Produits & Stocks</span>
+            </a>
+            <div class="collapse" id="menuProduits">
+              <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="{{url('categorieProduit')}}">Catégories de produits</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{url('familleProduit')}}">Familles de produits</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('produits') }}">Produits</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les stocks</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
+              </ul>
+            </div>
+          </li>
 
                     <!-- GESTION DES TRANSACTIONS -->
                     <li class="nav-item">

@@ -119,7 +119,7 @@
     alerts.forEach(function(alert) {
       setTimeout(function() {
         alert.style.display = 'none';
-      }, 6000);
+      }, 9000);
     });
   });
   
@@ -127,8 +127,30 @@
   if (statusAlert) {
     setTimeout(function() {
       statusAlert.style.display = 'none';
-    }, 6000);
+    }, 9000);
   }
+
+  // enlever la classe invalid-feedback
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var alerts = document.querySelectorAll('.invalid-feedback');
+    
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            // Masquer l'alerte
+            alert.style.display = 'none';
+            
+            // Enlever la classe 'is-invalid' du champ correspondant
+            var inputField = alert.previousElementSibling; // Le champ de saisie est juste avant l'alerte
+            if (inputField && inputField.classList.contains('is-invalid')) {
+                inputField.classList.remove('is-invalid');
+            }
+        }, 9000); // Délai de 9 secondes avant de masquer l'erreur
+    });
+});
 </script>
+
+
+
 
 

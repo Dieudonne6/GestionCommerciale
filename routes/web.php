@@ -12,6 +12,8 @@ use App\Http\Controllers\ApprovisionnementController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\VenteController;
 use App\Http\Controllers\CatClientController;
+use App\Http\Controllers\FamilleProduitController;
+use App\Http\Controllers\CategorieProduitController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -62,6 +64,7 @@ Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 Route::get('/client', [FournisseurController::class, 'client'])->name('client');
+Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
 
 
 // ApprovisionnementController
@@ -120,6 +123,24 @@ Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente'])
 
 // Vente 
 Route::get('vente', [VenteController::class, 'vente'])->name('vente');
+
+
+
+//familleProduitController
+Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);
+Route::post('/ajouterFamilleProduit', [FamilleProduitController::class, 'ajouterFamilleProduit'])->name('ajouterFamilleProduit');
+Route::delete('suppFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'supprimerFamilleProduit']);
+Route::put('modifFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'modifierFamilleProduit'])->name('modifierFamilleProduit');
+
+//categorieProduitController
+Route::get('/categorieProduit', [CategorieProduitController::class, 'categorieProduit']);
+Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit');
+Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit']);
+Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit');
+
+
+
+
 
 // DB_USERNAME=hlgs4475_cantinecbox
 // DB_PASSWORD=cantinecbox  
