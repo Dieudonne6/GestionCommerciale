@@ -75,7 +75,7 @@
             </a>
             <div class="collapse" id="menuFournisseurs">
               <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="#">Catégories de fournisseurs</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('categoriesFournisseur') }}">Catégories de fournisseurs</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url('fournisseur') }}">Fournisseurs</a></li>
                 <li class="nav-item">
                   <a class="nav-link" href="#submenuAchats" data-bs-toggle="collapse">Commandes d'Achat</a>

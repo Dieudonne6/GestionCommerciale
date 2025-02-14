@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategorieFournisseurController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitsController;
@@ -26,8 +27,8 @@ use App\Http\Controllers\VenteController;
 //     return view('welcome');
 // });
 //fournisseurcontroller
-Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
-Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseur.ajouter');
+Route::get('/fournisseur', [FournisseurController::class, 'fournisseur'])->name('fournisseur');
+Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseurs.ajouterFournisseur');
 Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
 Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
 
@@ -52,6 +53,11 @@ Route::get('/categories', [CategoriesController::class, 'index'])->name('categor
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
 Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name('categories.edit');
+Route::get('/categoriesFournisseur', [CategorieFournisseurController::class, 'index'])->name('categoriesF');
+Route::post('/categorieFournisseur/store', [CategorieFournisseurController::class, 'store'])->name('categoriesF.store');
+Route::delete('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'destroy'])->name('categoriesF.destroy');
+Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'update'])->name('categoriesF.update');
+Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit');
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
