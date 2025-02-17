@@ -90,35 +90,6 @@
               </ul>
             </div>
           </li>
-                    <!-- Fournisseurs & Achats -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#menuFournisseurs" data-bs-toggle="collapse">
-                            <i class="iconoir-truck menu-icon"></i>
-                            <span>Fournisseurs & Achats</span>
-                        </a>
-                        <div class="collapse" id="menuFournisseurs">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="#">Catégories de fournisseurs</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('fournisseur') }}">Fournisseurs</a></li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#submenuAchats" data-bs-toggle="collapse">Commandes
-                                        d'Achat</a>
-                                    <div class="collapse" id="submenuAchats">
-                                        <ul class="nav flex-column ms-3">
-                                            <li class="nav-item"><a class="nav-link"
-                                                    href="{{ url('commandeAchat') }}">Nouvelle Commande</a></li>
-                                            <li class="nav-item"><a class="nav-link"
-                                                    href="{{ url('reception') }}">Réception des Commandes Achats</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
                     <!-- PARAMÈTRES & UTILISATEURS -->
                     <li class="nav-item">
                         <a class="nav-link" href="#menuUtilisateurs" data-bs-toggle="collapse">
