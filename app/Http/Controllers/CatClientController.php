@@ -11,7 +11,7 @@ class CatClientController extends Controller
     public function categorieclient()
     {
         $categorie_clients = CategorieClient::all();
-        return view('pages.definition.categorieclient', compact('categorie_clients')); 
+        return view('pages.GestClient.categorieclient', compact('categorie_clients')); 
     }
 
     // Ajout d'une nouvelle catégorie client avec validation

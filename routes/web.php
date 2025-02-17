@@ -64,7 +64,6 @@ Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 Route::get('/client', [FournisseurController::class, 'client'])->name('client');
-Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
 
 
 // ApprovisionnementController

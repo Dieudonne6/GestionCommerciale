@@ -12,7 +12,7 @@ class ClientController extends Controller
     {
         $clients = Client::all();
         $categories = CategorieClient::all();
-        return view('pages.definition.client', compact('clients', 'categories'));
+        return view('pages.GestClient.client', compact('clients', 'categories'));
     }
 
     public function store(Request $request)
