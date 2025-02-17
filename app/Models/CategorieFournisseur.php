@@ -10,10 +10,12 @@ use App\Models\Fournisseur;
 class CategorieFournisseur extends Model
 {
     use HasFactory;
+    protected $table = 'categorie_fournisseurs';
     protected $primaryKey = 'idCatFour'; // Clé primaire de la table
 
     protected $fillable = [
         'libelle',
+        'codeCatFour'
     ];
 
     public function fournisseur() {
