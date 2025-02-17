@@ -156,16 +156,7 @@
                   </div>
               </div>
               
-                                  <!-- Script pour afficher le modal après actualisation si erreurs -->
-                  @if (session('showModifyFournisseurModal'))
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            var fournisseurId = "{{ session('showModifyFournisseurModal') }}";
-                            var myModal = new bootstrap.Modal(document.getElementById('ModifyBoardModal' + fournisseurId));
-                            myModal.show();
-                        });
-                    </script>
-                  @endif
+
                 <div class="modal fade" id="deleteBoardModal{{$allfournisseur->idF}}" tabindex="-1" aria-labelledby="deleteBoardModal{{$allfournisseur->idF}}" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
@@ -279,39 +270,33 @@
               </div>
             </div>
           </div>
-        </div>
-        
-            <!-- Script pour afficher le modal après actualisation si erreurs -->
-    @if (session('showAddFournisseurModal'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
-            myModal.show();
-        });
-    </script>
-@endif
-
+        </div>        
       </div>
     </div>
   </div>
   
   @endsection
 
-  @section('scripts')
-  <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document.addEventListener("hidden.bs.modal", function () {
-            setTimeout(() => {
-                let backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-                document.body.classList.remove('modal-open');
-            }, 200);
+    <!-- Script pour afficher le modal après actualisation si erreurs -->
+  @if (session('showModifyFournisseurModal'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var fournisseurId = "{{ session('showModifyFournisseurModal') }}";
+            var myModal = new bootstrap.Modal(document.getElementById('ModifyBoardModal' + fournisseurId));
+            myModal.show();
         });
-    });
-  </script>
-  @endsection
+    </script>
+  @endif
+
+              <!-- Script pour afficher le modal après actualisation si erreurs -->
+  @if (session('showAddFournisseurModal'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var myModal = new bootstrap.Modal(document.getElementById('addBoardModal'));
+            myModal.show();
+        });
+    </script>
+  @endif
   
   @section('styles')
 <style>

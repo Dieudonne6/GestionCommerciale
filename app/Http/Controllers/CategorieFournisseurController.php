@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Contracts\Validation\Validator;
 use App\Models\CategorieFournisseur;
 
 class CategorieFournisseurController extends Controller
@@ -83,12 +84,11 @@ class CategorieFournisseurController extends Controller
             'libelle.unique' => 'Ce nom de catégorie existe déjà.',
         ]);
 
-            // Vérifier si la validation a échoué
-    if ($validator->fails()) {
-        return redirect()->route('categoriesF')  // Recharger la page
-            ->withErrors($validator)  // Envoyer les erreurs en session
-            ->with('showModifyCategoryModal', $id); // Stocker l'ID du modal
-    }
+if ($validator->fails()) {
+    session()->flash('showModifyCategoryModal', $id);
+    return redirect()->route('categoriesF')->withErrors($validator);
+}
+
         // Mise à jour des données de la catégorie
         $categoryF->libelle = $request->libelle;
         $categoryF->codeCatFour = $request->codeCatFour;

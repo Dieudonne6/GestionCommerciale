@@ -146,16 +146,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Script pour afficher le modal après actualisation si erreurs -->
-                                        @if (session('showModifyCategoryModal'))
-                                            <script>
-                                                document.addEventListener("DOMContentLoaded", function() {
-                                                    var categoryId = "{{ session('showModifyCategoryModal') }}";
-                                                    var myModal = new bootstrap.Modal(document.getElementById('editCategoryModal' + categoryId));
-                                                    myModal.show();
-                                                });
-                                            </script>
-                                        @endif
 
                                         <div class="modal fade" id="deleteModal{{ $categoryF->idCatFour }}" tabindex="-1"
                                             aria-labelledby="deleteModal{{ $categoryF->idCatFour }}" aria-hidden="true">
@@ -236,34 +226,41 @@
             </div>
         </div>
     </div>
-
-    <!-- Script pour afficher le modal après actualisation si erreurs -->
-    @if (session('showAddCategoryModal'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                var myModal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
-                myModal.show();
-            });
-        </script>
-    @endif
     
 @endsection
 
-@section('scripts')
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.addEventListener("hidden.bs.modal", function () {
-          setTimeout(() => {
-              let backdrop = document.querySelector('.modal-backdrop');
-              if (backdrop) {
-                  backdrop.remove();
-              }
-              document.body.classList.remove('modal-open');
-          }, 200);
-      });
-  });
-</script>
-@endsection
+@if (session('showModifyCategoryModal'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var categoryId = "{{ session('showModifyCategoryModal') }}";
+            var existingModal = document.querySelector('.modal.show'); // Vérifie s'il y a un modal déjà ouvert
+            
+            if (existingModal) {
+                var modalInstance = bootstrap.Modal.getInstance(existingModal);
+                modalInstance.hide(); // Ferme le modal ouvert s'il y en a un
+            }
+
+            var myModalElement = document.getElementById('editCategoryModal' + categoryId);
+            var myModal = new bootstrap.Modal(myModalElement);
+
+            // Attendre un petit délai avant d'ouvrir pour éviter les conflits
+            setTimeout(() => {
+                myModal.show();
+            }, 300);
+        });
+    </script>
+@endif
+
+ <!-- Script pour afficher le modal après actualisation si erreurs -->
+ @if (session('showAddCategoryModal'))
+ <script>
+     document.addEventListener("DOMContentLoaded", function() {
+         var myModal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
+         myModal.show();
+     });
+ </script>
+@endif
+
 
 @section('styles')
 <style>

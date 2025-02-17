@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Validation\Validator;
+
 use App\Models\Fournisseur;
 use App\Models\CategorieFournisseur;
-use Illuminate\Support\Facades\Validator;
 
 class FournisseurController extends Controller
 {
@@ -104,9 +105,8 @@ class FournisseurController extends Controller
 
         // Vérifier si la validation a échoué
         if ($validator->fails()) {
-            return redirect()->route('fournisseur')
-                ->withErrors($validator)
-                ->with('showModifyFournisseurModal', $id);
+            session()->flash('showModifyFournisseurModal', $id);
+            return redirect()->route('fournisseur')->withErrors($validator);
         }
 
         // Mise à jour du fournisseur
