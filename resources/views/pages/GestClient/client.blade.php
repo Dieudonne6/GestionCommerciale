@@ -12,7 +12,7 @@
 </style>
 
 <div class="container-xxl">
-  <div class="row justify-content-center">
+  <div class="row">
     <div class="col-12">
       <div class="card">
         <!-- En-tête -->
@@ -21,28 +21,23 @@
             <div class="col">
               <h4 class="card-title">Liste des Clients</h4>
             </div>
-
-            <!-- Messages flash -->
-            @if (Session::has('status'))
-              <br>
-              <div class="alert alert-success alert-dismissible">
-                {{ Session::get('status') }}
-              </div>
-            @endif
-
-            @if (Session::has('erreur'))
-              <br>
-              <div class="alert alert-danger alert-dismissible">
-                {{ Session::get('erreur') }}
-              </div>
-            @endif
-
             <div class="col-auto">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal" onclick="resetForm()">
                 <i class="fa-solid fa-plus me-1"></i> Ajouter un Client
               </button>
             </div>
           </div>
+          <!-- Messages flash -->
+          @if (Session::has('status'))
+            <div class="alert alert-success alert-dismissible">
+              {{ Session::get('status') }}
+            </div>
+          @endif
+          @if (Session::has('erreur'))
+            <div class="alert alert-danger alert-dismissible">
+              {{ Session::get('erreur') }}
+            </div>
+          @endif
         </div>
 
         <!-- Tableau des clients -->
@@ -52,26 +47,22 @@
               <thead class="table-light">
                 <tr>
                   <th>No</th>
-                  <th class="ps-0">Nom & Prénoms</th>
+                  <th class="ps-0">Nom &amp; Prénoms</th>
                   <th>Adresse</th>
                   <th>Contact</th>
                   <th>Email</th>
-                  <th class="text-end">Action</th>
+                  <th class="text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($clients as $client)
-                  <tr>
-                    <td>
-                      <p class="d-inline-block align-middle mb-0">
-                        <span class="font-13 fw-medium">{{ $loop->iteration }}</span>
-                      </p>
-                    </td>
+                  <tr class="text-center">
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $client->nom }}</td>
                     <td>{{ $client->adresse }}</td>
                     <td>{{ $client->telephone }}</td>
                     <td>{{ $client->mail }}</td>
-                    <td class="text-end">
+                    <td>
                       <!-- Bouton de modification -->
                       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editClientModal{{ $client->idC }}">
                         Modifier
@@ -88,7 +79,7 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="editClientModalLabel{{ $client->idC }}">Modifier un Client</h1>
+                          <h5 class="modal-title" id="editClientModalLabel{{ $client->idC }}">Modifier un Client</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form action="{{ route('clients.update', $client->idC) }}" method="POST">
@@ -97,52 +88,50 @@
                           <div class="modal-body">
                             <div class="row">
                               <div class="col-md-6 mb-2">
-                                <label>IFU</label>
-                                <input type="number" class="form-control @error('IFU') is-invalid @enderror" name="IFU" placeholder="IFU" value="{{ old('IFU', $client->IFU) }}" required>
+                                <label for="IFU{{ $client->idC }}">IFU</label>
+                                <input type="number" class="form-control @error('IFU') is-invalid @enderror" id="IFU{{ $client->idC }}" name="IFU" placeholder="IFU" value="{{ $client->IFU }}" required>
                                 @error('IFU')
                                   <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                               </div>
                               <div class="col-md-6 mb-2">
-                                <label>Nom & Prénoms</label>
-                                <input type="text" class="form-control @error('nom') is-invalid @enderror" name="nom" placeholder="Nom & Prénoms" value="{{ old('nom', $client->nom) }}" required>
+                                <label for="nom{{ $client->idC }}">Nom &amp; Prénoms</label>
+                                <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom{{ $client->idC }}" name="nom" placeholder="Nom &amp; Prénoms" value="{{ $client->nom }}" required>
                                 @error('nom')
                                   <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                               </div>
                             </div>
-
                             <div class="row">
                               <div class="col-md-6 mb-2">
-                                <label>Adresse</label>
-                                <input type="text" class="form-control @error('adresse') is-invalid @enderror" name="adresse" placeholder="Adresse" value="{{ old('adresse', $client->adresse) }}" required>
+                                <label for="adresse{{ $client->idC }}">Adresse</label>
+                                <input type="text" class="form-control @error('adresse') is-invalid @enderror" id="adresse{{ $client->idC }}" name="adresse" placeholder="Adresse" value="{{ $client->adresse }}" required>
                                 @error('adresse')
                                   <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                               </div>
                               <div class="col-md-6 mb-2">
-                                <label>Téléphone</label>
-                                <input type="text" class="form-control @error('telephone') is-invalid @enderror" name="telephone" placeholder="Téléphone" value="{{ old('telephone', $client->telephone) }}" required>
+                                <label for="telephone{{ $client->idC }}">Téléphone</label>
+                                <input type="text" class="form-control @error('telephone') is-invalid @enderror" id="telephone{{ $client->idC }}" name="telephone" placeholder="Téléphone" value="{{ $client->telephone }}" required>
                                 @error('telephone')
                                   <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                               </div>
                             </div>
-
                             <div class="row">
                               <div class="col-md-6 mb-2">
-                                <label>Email</label>
-                                <input type="email" class="form-control @error('mail') is-invalid @enderror" name="mail" placeholder="Email" value="{{ old('mail', $client->mail) }}" required>
+                                <label for="mail{{ $client->idC }}">Email</label>
+                                <input type="email" class="form-control @error('mail') is-invalid @enderror" id="mail{{ $client->idC }}" name="mail" placeholder="Email" value="{{ $client->mail }}" required>
                                 @error('mail')
                                   <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                               </div>
                               <div class="col-md-6 mb-2">
-                                <label>Catégorie Client</label>
-                                <select class="form-control" name="idCatCl" required>
+                                <label for="idCatCl{{ $client->idC }}">Catégorie Client</label>
+                                <select class="form-control" id="idCatCl{{ $client->idC }}" name="idCatCl" required>
                                   <option value="" disabled>Sélectionner une catégorie</option>
                                   @foreach ($categories as $categorie)
-                                    <option value="{{ $categorie->idCatCl }}" {{ old('idCatCl', $client->idCatCl) == $categorie->idCatCl ? 'selected' : '' }}>
+                                    <option value="{{ $categorie->idCatCl }}" {{ $client->idCatCl == $categorie->idCatCl ? 'selected' : '' }}>
                                       {{ $categorie->libelle }}
                                     </option>
                                   @endforeach
@@ -164,7 +153,7 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="deleteClientModalLabel{{ $client->idC }}">Confirmation de suppression</h1>
+                          <h5 class="modal-title" id="deleteClientModalLabel{{ $client->idC }}">Confirmation de suppression</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -172,7 +161,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                          <form action="{{ route('clients.destroy', $client->idC) }}" method="POST">
+                          <form action="{{ route('clients.destroy', $client->idC) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Confirmer</button>
@@ -187,80 +176,65 @@
             </table>
           </div>
         </div>
+        <!-- Fin du tableau -->
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal d'ajout -->
-<div class="modal fade @if ($errors->any()) show @endif" 
-     id="addClientModal" 
-     tabindex="-1" 
-     aria-labelledby="addClientModalLabel" 
-     @if ($errors->any()) style="display: block;" @endif>
+<div class="modal fade @if ($errors->any()) show @endif" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" @if ($errors->any()) style="display: block;" @endif>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addClientModalLabel">Ajouter un Client</h1>
+        <h5 class="modal-title" id="addClientModalLabel">Ajouter un Client</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="{{ route('clients.store') }}" method="POST">
         @csrf
         <div class="modal-body">
-          {{-- @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible">
-              <ul>
-                @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-          @endif --}}
-
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="ifu" class="form-label">IFU</label>
+              <label for="ifu">IFU</label>
               <input type="number" class="form-control @error('IFU') is-invalid @enderror" id="ifu" name="IFU" value="{{ old('IFU') }}" required>
               @error('IFU')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label for="nom" class="form-label">Nom & Prénoms</label>
-              <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom" name="nom" placeholder="Nom & Prénoms" value="{{ old('nom') }}" required>
+              <label for="nom">Nom &amp; Prénoms</label>
+              <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom" name="nom" placeholder="Nom &amp; Prénoms" value="{{ old('nom') }}" required>
               @error('nom')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="adresse" class="form-label">Adresse</label>
+              <label for="adresse">Adresse</label>
               <input type="text" class="form-control @error('adresse') is-invalid @enderror" id="adresse" name="adresse" placeholder="Adresse" value="{{ old('adresse') }}" required>
               @error('adresse')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label for="telephone" class="form-label">Téléphone</label>
+              <label for="telephone">Téléphone</label>
               <input type="text" class="form-control @error('telephone') is-invalid @enderror" id="telephone" name="telephone" placeholder="Téléphone" value="{{ old('telephone') }}" required>
               @error('telephone')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="email" class="form-label">Email</label>
+              <label for="email">Email</label>
               <input type="email" class="form-control @error('mail') is-invalid @enderror" id="email" name="mail" placeholder="Email" value="{{ old('mail') }}" required>
               @error('mail')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label for="idCatCl" class="form-label">Catégorie Client</label>
+              <label for="idCatCl">Catégorie Client</label>
               <select class="form-control" id="idCatCl" name="idCatCl" required>
                 <option value="" disabled selected>Sélectionner une catégorie</option>
                 @foreach ($categories as $categorie)
@@ -272,7 +246,6 @@
             </div>
           </div>
         </div>
-
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
           <button type="submit" class="btn btn-primary">Ajouter</button>
@@ -283,58 +256,50 @@
 </div>
 @endsection
 
-@section('scripts')
-<!-- Script pour ouvrir automatiquement le modal concerné en cas d'erreurs -->
+{{-- Scripts pour afficher automatiquement les modals en cas d'erreur --}}
+@if (session('showModifyClientModal'))
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    @if ($errors->any())
-      var modalId = "{{ session('errorModalId') }}"; // Récupère l'ID du modal avec erreurs
-      if (modalId) {
-        var modalElement = document.getElementById(modalId);
-        if (modalElement) {
-          var myModal = new bootstrap.Modal(modalElement);
+  document.addEventListener("DOMContentLoaded", function() {
+      var clientId = "{{ session('showModifyClientModal') }}";
+      var existingModal = document.querySelector('.modal.show');
+      if (existingModal) {
+          var modalInstance = bootstrap.Modal.getInstance(existingModal);
+          modalInstance.hide();
+      }
+      var myModalElement = document.getElementById('editClientModal' + clientId);
+      var myModal = new bootstrap.Modal(myModalElement);
+      setTimeout(() => {
           myModal.show();
-        }
-      }
-    @endif
+      }, 300);
   });
 </script>
+@endif
 
-<!-- Script pour réinitialiser les erreurs lors de la fermeture ou de l'annulation d'un modal -->
+@if (session('showAddClientModal'))
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Sélectionne tous les modals
-    var modals = document.querySelectorAll('.modal');
-
-    modals.forEach(function(modal) {
-      // Lors de la fermeture du modal via le bouton "Fermer"
-      modal.addEventListener('hidden.bs.modal', function () {
-        resetModalErrors(modal);
-      });
-
-      // Lors du clic sur le bouton "Annuler"
-      var cancelButton = modal.querySelector('.btn-secondary');
-      if (cancelButton) {
-        cancelButton.addEventListener('click', function () {
-          resetModalErrors(modal);
-        });
-      }
-    });
-
-    // Fonction de réinitialisation des erreurs dans le modal
-    function resetModalErrors(modal) {
-      modal.querySelectorAll('.invalid-feedback').forEach(function(errorElement) {
-        errorElement.textContent = ''; // Supprime le texte des erreurs
-      });
-      modal.querySelectorAll('.form-control').forEach(function(inputField) {
-        inputField.classList.remove('is-invalid'); // Retire la classe d'erreur
-      });
-      
-      // Efface les erreurs dans la session si nécessaire
-      @if(Session::has('error'))
-        @php session()->forget('error'); @endphp
-      @endif
-    }
+  document.addEventListener("DOMContentLoaded", function() {
+      var myModal = new bootstrap.Modal(document.getElementById('addClientModal'));
+      myModal.show();
   });
 </script>
+@endif
+
+@section('styles')
+<style>
+  #datatable_1 td,
+  #datatable_1 th {
+    text-align: center;
+  }
+  #datatable_1 td img {
+    display: block;
+    margin: 0 auto;
+  }
+  #datatable_1 td a {
+    display: inline-block;
+    text-align: center;
+  }
+  .modal-content {
+    border-radius: 8px;
+  }
+</style>
 @endsection
