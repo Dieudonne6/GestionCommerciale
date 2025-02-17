@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApprovisionnementController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\VenteController;
+use App\Http\Controllers\CatClientController;
 use App\Http\Controllers\FamilleProduitController;
 use App\Http\Controllers\CategorieProduitController;
 /*
@@ -35,10 +36,16 @@ Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFour
 Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
 
 // clientcontroller
-Route::get('/client', [ClientController::class, 'client']);
-Route::post('/ajouterClient', [ClientController::class, 'ajouterClient']);
-Route::delete('suppClient/{id}', [ClientController::class, 'deleteClient']);
-Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
+Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+Route::put('/clients/{idC}', [ClientController::class, 'update'])->name('clients.update');
+Route::delete('/clients/{idC}', [ClientController::class, 'destroy'])->name('clients.destroy');
+
+// categorieclientcontroller
+Route::get('/categorieclient', [CatClientController::class, 'categorieclient'])->name('categorieclient');
+Route::post('/categorieclient/ajouter', [CatClientController::class, 'ajouterCategoryclient'])->name('categorieclient.ajouter');
+Route::delete('/categorieclient/supprimer/{idCatCl}', [CatClientController::class, 'deletecategorieclient'])->name('categorieclient.supprimer');
+Route::put('/categorieclient/modifier/{idCatCl}', [CatClientController::class, 'updatecategorieclient'])->name('categorieclient.modifier');
 
 // Exercicecontroller
 Route::get('/exercice', [ExerciceController::class, 'exercice']);
@@ -62,6 +69,9 @@ Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class
 Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit');
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
+// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
+Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
+Route::get('/client', [FournisseurController::class, 'client'])->name('client');
 Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
 
 

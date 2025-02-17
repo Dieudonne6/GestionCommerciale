@@ -4,62 +4,69 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
-use App\Http\Requests\ClientRequest;
-
+use App\Models\CategorieClient;
 
 class ClientController extends Controller
 {
-
-    public function client(){
-
-        $allclients = Client::get();
-        return view('pages.definition.client', compact('allclients'));
+    public function index()
+    {
+        $clients = Client::all();
+        $categories = CategorieClient::all();
+        return view('pages.definition.client', compact('clients', 'categories'));
     }
-        // creation client
 
-        public function ajouterClient( ClientRequest $request ) {
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'IFU'       => 'required|numeric|unique:clients,IFU',
+            'nom'       => 'required|string|max:255',
+            'adresse'   => 'required|string|max:255',
+            'telephone' => 'required|string|max:50',
+            'mail'      => 'required|email|max:255|unique:clients,mail',
+            'idCatCl'   => 'required|exists:categorie_clients,idCatCl'
+        ]);
 
+        $client = new Client();
+        $client->IFU       = $validated['IFU'];
+        $client->nom       = $validated['nom'];
+        $client->adresse   = $validated['adresse'];
+        $client->telephone = $validated['telephone'];
+        $client->mail      = $validated['mail'];
+        $client->idCatCl   = $validated['idCatCl'];
+        $client->save();
 
-            // Vérifier si le client existe déjà
-            $clientExiste = Client::where('identiteCl', $request->input('identiteCl'))
-            ->exists();
-    
-            if ($clientExiste) {
-                // Retourner une erreur si le client existe déjà
-                return back()->with(['erreur' => 'Ce client existe déjà.']);
-            }
-    
-            // creer un nouveau client dans le cas echeant
-            $Client = new Client();
-            $Client->identiteCl = $request->input('identiteCl');
-            // $Client->PrenomCl = $request->input('PrenomCl');
-            $Client->AdresseCl = $request->input('AdresseCl');
-            $Client->ContactCl = $request->input('ContactCl');
-            $Client->save();
-    
-            return back()->with("status", "Le client a ete creer avec succes");
-        }
-    
-    
-        // suppression client
-    
-        public function deleteClient ($id) {
-            $client = Client::where('idCl', $id)->first();
-            $client->delete();
-            return back()->with("status", "Le client a ete supprimer avec succes");
-        }
-    
-    
-        // modification client
-    
-        public function updateClient ( Request $request, $id ) {
-            $modifClient = Client::where('idCl', $id)->first();
-            $modifClient->identiteCl = $request->input('identiteCl');
-            // $modifClient->PrenomCl = $request->input('PrenomCl');
-            $modifClient->AdresseCl = $request->input('AdresseCl');
-            $modifClient->ContactCl = $request->input('ContactCl');
-            $modifClient->update();  
-            return back()->with("status", "Le client a ete modifier avec succes");
-  
-        }
+        return back()->with('status', 'Le client a été créé avec succès');
+    }
+
+    public function update(Request $request, $idC)
+    {
+        $client = Client::findOrFail($idC);
+
+        $validated = $request->validate([
+            'IFU'       => 'required|numeric|unique:clients,IFU,'.$client->idC.',idC',
+            'nom'       => 'required|string|max:255',
+            'adresse'   => 'required|string|max:255',
+            'telephone' => 'required|string|max:50',
+            'mail'      => 'required|email|max:255|unique:clients,mail,'.$client->idC.',idC',
+            'idCatCl'   => 'required|exists:categorie_clients,idCatCl'
+        ]);
+
+        $client->IFU       = $validated['IFU'];
+        $client->nom       = $validated['nom'];
+        $client->adresse   = $validated['adresse'];
+        $client->telephone = $validated['telephone'];
+        $client->mail      = $validated['mail'];
+        $client->idCatCl   = $validated['idCatCl'];
+        $client->save();
+
+        return back()->with('status', 'Le client a été modifié avec succès');
+    }
+
+    public function destroy($idC)
+    {
+        $client = Client::findOrFail($idC);
+        $client->delete();
+
+        return back()->with('status', 'Le client a été supprimé avec succès');
+    }
 }
