@@ -107,21 +107,24 @@
                         @method('PUT')
                         <div class="modal-body">
                             <div class="mb-2">
-                                <input type="text" class="form-control @error('codeFamille') is-invalid @enderror" placeholder="code Famille" name="codeFamille" >
+                              <label for="codefamille">Code Famille</label>
+                                <input type="text" class="form-control @error('codeFamille') is-invalid @enderror" id="codefamille" name="codeFamille" value="{{ $allFamilleProduit->codeFamille }}">
                                 @error('codeFamille')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                     
                             <div class="mb-2">
-                                <input type="text" class="form-control @error('libelle') is-invalid @enderror" placeholder="libelle" name="libelle" value="{{ old('libelle', $allFamilleProduit->libelle) }}">
+                              <label for="libelle">Libelle</label>
+                                <input type="text" class="form-control @error('libelle') is-invalid @enderror" id="libelle" name="libelle" value="{{ $allFamilleProduit->libelle }}">
                                 @error('libelle')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                     
                             <div class="mb-2">
-                                <input type="number" class="form-control @error('TVA') is-invalid @enderror" placeholder="TVA" name="TVA" value="{{ old('TVA', $allFamilleProduit->TVA) }}">
+                              <label for="TVA">TVA</label>
+                                <input type="number" class="form-control @error('TVA') is-invalid @enderror" id="TVA" name="TVA" value="{{ $allFamilleProduit->TVA }}">
                                 @error('TVA')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -188,21 +191,24 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('codeFamille') is-invalid @enderror" placeholder="code Famille" name="codeFamille" value="{{ old('codeFamille') }}">
+                        <label for="codeFamille">Code Famille</label>
+                        <input type="text" class="form-control @error('codeFamille') is-invalid @enderror" id="codeFamille" name="codeFamille" value="{{ old('codeFamille') }}">
                         @error('codeFamille')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
             
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('libelle') is-invalid @enderror" placeholder="libelle" name="libelle" value="{{ old('libelle') }}">
+                      <label for="libelle">Libelle</label>
+                        <input type="text" class="form-control @error('libelle') is-invalid @enderror" id="libelle" name="libelle" value="{{ old('libelle') }}">
                         @error('libelle')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
             
                     <div class="mb-2">
-                        <input type="number" class="form-control @error('TVA') is-invalid @enderror" placeholder="TVA" name="TVA" value="{{ old('TVA') }}">
+                      <label for="TVA">TVA</label>
+                        <input type="number" class="form-control @error('TVA') is-invalid @enderror" id="TVA" name="TVA" value="{{ old('TVA') }}">
                         @error('TVA')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

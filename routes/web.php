@@ -13,6 +13,8 @@ use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\VenteController;
 use App\Http\Controllers\FamilleProduitController;
 use App\Http\Controllers\CategorieProduitController;
+use App\Http\Controllers\ProduitController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -123,6 +125,12 @@ Route::get('/categorieProduit', [CategorieProduitController::class, 'categoriePr
 Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit');
 Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit']);
 Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit');
+
+//ProduitController
+Route::get('/Produits', [ProduitController::class, 'Produits']);
+Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
+Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
+Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
 
 
 

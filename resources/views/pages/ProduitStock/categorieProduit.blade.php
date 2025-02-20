@@ -45,8 +45,8 @@
               <thead class="table-light">
                 <tr>
                   <th >No</th>
-                  <th >Libellé</th>
                   <th >Code Categorie</th>
+                  <th >Libellé</th>
                   <th >Actions</th>
                 </tr>
               </thead>
@@ -67,8 +67,8 @@
                       <span class="font-13 fw-medium">{{ $allfournisseur->PrenomF }}</span>
                     </p>
                   </td> --}}
-                  <td >{{ $allCategorieProduit->libelle }}</td>
                   <td >{{ $allCategorieProduit->codeCatPro }}</td>
+                  <td >{{ $allCategorieProduit->libelle }}</td>
                   <td >
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allCategorieProduit->idCatPro}}"> Modifier</button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allCategorieProduit->idCatPro}}"> Supprimer</button>
@@ -106,7 +106,8 @@
                         <div class="modal-body">
 
                           <div class="mb-2">
-                            <input type="text" class="form-control @error('codeCatPro') is-invalid @enderror"  placeholder="code Categorie" name="codeCatPro" value="{{ $allCategorieProduit->codeCatPro }}">
+                            <label for="codeCatPro">Code Categorie Produit</label>
+                            <input type="text" class="form-control @error('codeCatPro') is-invalid @enderror"  id="codeCatPro" name="codeCatPro" value="{{ $allCategorieProduit->codeCatPro }}">
                             @error('codeCatPro')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -115,7 +116,8 @@
                             <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF" value="{{ $allCategorieProduit->PrenomF }}">
                           </div> --}}
                           <div class="mb-2">
-                            <input type="text" class="form-control @error('libelle') is-invalid @enderror"  placeholder="libelle" name="libelle" value="{{ $allCategorieProduit->libelle }}">
+                            <label for="libelle">Libelle</label>
+                            <input type="text" class="form-control @error('libelle') is-invalid @enderror"  id="libelle" name="libelle" value="{{ $allCategorieProduit->libelle }}">
                             @error('libelle')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -181,7 +183,8 @@
                 @csrf
                 <div class="modal-body">
                   <div class="mb-2">
-                    <input type="text" class="form-control @error('codeCatPro') is-invalid @enderror"  placeholder="code Categorie" name="codeCatPro" value="{{old('codeCatPro')}}">
+                    <label for="codeCatPro">Code Categorie Produit</label>
+                    <input type="text" class="form-control @error('codeCatPro') is-invalid @enderror"  id="codeCatPro" name="codeCatPro" value="{{old('codeCatPro')}}">
                     @error('codeCatPro')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -190,7 +193,8 @@
                     <input type="text" class="form-control"  placeholder="Prenom" name="PrenomF">
                   </div> --}}
                   <div class="mb-2">
-                    <input type="text" class="form-control @error('libelle') is-invalid @enderror"  placeholder="libelle" name="libelle" value="{{old('libelle')}}">
+                    <label for="libelle">Libelle</label>
+                    <input type="text" class="form-control @error('libelle') is-invalid @enderror"  placeholder="libelle" id="libelle" value="{{old('libelle')}}">
                     @error('libelle')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
