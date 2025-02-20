@@ -5,16 +5,18 @@
         <div class="card mt-4">
             <div class="card-header">
                 <div class="row align-items-center">
-                  <div class="col">
-                    <h4 class="card-title">Gestion des Rôles</h4>
-                  </div><!--end col-->
-                  <div class="col-auto">
-                    <div class="col-auto">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRoleModal"><i class="fa-solid fa-plus me-1"></i> Ajouter un rôle</button>
+                    <div class="col">
+                        <h4 class="card-title">Gestion des Rôles</h4>
                     </div><!--end col-->
-                  </div><!--end col-->
+                    <div class="col-auto">
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRoleModal">
+                                <i class="fa-solid fa-plus me-1"></i> Ajouter un rôle
+                            </button>
+                        </div><!--end col-->
+                    </div><!--end col-->
                 </div><!--end row-->
-              </div>
+            </div>
 
             <div class="card-body">
                 <!-- Message de succès -->
@@ -29,29 +31,29 @@
                 <table class="table-responsive table mb-0" id="datatable_1">
                     <thead class="table-light">
                         <tr>
-                            <th>Roles</th>
+                            <th>Rôles</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($roles as $role)
                             <tr>
-                                <td>{{ $role->libelleRole }}</td>
+                                <td>{{ $role->libelle }}</td>
                                 <td>
                                     <!-- Modifier -->
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#editRoleModal{{ $role->id }}">Modifier</button>
+                                        data-bs-target="#editRoleModal{{ $role->idRole }}">Modifier</button>
 
                                     <!-- Supprimer -->
                                     <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#deleteRoleModal{{ $role->id }}">Supprimer</button>
+                                        data-bs-target="#deleteRoleModal{{ $role->idRole }}">Supprimer</button>
                                 </td>
                             </tr>
 
                             <!-- Modal de modification -->
-                            <div class="modal fade" id="editRoleModal{{ $role->id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal fade" id="editRoleModal{{ $role->idRole }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <form action="{{ route('updateRole', $role->id) }}" method="POST">
+                                    <form action="{{ route('updateRole', $role->idRole) }}" method="POST">
                                         @csrf
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -61,11 +63,10 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="libelleRole{{ $role->id }}" class="form-label">Nom du
-                                                        rôle</label>
+                                                    <label for="libelle{{ $role->idRole }}" class="form-label">Nom du rôle</label>
                                                     <input type="text" class="form-control"
-                                                        id="libelleRole{{ $role->id }}" name="libelleRole"
-                                                        value="{{ $role->libelleRole }}" required>
+                                                        id="libelle{{ $role->idRole }}" name="libelle"
+                                                        value="{{ $role->libelle }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -79,10 +80,9 @@
                             </div>
 
                             <!-- Modal de suppression -->
-                            <div class="modal fade" id="deleteRoleModal{{ $role->id }}" tabindex="-1"
-                                aria-hidden="true">
+                            <div class="modal fade" id="deleteRoleModal{{ $role->idRole }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <form action="{{ route('deleteRole', $role->id) }}" method="POST">
+                                    <form action="{{ route('deleteRole', $role->idRole) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-content">
@@ -93,7 +93,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p>Êtes-vous sûr de vouloir supprimer le rôle
-                                                    <strong>{{ $role->libelleRole }}</strong> ?</p>
+                                                    <strong>{{ $role->libelle }}</strong> ?</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -122,8 +122,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="libelleRole" class="form-label">Nom du rôle</label>
-                                <input type="text" class="form-control" id="libelleRole" name="libelleRole" required>
+                                <label for="libelle" class="form-label">Nom du rôle</label>
+                                <input type="text" class="form-control" id="libelle" name="libelle" required>
                             </div>
                         </div>
                         <div class="modal-footer">

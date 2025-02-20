@@ -4,62 +4,111 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
-use App\Http\Requests\ClientRequest;
-
+use App\Models\CategorieClient;
+use Illuminate\Support\Facades\Validator;
 
 class ClientController extends Controller
 {
-
-    public function client(){
-
-        $allclients = Client::get();
-        return view('pages.definition.client', compact('allclients'));
+    public function index()
+    {
+        $clients = Client::all();
+        $categories = CategorieClient::all();
+        return view('pages.GestClient.client', compact('clients', 'categories'));
     }
-        // creation client
 
-        public function ajouterClient( ClientRequest $request ) {
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'IFU'       => 'required|numeric|unique:clients,IFU',
+            'nom'       => 'required|string|max:255',
+            'adresse'   => 'required|string|max:255',
+            'telephone' => 'required|string|max:50',
+            'mail'      => 'required|email|max:255|unique:clients,mail',
+            'idCatCl'   => 'required|exists:categorie_clients,idCatCl'
+        ], [
+            'IFU.required'       => 'L\'IFU est obligatoire.',
+            'IFU.numeric'        => 'L\'IFU doit être numérique.',
+            'IFU.unique'         => 'Cet IFU existe déjà.',
+            'nom.required'       => 'Le nom est obligatoire.',
+            'adresse.required'   => 'L\'adresse est obligatoire.',
+            'telephone.required' => 'Le téléphone est obligatoire.',
+            'mail.required'      => 'L\'email est obligatoire.',
+            'mail.email'         => 'L\'email doit être valide.',
+            'mail.unique'        => 'Cet email est déjà utilisé.',
+            'idCatCl.required'   => 'La catégorie client est obligatoire.',
+            'idCatCl.exists'     => 'La catégorie client sélectionnée est invalide.'
+        ]);
 
-
-            // Vérifier si le client existe déjà
-            $clientExiste = Client::where('identiteCl', $request->input('identiteCl'))
-            ->exists();
-    
-            if ($clientExiste) {
-                // Retourner une erreur si le client existe déjà
-                return back()->with(['erreur' => 'Ce client existe déjà.']);
-            }
-    
-            // creer un nouveau client dans le cas echeant
-            $Client = new Client();
-            $Client->identiteCl = $request->input('identiteCl');
-            // $Client->PrenomCl = $request->input('PrenomCl');
-            $Client->AdresseCl = $request->input('AdresseCl');
-            $Client->ContactCl = $request->input('ContactCl');
-            $Client->save();
-    
-            return back()->with("status", "Le client a ete creer avec succes");
+        if ($validator->fails()) {
+            return redirect()->route('clients.index')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('showAddClientModal', true);
         }
-    
-    
-        // suppression client
-    
-        public function deleteClient ($id) {
-            $client = Client::where('idCl', $id)->first();
+
+        try {
+            Client::create($request->only(['IFU', 'nom', 'adresse', 'telephone', 'mail', 'idCatCl']));
+            return redirect()->route('clients.index')
+                ->with('status', 'Le client a été créé avec succès');
+        } catch (\Exception $e) {
+            return redirect()->route('clients.index')
+                ->with('erreur', 'Une erreur est survenue lors de la création du client');
+        }
+    }
+
+    public function update(Request $request, $idC)
+    {
+        $client = Client::findOrFail($idC);
+
+        $validator = Validator::make($request->all(), [
+            'IFU'       => 'required|numeric|unique:clients,IFU,'.$client->idC.',idC',
+            'nom'       => 'required|string|max:255',
+            'adresse'   => 'required|string|max:255',
+            'telephone' => 'required|string|max:50',
+            'mail'      => 'required|email|max:255|unique:clients,mail,'.$client->idC.',idC',
+            'idCatCl'   => 'required|exists:categorie_clients,idCatCl'
+        ], [
+            'IFU.required'       => 'L\'IFU est obligatoire.',
+            'IFU.numeric'        => 'L\'IFU doit être numérique.',
+            'IFU.unique'         => 'Cet IFU existe déjà.',
+            'nom.required'       => 'Le nom est obligatoire.',
+            'adresse.required'   => 'L\'adresse est obligatoire.',
+            'telephone.required' => 'Le téléphone est obligatoire.',
+            'mail.required'      => 'L\'email est obligatoire.',
+            'mail.email'         => 'L\'email doit être valide.',
+            'mail.unique'        => 'Cet email est déjà utilisé.',
+            'idCatCl.required'   => 'La catégorie client est obligatoire.',
+            'idCatCl.exists'     => 'La catégorie client sélectionnée est invalide.'
+        ]);
+
+        if ($validator->fails()) {
+            // Flag pour ouvrir le modal de modification avec l'ID concerné
+            session()->flash('showModifyClientModal', $idC);
+            return redirect()->route('clients.index')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            $client->update($request->only(['IFU', 'nom', 'adresse', 'telephone', 'mail', 'idCatCl']));
+            return redirect()->route('clients.index')
+                ->with('status', 'Le client a été modifié avec succès');
+        } catch (\Exception $e) {
+            return redirect()->route('clients.index')
+                ->with('erreur', 'Une erreur est survenue lors de la modification du client');
+        }
+    }
+
+    public function destroy($idC)
+    {
+        try {
+            $client = Client::findOrFail($idC);
             $client->delete();
-            return back()->with("status", "Le client a ete supprimer avec succes");
+            return redirect()->route('clients.index')
+                ->with('status', 'Le client a été supprimé avec succès');
+        } catch (\Exception $e) {
+            return redirect()->route('clients.index')
+                ->with('erreur', 'Une erreur est survenue lors de la suppression du client');
         }
-    
-    
-        // modification client
-    
-        public function updateClient ( Request $request, $id ) {
-            $modifClient = Client::where('idCl', $id)->first();
-            $modifClient->identiteCl = $request->input('identiteCl');
-            // $modifClient->PrenomCl = $request->input('PrenomCl');
-            $modifClient->AdresseCl = $request->input('AdresseCl');
-            $modifClient->ContactCl = $request->input('ContactCl');
-            $modifClient->update();  
-            return back()->with("status", "Le client a ete modifier avec succes");
-  
-        }
+    }
 }

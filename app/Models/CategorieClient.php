@@ -12,9 +12,7 @@ class CategorieClient extends Model
     use HasFactory;
     protected $primaryKey = 'idCatCl'; // Clé primaire de la table
 
-    protected $fillable = [
-        'libelle',
-    ];
+    protected $fillable = ['codeCatCl', 'libelle'];
 
     public function client() {
         return $this->hasMany(Client::class, 'idC');

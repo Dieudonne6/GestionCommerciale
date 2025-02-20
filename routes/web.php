@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategorieFournisseurController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitsController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApprovisionnementController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\VenteController;
+use App\Http\Controllers\CatClientController;
 use App\Http\Controllers\FamilleProduitController;
 use App\Http\Controllers\CategorieProduitController;
 use App\Http\Controllers\ProduitController;
@@ -30,16 +32,22 @@ use App\Http\Controllers\ProduitController;
 //     return view('welcome');
 // });
 //fournisseurcontroller
-Route::get('/fournisseur', [FournisseurController::class, 'fournisseur']);
-Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseur.ajouter');
+Route::get('/fournisseur', [FournisseurController::class, 'fournisseur'])->name('fournisseur');
+Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseurs.ajouterFournisseur');
 Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
 Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
 
 // clientcontroller
-Route::get('/client', [ClientController::class, 'client']);
-Route::post('/ajouterClient', [ClientController::class, 'ajouterClient']);
-Route::delete('suppClient/{id}', [ClientController::class, 'deleteClient']);
-Route::put('modifClient/{id}', [ClientController::class, 'updateClient']);
+Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+Route::put('/clients/{idC}', [ClientController::class, 'update'])->name('clients.update');
+Route::delete('/clients/{idC}', [ClientController::class, 'destroy'])->name('clients.destroy');
+
+// categorieclientcontroller
+Route::get('/categorieclient', [CatClientController::class, 'categorieclient'])->name('categorieclient');
+Route::post('/categorieclient/ajouter', [CatClientController::class, 'ajouterCategoryclient'])->name('categorieclient.ajouter');
+Route::delete('/categorieclient/supprimer/{idCatCl}', [CatClientController::class, 'deletecategorieclient'])->name('categorieclient.supprimer');
+Route::put('/categorieclient/modifier/{idCatCl}', [CatClientController::class, 'updatecategorieclient'])->name('categorieclient.modifier');
 
 // Exercicecontroller
 Route::get('/exercice', [ExerciceController::class, 'exercice']);
@@ -52,7 +60,20 @@ Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
 Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
 Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy');
-Route::get('/clients', [FournisseurController::class, 'clients'])->name('clients');
+Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
+Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
+Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
+Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name('categories.edit');
+Route::get('/categoriesFournisseur', [CategorieFournisseurController::class, 'index'])->name('categoriesF');
+Route::post('/categorieFournisseur/store', [CategorieFournisseurController::class, 'store'])->name('categoriesF.store');
+Route::delete('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'destroy'])->name('categoriesF.destroy');
+Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'update'])->name('categoriesF.update');
+Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit');
+// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
+Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
+// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
+Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
+Route::get('/client', [FournisseurController::class, 'client'])->name('client');
 
 
 // ApprovisionnementController
@@ -77,6 +98,8 @@ Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::clas
 
 Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
 Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
+Route::post('/entreprise/{id}', [ParamController::class, 'updateEntreprise'])->name('entreprise.update');
+Route::delete('/entreprise/{id}', [ParamController::class, 'destroyEntreprise'])->name('entreprise.destroy');
 
 Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
 Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
