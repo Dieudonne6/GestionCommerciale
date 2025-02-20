@@ -96,6 +96,8 @@ Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::clas
 
 Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
 Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
+Route::post('/entreprise/{id}', [ParamController::class, 'updateEntreprise'])->name('entreprise.update');
+Route::delete('/entreprise/{id}', [ParamController::class, 'destroyEntreprise'])->name('entreprise.destroy');
 
 Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
 Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');

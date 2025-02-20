@@ -4,115 +4,145 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\Utilisateur;
 use App\Models\Entreprise;
 use App\Models\Role;
 
 class ParamController extends Controller
 {
-    // Affiche la liste des utilisateurs
-    public function utilisateurs()
-    {
-        $users = User::all();
-        $roles = Role::all();
-        return view('pages.parametres.utilisateurs', compact('users', 'roles'));
+   // Affiche la liste des utilisateurs
+   public function utilisateurs()
+   {
+       $utilisateurs = Utilisateur::all();
+       $roles = Role::all();
+       $entreprises = Entreprise::all();
+       return view('pages.parametres.utilisateurs', compact('utilisateurs', 'roles', 'entreprises'));
+   }
+
+   // Ajoute un nouvel utilisateur
+   public function enregistre(Request $request)
+   {
+       $request->validate([
+           'nom'       => 'required|string|max:255',
+           'adresse'   => 'required|string',
+           'telephone' => 'required|string|max:15',
+           'mail'      => 'required|email|unique:utilisateurs,mail',
+           'idRole'    => 'required|integer',
+           // Vous pouvez ajouter une validation pour idE si nécessaire :
+           'idE'    => 'nullable|integer',
+       ]);
+
+       Utilisateur::create([
+           'nom'       => $request->nom,
+           'adresse'   => $request->adresse,
+           'telephone' => $request->telephone,
+           'mail'      => $request->mail,
+           'idRole'    => $request->idRole,
+           'idE'       => $request->idE, // Assurez-vous que ce champ est présent dans votre formulaire ou définissez-le en dur si nécessaire.
+       ]);
+
+       return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
+   }
+
+   // Met à jour un utilisateur existant
+   public function modifie(Request $request, $idU)
+   {
+       $utilisateur = Utilisateur::findOrFail($idU);
+
+       $request->validate([
+           'nom'       => 'required|string|max:255' . $idU . ',idU',
+           'adresse'   => 'required|string',
+           'telephone' => 'required|string|max:15',
+           'mail'      => 'required|email|unique:utilisateurs,mail,' . $idU . ',idU',
+           'idRole'    => 'required|integer',
+           'idE'    => 'nullable|integer',
+       ]);
+
+       $utilisateur->update([
+           'nom'       => $request->nom,
+           'adresse'   => $request->adresse,
+           'telephone' => $request->telephone,
+           'mail'      => $request->mail,
+           'idRole'    => $request->idRole,
+           'idE'       => $request->idE,
+       ]);
+
+       return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
+   }
+
+   // Supprime un utilisateur
+   public function supprime($idU)
+   {
+       $utilisateur = Utilisateur::findOrFail($idU);
+       $utilisateur->delete();
+
+       return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
+   }
+
+   public function entreprise()
+{
+    $entreprises = Entreprise::all();
+    return view('pages.parametres.entreprise', compact('entreprises'));
+}
+
+public function storeEntreprise(Request $request)
+{
+    $validated = $request->validate([
+        'nom'       => 'required|string|max:255',
+        'IFU'       => 'nullable|string|max:50',
+        'adresse'   => 'nullable|string|max:255',
+        'telephone' => 'nullable|string|max:20',
+        'mail'      => 'nullable|email|max:255',
+        'logo'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'RCCM'      => 'nullable|string|max:100',
+        'regime'    => 'nullable|string|max:100',
+        'idParent'  => 'nullable|exists:entreprises,idE'
+    ]);
+
+    if ($request->hasFile('logo')) {
+        $logoPath = $request->file('logo')->store('logos', 'public');
+        $validated['logo'] = $logoPath;
     }
 
-    // Ajoute un nouvel utilisateur
-    public function enregistre(Request $request)
-    {
-        $users = User::all();
-        $roles = Role::all();
-        $request->validate([
-            'login' => 'required|string|unique:users',
-            'nomU' => 'required|string|max:255',
-            'adresseU' => 'required|string',
-            'telephone' => 'required|string|max:15',
-            'password' => 'required|min:6',
-            'roleID' => 'required|integer',
-        ]);
+    Entreprise::create($validated);
 
-        User::create([
-            'login' => $request->login,
-            'nomU' => $request->nomU,
-            'adresseU' => $request->adresseU,
-            'telephone' => $request->telephone,
-            'password' => Hash::make($request->password),
-            'roleID' => $request->roleID,
-        ]);
+    return redirect()->back()->with('success', 'Entreprise ajoutée avec succès.');
+}
 
-        return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
+public function updateEntreprise(Request $request, $id)
+{
+    $entreprise = Entreprise::findOrFail($id);
+
+    $validated = $request->validate([
+        'nom'       => 'required|string|max:255',
+        'IFU'       => "required|string|max:50|unique:entreprises,IFU,{$id},idE",
+        'adresse'   => 'nullable|string|max:255',
+        'telephone' => 'nullable|string|max:20',
+        'mail'      => 'nullable|email|max:255',
+        'logo'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'RCCM'      => 'nullable|string|max:100',
+        'regime'    => 'nullable|string|max:100',
+        'idParent'  => 'nullable|exists:entreprises,idE'
+    ]);
+
+    if ($request->hasFile('logo')) {
+        $logoPath = $request->file('logo')->store('logos', 'public');
+        $validated['logo'] = $logoPath;
     }
 
-    // Met à jour un utilisateur existant
-    public function modifie(Request $request, $idU)
-    {
-        $user = User::findOrFail($idU);
+    $entreprise->update($validated);
 
-        $request->validate([
-            'login' => 'required|string|unique:users,login,' . $idU . ',idU',
-            'nomU' => 'required|string|max:255',
-            'adresseU' => 'required|string',
-            'telephone' => 'required|string|max:15',
-            'roleID' => 'required|integer',
-        ]);
+    return redirect()->back()->with('success', 'Entreprise mise à jour avec succès.');
+}
 
-        $user->update([
-            'login' => $request->login,
-            'nomU' => $request->nomU,
-            'adresseU' => $request->adresseU,
-            'telephone' => $request->telephone,
-            'roleID' => $request->roleID,
-        ]);
+public function destroyEntreprise($id)
+{
+    $entreprise = Entreprise::findOrFail($id);
+    $entreprise->delete();
 
-        return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
-    }
+    return redirect()->back()->with('success', 'Entreprise supprimée avec succès.');
+}
 
-    // Supprime un utilisateur
-    public function supprime($idU)
-    {
-        $user = User::findOrFail($idU);
-        $user->delete();
-
-        return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
-    }
-
-    public function entreprise()
-    {
-        $entreprise = Entreprise::first();
-        return view('pages.parametres.entreprise', compact('entreprise'));
-    }
-
-    public function storeEntreprise(Request $request)
-    {
-        $request->validate([
-            'nomEntreprise' => 'required|string|max:255',
-            'adresseEntreprise' => 'nullable|string|max:255',
-            'emailEntreprise' => 'nullable|email',
-            'telephone' => 'nullable|string|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'IFU' => 'nullable|string|max:50',
-            'Description' => 'nullable|string',
-            'site_web' => 'nullable|url',
-        ]);
-
-        $data = $request->all();
-
-        // Gestion du logo
-        if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('logos', 'public');
-            $data['logo'] = $logoPath;
-        }
-
-        $entreprise = Entreprise::first();
-        if ($entreprise) {
-            $entreprise->update($data);
-        } else {
-            Entreprise::create($data);
-        }
-
-        return redirect()->back()->with('success', 'Informations de l\'entreprise mises à jour avec succès.');
-    }
      // Affiche les rôles
      public function role()
      {
@@ -121,40 +151,41 @@ class ParamController extends Controller
      }
  
      // Ajoute un rôle
-     public function storeRole(Request $request)
-     {
-         $request->validate([
-             'libelleRole' => 'required|string|max:255|unique:roles,libelleRole',
-         ]);
- 
-         Role::create([
-             'libelleRole' => $request->libelleRole,
-         ]);
- 
-         return redirect()->back()->with('success', 'Rôle ajouté avec succès.');
-     }
- 
-     // Modifie un rôle
-     public function updateRole(Request $request, $id)
-     {
-         $request->validate([
-             'libelleRole' => 'required|string|max:255|unique:roles,libelleRole,' . $id,
-         ]);
- 
-         $role = Role::findOrFail($id);
-         $role->update([
-             'libelleRole' => $request->libelleRole,
-         ]);
- 
-         return redirect()->back()->with('success', 'Rôle modifié avec succès.');
-     }
- 
-     // Supprime un rôle
-     public function deleteRole($id)
-     {
-         $role = Role::findOrFail($id);
-         $role->delete();
- 
-         return redirect()->back()->with('success', 'Rôle supprimé avec succès.');
-     }
+public function storeRole(Request $request)
+{
+    $request->validate([
+        'libelle' => 'required|string|max:255|unique:roles,libelle',
+    ]);
+
+    Role::create([
+        'libelle' => $request->libelle,
+    ]);
+
+    return redirect()->back()->with('success', 'Rôle ajouté avec succès.');
+}
+
+// Modifie un rôle
+public function updateRole(Request $request, $id)
+{
+    $request->validate([
+        // Ici, on ignore l'enregistrement courant grâce à l'id et on précise la colonne de la clé primaire (idRole)
+        'libelle' => 'required|string|max:255|unique:roles,libelle,' . $id . ',idRole',
+    ]);
+
+    $role = Role::findOrFail($id);
+    $role->update([
+        'libelle' => $request->libelle,
+    ]);
+
+    return redirect()->back()->with('success', 'Rôle modifié avec succès.');
+}
+
+// Supprime un rôle
+public function deleteRole($id)
+{
+    $role = Role::findOrFail($id);
+    $role->delete();
+
+    return redirect()->back()->with('success', 'Rôle supprimé avec succès.');
+}
 }
