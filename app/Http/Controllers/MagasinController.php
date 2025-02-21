@@ -10,6 +10,7 @@ use App\Models\Entreprise;
 use App\Models\Produit;
 use App\Models\Stocke;
 use App\Models\CategorieProduit;
+use App\Models\FamilleProduit;
 
 class MagasinController extends Controller
 {
@@ -19,7 +20,9 @@ class MagasinController extends Controller
         $magasins = Magasin::with('entreprise')->get();
         $entreprises = Entreprise::all();
         $produits = Produit::all(); // Pour le modal d'ajout de produit
-        return view('pages.ProduitStock.magasins', compact('magasins', 'produits', 'entreprises'));
+        $allCategorieProduits = CategorieProduit::get();
+        $allFamilleProduits = FamilleProduit::get();
+        return view('pages.ProduitStock.magasins', compact('magasins', 'produits', 'entreprises', 'allCategorieProduits', 'allFamilleProduits'));
     }
 
     public function ajouterMagasin(Request $request)
@@ -62,13 +65,24 @@ class MagasinController extends Controller
     // Ajouter un produit au magasin
     public function addProduct(Request $request, $idMag)
     {
-        $request->validate([
-            'libelle' => 'required|string|max:255',
-            'qteStocke' => 'required|integer|min:1',
-        ]);
-
         // Vérifier si le produit existe déjà
         $produit = Produit::where('libelle', $request->libelle)->first();
+
+        $validator = \Validator::make($request->all(), [
+            'libelle' => 'required|string|max:255',
+            'qteStocke' => 'required|integer|min:1',
+            'idCatPro' => 'required',
+            'idFamPro' => 'required',
+        ], [
+            'idCatPro.required' => 'Ce champ est obligatoire.',
+            'idFamPro.required' => 'Ce champ est obligatoire.',
+        ]);
+
+        // Vérifier si la validation a échoué
+        if ($validator->fails()) {
+            session()->flash('showModifyMagasinModal', $idMag);
+            return redirect()->route('magasins')->withErrors($validator);
+        }
 
         if (!$produit) {
             // Création du produit s'il n'existe pas
@@ -79,6 +93,8 @@ class MagasinController extends Controller
                 'image' => $request->image,
                 'stockAlert' => $request->stockAlert,
                 'stockMinimum' => $request->stockMinimum,
+                'idCatPro' => $request->idCatPro,
+                'idFamPro' => $request->idFamPro,
             ]);
         }
 

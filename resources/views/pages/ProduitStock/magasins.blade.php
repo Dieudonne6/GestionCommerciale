@@ -75,63 +75,82 @@
                                     </tr>
 
                                     <!-- Modal Modifier -->
-<div class="modal fade" id="editModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="editModalLabel{{ $magasin->idMag }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ $magasin->idMag }}">Ajouter un Produit</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('magasins.addProduct', $magasin->idMag) }}" enctype="multipart/form-data" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="libelle">Produit</label>
-                        <input type="text" name="libelle" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="prix">Prix</label>
-                        <input type="number" name="prix" class="form-control" required>
-                    <div class="form-group">
-                        <label for="desc">Description</label>
-                        <input type="text" name="desc" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Image</label>
-                        <input type="file" name="image" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="stockAlert">stockAlert</label>
-                        <input type="text" name="stockAlert" class="form-control" required>
-                    </div>                        
-                    <div class="form-group">
-                        <label for="stockMinimum">stockMinimum</label>
-                        <input type="text" name="stockMinimum" class="form-control" required>
-                    </div>                                        
-                    </div>
-                    <div class="form-group">
-                        <label for="qteStocke">Quantité</label>
-                        <input type="number" name="qteStocke" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="idCatPro">Catégorie du Produit</label>
-                      <select name="idCatPro" class="form-control">
-                        <option value="0" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
-                        @foreach ($categories as $categorie)
-                            <option value="{{ $categorie->idC }}" {{ $categorie->NomC == $categorie->idC ? 'selected' : '' }}>{{ $categorie->NomC }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Ajouter</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+                                    <div class="modal fade" id="editModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="editModalLabel{{ $magasin->idMag }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editModalLabel{{ $magasin->idMag }}">Ajouter un Produit</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('magasins.addProduct', $magasin->idMag) }}" enctype="multipart/form-data" method="POST">
+                                                        @csrf
+                                                        <div class="form-group">
+                                                            <label for="libelle">Produit</label>
+                                                            <input type="text" name="libelle" class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="prix">Prix</label>
+                                                            <input type="number" name="prix" class="form-control" required>
+                                                        <div class="form-group">
+                                                            <label for="desc">Description</label>
+                                                            <input type="text" name="desc" class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="image">Image</label>
+                                                            <input type="file" name="image" class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="stockAlert">stockAlert</label>
+                                                            <input type="text" name="stockAlert" class="form-control" required>
+                                                        </div>                        
+                                                        <div class="form-group">
+                                                            <label for="stockMinimum">stockMinimum</label>
+                                                            <input type="text" name="stockMinimum" class="form-control" required>
+                                                        </div>                                        
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="qteStocke">Quantité</label>
+                                                            <input type="number" name="qteStocke" class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                        <label for="idCatPro">Catégorie du Produit</label>
+                                                        <select name="idCatPro" class="form-control @error('idCatPro') is-invalid  @enderror">
+                                                            <option value="" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
+                                                            @foreach ($allCategorieProduits as $allCategorieProduit)
+                                                                <option value="{{ $allCategorieProduit->idCatPro }}">
+                                                                    {{ $allCategorieProduit->libelle }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                            @error('idCatPro')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                        <label for="idFamPro">Famillle du Produit</label>
+                                                        <select name="idFamPro" class="form-control @error('idFamPro') is-invalid  @enderror">
+                                                            <option value="" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
+                                                            @foreach ($allFamilleProduits as $allFamilleProduit)
+                                                                {{-- <option value="{{ $allFamilleProduit->idFamPro }}" {{ old('idFamPro', $allCategorieProduit->idFamPro) == $allCategorieProduit->idCatPro ? 'selected' : '' }}> --}}
+                                                                <option value="{{ $allFamilleProduit->idFamPro }}">
+                                                                    {{ $allFamilleProduit->libelle }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                            @error('idFamPro')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <!-- Modal Supprimer -->
                                     <div class="modal fade" id="deleteModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $magasin->idMag }}" aria-hidden="true">
@@ -155,8 +174,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                                     <div class="modal fade" id="detailsModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $magasin->idMag }}" aria-hidden="true">
+                <div class="modal fade" id="detailsModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $magasin->idMag }}" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -197,77 +221,75 @@
                                         </div>
                                     </div>
 
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                 <!-- Modal d'ajout -->
-        <div class="modal fade" id="addMagasinModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5">Ajouter un Magasin</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-{{--                 @if ($errors->any())
-                <div class="alert alert-danger">
-                  <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                  </ul>
-                </div>
-                @endif --}}
-                <form action="{{ route('magasins.ajouterMagasin') }}" method="POST">
-                  @csrf
-                  <div class="modal-body">
-                    <div class="form-group">
-                        <label for="codeMagasin">Code </label>
-                        <input type="text" class="form-control @error('codeMagasin') is-invalid  @enderror" name="codeMagasin" value="{{ old('codeMagasin') }}" required>
-                        @error('codeMagasin')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="libelle">libelle</label>
-                        <input type="text" class="form-control @error('libelle') is-invalid  @enderror" name="libelle" value="{{ old('libelle') }}" required>
-                        @error('libelle')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="Adresse">Adresse</label>
-                        <input type="text" class="form-control @error('Adresse') is-invalid  @enderror" name="Adresse" value="{{ old('Adresse') }}" required>
-                        @error('Adresse')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="entreprise">Entreprise</label>
-                        <select name="idE" class="form-control @error('idE') is-invalid  @enderror">
-                            <option value="">Aucune</option>
-                            @foreach ($entreprises as $entreprise)
-                                <option value="{{ $entreprise->idE }}" {{ old('idE') == $entreprise->idE ? 'selected' : '' }}>
-                                    {{ $entreprise->nom }}
-                                </option>
-                            @endforeach
-                        </select>
-                            @error('idE')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-            </div>
-        </div>
+                                    <!-- Modal d'ajout -->
+                                    <div class="modal fade" id="addMagasinModal" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Ajouter un Magasin</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            {{--@if ($errors->any())
+                                            <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                            </div>
+                                            @endif --}}
+                                            <form action="{{ route('magasins.ajouterMagasin') }}" method="POST">
+                                                @csrf
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="codeMagasin">Code </label>
+                                                    <input type="text" class="form-control @error('codeMagasin') is-invalid  @enderror" name="codeMagasin" value="{{ old('codeMagasin') }}" required>
+                                                    @error('codeMagasin')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="libelle">libelle</label>
+                                                    <input type="text" class="form-control @error('libelle') is-invalid  @enderror" name="libelle" value="{{ old('libelle') }}" required>
+                                                    @error('libelle')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="Adresse">Adresse</label>
+                                                    <input type="text" class="form-control @error('Adresse') is-invalid  @enderror" name="Adresse" value="{{ old('Adresse') }}" required>
+                                                    @error('Adresse')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="entreprise">Entreprise</label>
+                                                    <select name="idE" class="form-control @error('idE') is-invalid  @enderror">
+                                                        <option value="">Aucune</option>
+                                                        @foreach ($entreprises as $entreprise)
+                                                            <option value="{{ $entreprise->idE }}" {{ old('idE') == $entreprise->idE ? 'selected' : '' }}>
+                                                                {{ $entreprise->nom }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                        @error('idE')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                                            </div>
+                                            </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
     </div>
 </div>
 @endsection
@@ -277,6 +299,16 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var myModal = new bootstrap.Modal(document.getElementById('addMagasinModal'));
+            myModal.show();
+        });
+    </script>
+  @endif
+
+    @if (session('showModifyMagasinModal'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var magasinId = "{{ session('showModifyMagasinModal') }}";
+            var myModal = new bootstrap.Modal(document.getElementById('editModal' + magasinId));
             myModal.show();
         });
     </script>
