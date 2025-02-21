@@ -15,6 +15,12 @@ use App\Http\Controllers\VenteController;
 use App\Http\Controllers\CatClientController;
 use App\Http\Controllers\FamilleProduitController;
 use App\Http\Controllers\CategorieProduitController;
+
+use App\Http\Controllers\MagasinController;
+
+use App\Http\Controllers\ProduitController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -62,11 +68,21 @@ Route::get('/categories', [CategoriesController::class, 'index'])->name('categor
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
 Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name('categories.edit');
+
+//Fournisseur
 Route::get('/categoriesFournisseur', [CategorieFournisseurController::class, 'index'])->name('categoriesF');
 Route::post('/categorieFournisseur/store', [CategorieFournisseurController::class, 'store'])->name('categoriesF.store');
 Route::delete('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'destroy'])->name('categoriesF.destroy');
 Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'update'])->name('categoriesF.update');
 Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit');
+
+// Magasin
+Route::get('/magasins', [MagasinController::class, 'index'])->name('magasins');
+Route::post('/ajouterMagasin', [MagasinController::class, 'ajouterMagasin'])->name('magasins.ajouterMagasin');
+Route::delete('suppMagasin/{id}', [MagasinController::class, 'destroy'])->name('magasins.destroy');
+Route::post('addProduct/{idMag}', [MagasinController::class, 'addProduct'])->name('magasins.addProduct');
+Route::put('modifMagasin/{id}', [MagasinController::class, 'updateMagasin'])->name('magasins.updateMagasin');
+
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
@@ -96,25 +112,25 @@ Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::clas
 
 Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
 Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
-Route::post('/entreprise/{id}', [ParamController::class, 'updateEntreprise'])->name('entreprise.update');
-Route::delete('/entreprise/{id}', [ParamController::class, 'destroyEntreprise'])->name('entreprise.destroy');
 
-Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
-Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
-Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
-Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
+
+// Entreprise
+Route::get('/entreprise', [ParamController::class, 'entreprise'])->name('entreprise');
+Route::post('/ajouterEntreprise', [ParamController::class, 'ajouterEntreprise'])->name('ajouterEntreprise');
+Route::put('modifierEntreprise/{idE}', [ParamController::class, 'modifEntreprise'])->name('modifEntreprise');
+Route::delete('suppEntreprise/{idE}', [ParamController::class, 'supprimerEntreprise'])->name('supprimerEntreprise');
+
+
+Route::get('/roles', [ParamController::class, 'role'])->name('role');
+Route::post('/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
+Route::post('/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
+Route::get('/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
 
 // Reception
 Route::get('/receptions', [Controller::class, 'indexReception'])->name('receptions.index');
 Route::post('/receptions', [Controller::class, 'storeReception'])->name('receptions.store');
 Route::put('/receptions/{idReception}', [Controller::class, 'updateReception'])->name('receptions.update');
 Route::delete('/receptions/{idReception}', [Controller::class, 'destroyReception'])->name('receptions.destroy');
-
-// Magasin
-Route::get('/magasin', [Controller::class, 'magasin']);
-Route::post('/ajouterMagasin', [Controller::class, 'ajouterMagasin']);
-Route::delete('suppMagasin/{id}', [Controller::class, 'deleteMagasin']);
-Route::put('modifMagasin/{id}', [Controller::class, 'updateMagasin']);
 
 Route::post('/ajouterCmd', [Controller::class, 'storeCmd'])->name('ajouterCmd.store');
 // Route::put('/ajouterCmd/{idCmd}', [Controller::class, 'updateCmd'])->name('ajouterCmd.update');
@@ -147,7 +163,19 @@ Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajo
 Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit']);
 Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit');
 
+//ProduitController
+Route::get('/Produits', [ProduitController::class, 'Produits']);
+Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
+Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
+Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
 
+
+
+Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
+Route::post('/export-form',  [ParamController::class, 'Export'])->name('export');
+// Route::get('/export-entreprises', function () {
+//     return Excel::download(new EntreprisesExport, 'entreprises.xlsx');
+// });
 
 
 

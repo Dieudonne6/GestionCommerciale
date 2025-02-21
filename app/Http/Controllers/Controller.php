@@ -586,7 +586,7 @@ class Controller extends BaseController
     }
 
     // Création magasin
-    public function ajouterMagasin(Request $request)
+/*     public function ajouterMagasin(Request $request)
     {
         // Vérifier si le magasin existe déjà
         $magasinExiste = Magasin::where('codeMgs', $request->input('codeMgs'))->exists();
@@ -603,7 +603,7 @@ class Controller extends BaseController
         ]);
 
         return back()->with('status', 'Le magasin a été créé avec succès');
-    }
+    } */
 
     // Suppression magasin
     public function deleteMagasin($id)
