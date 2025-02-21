@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Utilisateur;
 use App\Models\Entreprise;
 use App\Models\Role;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\EntrepriseRequest;
 
 
@@ -29,64 +30,107 @@ class ParamController extends Controller
    }
 
    // Ajoute un nouvel utilisateur
-   public function enregistre(Request $request)
-   {
-       $request->validate([
-           'nom'       => 'required|string|max:255',
-           'adresse'   => 'required|string',
-           'telephone' => 'required|string|max:15',
-           'mail'      => 'required|email|unique:utilisateurs,mail',
-           'idRole'    => 'required|integer',
-           // Vous pouvez ajouter une validation pour idE si nécessaire :
-           'idE'    => 'nullable|integer',
-       ]);
+public function enregistre(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'nom'       => 'required|string|max:255',
+        'adresse'   => 'required|string|max:255',
+        'telephone' => 'required|string|max:15',
+        'mail'      => 'required|email|max:255|unique:utilisateurs,mail',
+        'idRole'    => 'required|integer',
+        'idE'       => 'nullable|integer',
+    ], [
+        'nom.required'       => 'Le nom est obligatoire.',
+        'nom.string'         => 'Le nom doit être une chaîne de caractères.',
+        'nom.max'            => 'Le nom ne peut pas dépasser 255 caractères.',
+        'adresse.required'   => 'L\'adresse est obligatoire.',
+        'adresse.string'     => 'L\'adresse doit être une chaîne de caractères.',
+        'adresse.max'        => 'L\'adresse ne peut pas dépasser 255 caractères.',
+        'telephone.required' => 'Le téléphone est obligatoire.',
+        'telephone.string'   => 'Le téléphone doit être une chaîne de caractères.',
+        'telephone.max'      => 'Le téléphone ne peut pas dépasser 15 caractères.',
+        'mail.required'      => 'L\'email est obligatoire.',
+        'mail.email'         => 'L\'email doit être valide.',
+        'mail.max'           => 'L\'email ne peut pas dépasser 255 caractères.',
+        'mail.unique'        => 'Cet email est déjà utilisé.',
+        'idRole.required'    => 'Le rôle est obligatoire.',
+        'idRole.integer'     => 'Le rôle doit être un entier.',
+        'idE.integer'        => 'L\'ID de l\'entité doit être un entier.',
+    ]);
 
-       Utilisateur::create([
-           'nom'       => $request->nom,
-           'adresse'   => $request->adresse,
-           'telephone' => $request->telephone,
-           'mail'      => $request->mail,
-           'idRole'    => $request->idRole,
-           'idE'       => $request->idE, // Assurez-vous que ce champ est présent dans votre formulaire ou définissez-le en dur si nécessaire.
-       ]);
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput()
+            ->with('showAddUserModal', true);
+    }
 
-       return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
-   }
+    try {
+        Utilisateur::create($validator->validated());
+        return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('erreur', 'Une erreur est survenue lors de la création de l\'utilisateur.');
+    }
+}
 
-   // Met à jour un utilisateur existant
-   public function modifie(Request $request, $idU)
-   {
-       $utilisateur = Utilisateur::findOrFail($idU);
+// Met à jour un utilisateur existant
+public function modifie(Request $request, $idU)
+{
+    $utilisateur = Utilisateur::findOrFail($idU);
 
-       $request->validate([
-           'nom'       => 'required|string|max:255' . $idU . ',idU',
-           'adresse'   => 'required|string',
-           'telephone' => 'required|string|max:15',
-           'mail'      => 'required|email|unique:utilisateurs,mail,' . $idU . ',idU',
-           'idRole'    => 'required|integer',
-           'idE'    => 'nullable|integer',
-       ]);
+    $validator = Validator::make($request->all(), [
+        'nom'       => 'required|string|max:255',
+        'adresse'   => 'required|string|max:255',
+        'telephone' => 'required|string|max:15',
+        'mail'      => 'required|email|max:255|unique:utilisateurs,mail,' . $idU . ',idU',
+        'idRole'    => 'required|integer',
+        'idE'       => 'nullable|integer',
+    ], [
+        'nom.required'       => 'Le nom est obligatoire.',
+        'nom.string'         => 'Le nom doit être une chaîne de caractères.',
+        'nom.max'            => 'Le nom ne peut pas dépasser 255 caractères.',
+        'adresse.required'   => 'L\'adresse est obligatoire.',
+        'adresse.string'     => 'L\'adresse doit être une chaîne de caractères.',
+        'adresse.max'        => 'L\'adresse ne peut pas dépasser 255 caractères.',
+        'telephone.required' => 'Le téléphone est obligatoire.',
+        'telephone.string'   => 'Le téléphone doit être une chaîne de caractères.',
+        'telephone.max'      => 'Le téléphone ne peut pas dépasser 15 caractères.',
+        'mail.required'      => 'L\'email est obligatoire.',
+        'mail.email'         => 'L\'email doit être valide.',
+        'mail.max'           => 'L\'email ne peut pas dépasser 255 caractères.',
+        'mail.unique'        => 'Cet email est déjà utilisé.',
+        'idRole.required'    => 'Le rôle est obligatoire.',
+        'idRole.integer'     => 'Le rôle doit être un entier.',
+        'idE.integer'        => 'L\'ID de l\'entité doit être un entier.',
+    ]);
 
-       $utilisateur->update([
-           'nom'       => $request->nom,
-           'adresse'   => $request->adresse,
-           'telephone' => $request->telephone,
-           'mail'      => $request->mail,
-           'idRole'    => $request->idRole,
-           'idE'       => $request->idE,
-       ]);
+    if ($validator->fails()) {
+        session()->flash('showModifyUserModal', $idU);
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+    }
 
-       return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
-   }
+    try {
+        $utilisateur->update($validator->validated());
+        return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('erreur', 'Une erreur est survenue lors de la modification de l\'utilisateur.');
+    }
+}
 
-   // Supprime un utilisateur
-   public function supprime($idU)
-   {
-       $utilisateur = Utilisateur::findOrFail($idU);
-       $utilisateur->delete();
+// Supprime un utilisateur
+public function supprime($idU)
+{
+    try {
+        $utilisateur = Utilisateur::findOrFail($idU);
+        $utilisateur->delete();
+        return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('erreur', 'Une erreur est survenue lors de la suppression de l\'utilisateur.');
+    }
+}
 
-       return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
-   }
 
    public function entreprise()
 {

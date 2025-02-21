@@ -105,8 +105,7 @@
                             <ul class="nav flex-column">
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ url('/parametres/utilisateurs') }}">Utilisateurs</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/parametres/roles') }}">Rôles
-                                        et Permissions</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/parametres/roles') }}">Rôles</a></li>
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ url('/entreprise') }}">Entreprises</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('exercice') }}">Exercice</a>
