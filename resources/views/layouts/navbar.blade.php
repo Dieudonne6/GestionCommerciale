@@ -103,7 +103,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/parametres/roles') }}">Rôles
                                         et Permissions</a></li>
                                 <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('/parametres/entreprise') }}">Entreprises</a></li>
+                                        href="{{ url('/entreprise') }}">Entreprises</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('exercice') }}">Exercice</a>
                                 </li>
                                 <li class="nav-item"><a class="nav-link"

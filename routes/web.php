@@ -96,15 +96,16 @@ Route::post('/parametres/utilisateurs', [ParamController::class, 'enregistre'])-
 Route::post('/parametres/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('users.modifie');
 Route::delete('/parametres/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('users.supprime');
 
-Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
-Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
-Route::post('/entreprise/{id}', [ParamController::class, 'updateEntreprise'])->name('entreprise.update');
-Route::delete('/entreprise/{id}', [ParamController::class, 'destroyEntreprise'])->name('entreprise.destroy');
+// Entreprise
+Route::get('/entreprise', [ParamController::class, 'entreprise'])->name('entreprise');
+Route::post('/ajouterEntreprise', [ParamController::class, 'ajouterEntreprise'])->name('ajouterEntreprise');
+Route::put('modifierEntreprise/{idE}', [ParamController::class, 'modifEntreprise'])->name('modifEntreprise');
+Route::delete('suppEntreprise/{idE}', [ParamController::class, 'supprimerEntreprise'])->name('supprimerEntreprise');
 
-Route::get('/parametres/roles', [ParamController::class, 'role'])->name('role');
-Route::post('/parametres/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
-Route::post('/parametres/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
-Route::get('/parametres/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
+Route::get('/roles', [ParamController::class, 'role'])->name('role');
+Route::post('/roles/store', [ParamController::class, 'storeRole'])->name('storeRole');
+Route::post('/roles/update/{id}', [ParamController::class, 'updateRole'])->name('updateRole');
+Route::get('/roles/delete/{id}', [ParamController::class, 'deleteRole'])->name('deleteRole');
 
 // Reception
 Route::get('/receptions', [Controller::class, 'indexReception'])->name('receptions.index');
@@ -156,7 +157,11 @@ Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProdui
 Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
 
 
-
+Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
+Route::post('/export-form',  [ParamController::class, 'Export'])->name('export');
+// Route::get('/export-entreprises', function () {
+//     return Excel::download(new EntreprisesExport, 'entreprises.xlsx');
+// });
 
 
 // DB_USERNAME=hlgs4475_cantinecbox
