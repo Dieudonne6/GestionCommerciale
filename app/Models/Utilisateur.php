@@ -18,7 +18,6 @@ class Utilisateur extends Model
     protected $primaryKey = 'idU'; // Clé primaire de la table
 
     protected $fillable = [
-        'IFU',
         'nom',
         'adresse',
         'telephone',
