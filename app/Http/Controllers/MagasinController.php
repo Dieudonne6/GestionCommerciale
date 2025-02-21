@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Magasin;
 use App\Models\Entreprise;
@@ -90,11 +92,11 @@ class MagasinController extends Controller
                 'libelle' => $request->libelle,
                 'prix' => $request->prix,
                 'desc' => $request->desc,
-                'image' => $request->image,
                 'stockAlert' => $request->stockAlert,
                 'stockMinimum' => $request->stockMinimum,
                 'idCatPro' => $request->idCatPro,
                 'idFamPro' => $request->idFamPro,
+                'image' => file_get_contents($request->file('image')->getRealPath()),
             ]);
         }
 
@@ -125,7 +127,7 @@ class MagasinController extends Controller
     {
         $magasin = Magasin::findOrFail($id);
         $magasin->delete();
-        return redirect()->route('pages.ProduitStock.magasins')->with('success', 'Magasin supprimé avec succès.');
+        return redirect()->route('magasins')->with('success', 'Magasin supprimé avec succès.');
     }
 
     // Mettre à jour un magasin
