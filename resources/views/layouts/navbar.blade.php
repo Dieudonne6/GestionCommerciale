@@ -47,11 +47,9 @@
               <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link" href="{{url('categorieProduit')}}">Catégories de produits</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{url('familleProduit')}}">Familles de produits</a></li>
-
-                <li class="nav-item"><a class="nav-link" href="{{ url('produits') }}">Produits</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a></li>
 
-                <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
 
                 <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les stocks</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>

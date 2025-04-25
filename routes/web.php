@@ -60,10 +60,10 @@ Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])-
 Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
 
-Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+/* Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
 Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
-Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy');
+Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy'); */
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');

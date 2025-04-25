@@ -44,10 +44,10 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th >No</th>
-                  <th >Code Categorie</th>
-                  <th >Libellé</th>
-                  <th >Actions</th>
+                  <th class="text-center">No</th>
+                  <th class="text-center">Code Categorie</th>
+                  <th class="text-center">Libellé</th>
+                  <th class="text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -56,7 +56,7 @@
               @endphp
               <tbody>
                 @foreach ($allCategorieProduits as $allCategorieProduit)
-                <tr>
+                <tr class="text-center">
                   <td >
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $i }}</span>
@@ -194,7 +194,7 @@
                   </div> --}}
                   <div class="mb-2">
                     <label for="libelle">Libelle</label>
-                    <input type="text" class="form-control @error('libelle') is-invalid @enderror"  placeholder="libelle" id="libelle" value="{{old('libelle')}}">
+                    <input type="text" class="form-control @error('libelle') is-invalid @enderror" name="libelle" placeholder="libelle" id="libelle" value="{{old('libelle')}}">
                     @error('libelle')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

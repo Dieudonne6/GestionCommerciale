@@ -8,6 +8,7 @@ use App\Models\Entreprise;
 use App\Models\Stocke;
 use App\Models\Inventaire;
 use App\Models\TransfertMagasin;
+use App\Models\Produit;
 
 
 

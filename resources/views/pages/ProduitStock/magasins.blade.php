@@ -74,8 +74,9 @@
                                                     class="btn btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#editModal{{ $magasin->idMag }}"
                                                     style="margin-right: 24px; margin-left: 43px;">
-                                                    Modifier
+                                                    Ajouter Produit
                                             </a>
+                                            
                                             <!-- Bouton Supprimer -->
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="##deleteModal{{ $magasin->idMag }}">
                                                  Supprimer
@@ -83,7 +84,7 @@
                                         </td>
                                     </tr>
 
-                                    <!-- Modal Modifier -->
+                                    <!-- Modal Ajouter Produit -->
                                     <div class="modal fade" id="editModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="editModalLabel{{ $magasin->idMag }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -131,7 +132,7 @@
                                                             <div class="col-md-6 mb-2">
                                                             <label for="idCatPro">Catégorie du Produit</label>
                                                             <select name="idCatPro" class="form-control @error('idCatPro') is-invalid  @enderror">
-                                                                <option value="" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
+                                                                <option value="0" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
                                                                 @foreach ($allCategorieProduits as $allCategorieProduit)
                                                                     <option value="{{ $allCategorieProduit->idCatPro }}">
                                                                         {{ $allCategorieProduit->libelle }}
@@ -145,7 +146,7 @@
                                                             <div class="col-md-6 mb-2">
                                                             <label for="idFamPro">Famillle du Produit</label>
                                                             <select name="idFamPro" class="form-control @error('idFamPro') is-invalid  @enderror">
-                                                                <option value="" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
+                                                                <option value="0" {{-- {{ $produit->categorieP == 0 ? 'selected' : '' }} --}}>Aucune</option>
                                                                 @foreach ($allFamilleProduits as $allFamilleProduit)
                                                                     {{-- <option value="{{ $allFamilleProduit->idFamPro }}" {{ old('idFamPro', $allCategorieProduit->idFamPro) == $allCategorieProduit->idCatPro ? 'selected' : '' }}> --}}
                                                                     <option value="{{ $allFamilleProduit->idFamPro }}">

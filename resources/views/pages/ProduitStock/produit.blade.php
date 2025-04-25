@@ -16,7 +16,7 @@
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
-              <h4 class="card-title">Listes des Produit</h4>
+              <h4 class="card-title">Listes des Produits</h4>
             </div><!--end col-->
 
             @if (Session::has('status'))
@@ -44,12 +44,12 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th >No</th>
-                  <th >Libellé</th>
-                  <th >Prix</th>
-                  <th >Quantite en Stock</th>
-                  <th >Image</th>
-                  <th >Actions</th>
+                  <th class="text-center">No</th>
+                  <th class="text-center">Libellé</th>
+                  <th class="text-center">Prix</th>
+                  <th class="text-center">Quantite en Stock</th>
+                  <th class="text-center">Image</th>
+                  <th class="text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -59,7 +59,7 @@
               <tbody>
                 @foreach ($allProduits as $allProduit)
                 <tr>
-                  <td >
+                  <td class="text-center">
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $i }}</span>
                     </p>
@@ -69,18 +69,20 @@
                       <span class="font-13 fw-medium">{{ $allfournisseur->PrenomF }}</span>
                     </p>
                   </td> --}}
-                  <td >{{ $allProduit->libelle }}</td>
-                  <td >{{ $allProduit->prix }}</td>
-                  <td>
+                  <td class="text-center">{{ $allProduit->libelle }}</td>
+                  <td class="text-center">{{ $allProduit->prix }}</td>
+                  <td class="text-center">
                     @php
                         $totalStocke = $allProduit->stocke->sum('qteStocke');
                     @endphp
-                    {{ $totalStocke > 0 ? $totalStocke : 'Aucun stock' }}
-                </td>                  
-                <td>
-                    <img src="data:image/jpeg;base64,{{ base64_encode($allProduit->image) }}" alt="Image du produit" style="width: 100px; height: auto;">
-                </td>                  
-                <td >
+                    {{ $totalStocke > 0 ? $totalStocke : '0' }}
+                  </td>                  
+                  <td class="text-center">
+                    <img src="data:image/jpeg;base64,{{ base64_encode($allProduit->image) }}" 
+                         alt="Image du produit" 
+                         style="width: 70px; height:70px; object-fit: cover; object-position: center;">
+                  </td>                  
+                  <td class="text-center">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allProduit->idPro}}"> Modifier</button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allProduit->idPro}}"> Supprimer</button>
                   </td>
@@ -239,16 +241,26 @@
             <form action="{{url('/ajouterProduit')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                  <div class="mb-2">
+
+                <div class="row">
+                  <div class="col-md-6 mb-2">
                       <label for="libelleAdd">Libelle</label>
                       <input type="text" class="form-control @error('libelle') is-invalid @enderror" id="libelleAdd" name="libelle" value="{{ old('libelle') }}">
                       @error('libelle')
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror
                   </div>
-          
+                  <div class="col-md-6 mb-2">
+                      <label for="prixAdd">Prix</label>
+                      <input type="number" class="form-control @error('prix') is-invalid @enderror" id="prixAdd" name="prix" value="{{ old('prix') }}">
+                      @error('prix')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="row">
+                  <div class="col-md-6 form-group">
                       <label for="idCatProAdd">Catégorie Produit</label>
                       <select id="idCatProAdd" name="idCatPro" class="form-control @error('idCatPro') is-invalid  @enderror">
                           <option value="0" selected>Aucune</option>
@@ -263,7 +275,7 @@
                       @enderror
                   </div>
 
-                  <div class="form-group">
+                  <div class="col-md-6 form-group">
                       <label for="idFamProAdd">Famille Produit</label>
                       <select id="idFamProAdd" name="idFamPro" class="form-control @error('idFamPro') is-invalid  @enderror">
                           <option value="0" selected>Aucune</option>
@@ -274,35 +286,72 @@
                               </option>
                           @endforeach
                       </select>
-                      @error('idCatPro')
+                      @error('idFamPro')
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror
                   </div>
-                  <div class="mb-2">
-                      <label for="prixAdd">Prix</label>
-                      <input type="number" class="form-control @error('prix') is-invalid @enderror" id="prixAdd" name="prix" value="{{ old('prix') }}">
-                      @error('prix')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                      @enderror
-                  </div>
-          
-                  <div class="mb-2">
-                      <label for="descAdd">Description</label>
-                      <textarea class="form-control @error('desc') is-invalid @enderror" id="desc" name="desc" rows="4">{{ old('desc') }}</textarea>
-                      @error('desc')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                      @enderror
-                  </div>
+                </div>
+                <br>
+                  <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label for="stockAlert">Seuil d'Alert</label>
+                        <input type="text" class="form-control @error('stockAlert') is-invalid @enderror" id="stockAlert" name="stockAlert" value="{{ old('stockAlert') }}">
+                        @error('stockAlert')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label for="stockMinimum">Stock Minimum</label>
+                        <input type="text" class="form-control @error('stockMinimum') is-invalid @enderror" id="stockMinimum" name="stockMinimum" value="{{ old('stockMinimum') }}">
+                        @error('stockMinimum')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                  </div> 
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <label for="idMag">Magasin</label>
+                    <select id="idMag" name="idMag" class="form-control @error('idMag') is-invalid  @enderror">
+                        <option value="0" selected>Aucune</option>
+                        @foreach ($magasins as $magasin)
+                            {{-- <option value="{{ $allFamilleProduit->idFamPro }}" {{ old('idFamPro', $allCategorieProduit->idFamPro) == $allCategorieProduit->idCatPro ? 'selected' : '' }}> --}}
+                            <option value="{{ $magasin->idMag }}">
+                                {{ $magasin->libelle }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('idMag')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                  </div>                  
 
-
-                  <div class="mb-2">
-                    <label for="imageAdd">Image</label>
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="imageAdd" name="image" accept="image/*" onchange="previewImage(event)">
-                    @error('image')
+                  <div class="col-md-6 mb-2">
+                    <label for="qteStocke">Quantité</label>
+                    <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ old('qteStocke') }}" required>
+                    @error('qteStocke')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
-                
+                  
+                </div>
+{{--                 <div class="col-md-6 mb-2">
+                  <label for="qteStocke">Quantité</label>
+                  <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke">
+                </div> --}}
+                <div class="col-md-12">
+                  <label for="imageAdd">Image</label>
+                  <input type="file" class="form-control @error('image') is-invalid @enderror" id="imageAdd" name="image" accept="image/*" onchange="previewImage(event)" required>
+                  @error('image')
+                      <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="col-md-12">
+                  <label for="descAdd">Description</label>
+                  <textarea class="form-control @error('desc') is-invalid @enderror" id="desc" name="desc" rows="4">{{ old('desc') }}</textarea>
+                  @error('desc')
+                      <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
                 <!-- Zone de prévisualisation -->
                 <div class="mb-2 text-center">
                     <img id="imagePreview" src="#" alt="Prévisualisation" style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
@@ -325,19 +374,18 @@
   @endsection
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        @if ($errors->any())
-            var modalId = "{{ session('errorModalId') }}"; // Récupérez l'ID du modal ayant les erreurs
-            if (modalId) {
-                var modalElement = document.getElementById(modalId);
-                if (modalElement) {
-                    var myModal = new bootstrap.Modal(modalElement);
-                    myModal.show();
-                }
-            }
-        @endif
-    });
-  </script>
+  document.addEventListener('DOMContentLoaded', function () {
+      @if (session()->has('errorModalId'))
+          var modalId = "{{ session('errorModalId') }}";
+          var modalElement = document.getElementById(modalId);
+          if (modalElement) {
+              var myModal = new bootstrap.Modal(modalElement);
+              myModal.show();
+          }
+      @endif
+  });
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

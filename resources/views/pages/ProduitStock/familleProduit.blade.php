@@ -44,11 +44,11 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th >No</th>
-                  <th >Code Famille</th>
-                  <th >Libellé</th>
-                  <th >TVA</th>
-                  <th >Actions</th>
+                  <th class="text-center">No</th>
+                  <th class="text-center">Code Famille</th>
+                  <th class="text-center">Libellé</th>
+                  <th class="text-center">TVA</th>
+                  <th class="text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -57,7 +57,7 @@
               @endphp
               <tbody>
                 @foreach ($allFamilleProduits as $allFamilleProduit)
-                <tr>
+                <tr class="text-center">
                   <td >
                     <p class="d-inline-block align-middle mb-0">
                       <span class="font-13 fw-medium">{{ $i }}</span>

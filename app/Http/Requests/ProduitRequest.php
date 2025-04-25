@@ -25,11 +25,7 @@ class ProduitRequest extends FormRequest
             'libelle' => 'required|string|min:5',
             'prix' => 'required|numeric',
             'desc' => 'required|string|min:10|max:1000',
-            'image' => 'required|file|image|mimes:jpg,jpeg,png|max:2048',  // Extension jpg, jpeg, png et taille max 2 Mo
-            'stockAlert' => 'nullable|string',
-            'stockMinimum' => 'nullable|string',
-            'idCatPro' => 'nullable|string',
-            'idFamPro' => 'nullable|string',
+            'image' => 'file|image|mimes:jpg,jpeg,png|max:2048',  // Extension jpg, jpeg, png et taille max 2 Mo
         ];
     }
 
@@ -46,16 +42,10 @@ class ProduitRequest extends FormRequest
         'desc.required' => 'La description est obligatoire.',
         'desc.string' => 'La description doit être une chaîne de caractères.',
         
-        'image.required' => 'L\'image est obligatoire.',
         'image.file' => 'Le fichier doit être un fichier valide.',
         'image.image' => 'Le fichier doit être une image.',
         'image.mimes' => 'L\'image doit avoir l\'une des extensions suivantes : jpg, jpeg, png.',
         'image.max' => 'L\'image ne doit pas dépasser 2 Mo.',
-        
-        'stockAlert.string' => 'L\'alerte de stock doit être une chaîne de caractères.',
-        'stockMinimum.string' => 'Le stock minimum doit être une chaîne de caractères.',
-        'idCatPro.string' => 'L\'ID de la catégorie produit doit être une chaîne de caractères.',
-        'idFamPro.string' => 'L\'ID de la famille produit doit être une chaîne de caractères.',
     ];
 }
 
