@@ -49,8 +49,6 @@
                                         de produits</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('familleProduit') }}">Familles de
                                         produits</a></li>
-
-                                <li class="nav-item"><a class="nav-link" href="{{ url('produits') }}">Produits</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a></li>
 
                                 <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>

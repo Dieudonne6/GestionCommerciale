@@ -194,6 +194,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Toutes les autres routes sont protégées par le middleware auth
 Route::middleware(['auth'])->group(function () {
+     // Route racine
+     Route::get('/', function () {
+          return redirect('/tableaudebord');
+     });
+
      // Routes du profil
      Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
      Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
@@ -222,12 +227,6 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/exercice', [ExerciceController::class, 'exercice']);
      Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
      Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
-
-     // Produits
-     Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
-     Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
-     Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
-     Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy');
 
      // Categories
      Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
@@ -281,12 +280,6 @@ Route::middleware(['auth'])->group(function () {
      Route::post('/roles/store', [RolesController::class, 'storeRole'])->name('storeRole');
      Route::put('/roles/update/{id}', [RolesController::class, 'updateRole'])->name('updateRole');
      Route::delete('/roles/delete/{id}', [RolesController::class, 'deleteRole'])->name('deleteRole');
-
-     // Reception
-     // Route::get('/receptions', [Controller::class, 'indexReception'])->name('receptions.index');
-     // Route::post('/receptions', [Controller::class, 'storeReception'])->name('receptions.store');
-     // Route::put('/receptions/{idReception}', [Controller::class, 'updateReception'])->name('receptions.update');
-     // Route::delete('/receptions/{idReception}', [Controller::class, 'destroyReception'])->name('receptions.destroy');
 
      // Vente
      Route::post('/ajouterVente', [Controller::class, 'storeVente'])->name('ajouterVente.store');
