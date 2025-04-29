@@ -62,10 +62,10 @@ Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])-
 Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
 
-Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
+/* Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
 Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
 Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
-Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy');
+Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy'); */
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
@@ -83,7 +83,7 @@ Route::get('/magasins', [MagasinController::class, 'index'])->name('magasins');
 Route::post('/ajouterMagasin', [MagasinController::class, 'ajouterMagasin'])->name('magasins.ajouterMagasin');
 Route::delete('suppMagasin/{id}', [MagasinController::class, 'destroy'])->name('magasins.destroy');
 Route::post('addProduct/{idMag}', [MagasinController::class, 'addProduct'])->name('magasins.addProduct');
-Route::put('modifMagasin/{id}', [MagasinController::class, 'updateMagasin'])->name('magasins.updateMagasin');
+//Route::put('modifMagasin/{id}', [MagasinController::class, 'updateMagasin'])->name('magasins.updateMagasin');
 
 // Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
 Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
