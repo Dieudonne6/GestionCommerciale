@@ -14,7 +14,7 @@ class FournisseurController extends Controller
     {
         $allfournisseurs = Fournisseur::with('categorieFournisseur')->get();
         $categoriesF = CategorieFournisseur::all();
-        return view('pages.definition.fournisseur', compact('allfournisseurs', 'categoriesF'));
+        return view('pages.Fournisseur&Achat.fournisseur', compact('allfournisseurs', 'categoriesF'));
     }
 
     // Création d'un fournisseur

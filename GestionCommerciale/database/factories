@@ -1,0 +1,24 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\ReceptionCmdAchat;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class ReceptionCmdAchatFactory extends Factory
+{
+    protected $model = ReceptionCmdAchat::class;
+
+    public function definition()
+    {
+        return [
+            'date' => $this->faker->date(),
+            'reference' => $this->faker->unique()->word,
+            'numBordereauLivraison' => $this->faker->word,
+            'statutRecep' => $this->faker->randomElement(['en cours', 'complète']),
+            'idExercice' => \App\Models\Exercice::factory(),
+            'idCommande' => \App\Models\CommandeAchat::factory(),
+            'idU' => \App\Models\User::factory(),
+        ];
+    }
+}

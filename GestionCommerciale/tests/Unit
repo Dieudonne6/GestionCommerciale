@@ -1,0 +1,86 @@
+<?php
+
+namespace Tests\Unit;
+
+use Tests\TestCase;
+use App\Models\ReceptionCmdAchat;
+use App\Models\CommandeAchat;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class ReceptionCmdAchatTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_can_create_reception()
+    {
+        $commande = CommandeAchat::factory()->create();
+
+        $response = $this->post(route('receptions.store'), [
+            'dateC' => now()->format('Y-m-d'),
+            'referenceC' => 'BL123',
+            'numBordereauLivraison' => 'BORD123',
+            'idExercice' => 1,
+            'idCommande' => $commande->idCommande,
+            'lignes' => [
+                [
+                    'idDetailCom' => 1,
+                    'qteReceptionne' => 5,
+                    'prixUnit' => 100,
+                ],
+            ],
+        ]);
+
+        $this->assertDatabaseHas('reception_cmd_achats', [
+            'reference' => 'BL123',
+            'numBordereauLivraison' => 'BORD123',
+        ]);
+    }
+
+    public function test_can_update_reception()
+    {
+        $reception = ReceptionCmdAchat::factory()->create();
+
+        $response = $this->put(route('receptions.update', $reception->idRecep), [
+            'dateC' => now()->format('Y-m-d'),
+            'referenceC' => 'BL456',
+            'numBordereauLivraison' => 'BORD456',
+            'idExercice' => 1,
+            'lignes' => [
+                [
+                    'idDetailCom' => 1,
+                    'qteReceptionne' => 10,
+                    'prixUnit' => 150,
+                ],
+            ],
+        ]);
+
+        $this->assertDatabaseHas('reception_cmd_achats', [
+            'idRecep' => $reception->idRecep,
+            'reference' => 'BL456',
+            'numBordereauLivraison' => 'BORD456',
+        ]);
+    }
+
+    public function test_can_delete_reception()
+    {
+        $reception = ReceptionCmdAchat::factory()->create();
+
+        $response = $this->delete(route('receptions.destroy', $reception->idRecep));
+
+        $this->assertDeleted($reception);
+    }
+
+    public function test_reception_validation()
+    {
+        $response = $this->post(route('receptions.store'), [
+            'dateC' => '',
+            'referenceC' => '',
+            'numBordereauLivraison' => '',
+            'idExercice' => '',
+            'idCommande' => '',
+            'lignes' => [],
+        ]);
+
+        $response->assertSessionHasErrors(['dateC', 'referenceC', 'numBordereauLivraison', 'idExercice', 'idCommande']);
+    }
+}

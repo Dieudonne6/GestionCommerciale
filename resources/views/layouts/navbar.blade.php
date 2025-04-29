@@ -1,7 +1,7 @@
 <div class="startbar d-print-none">
     <!-- LOGO -->
     <div class="brand">
-        <a href="index.html" class="logo">
+        <a href="{{ url('/tableaudebord') }}" class="logo">
             <span>
                 <img id="logo-image" src="assets/logoo.jpg" alt="Logo">
             </span>
@@ -16,7 +16,7 @@
                 <!-- Tableau de Bord -->
                 <ul class="navbar-nav mb-auto w-100">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="{{ url('/tableaudebord') }}">
                             <i class="iconoir-home-simple menu-icon"></i>
                             <span>Tableau de Bord</span>
                         </a>
@@ -30,34 +30,38 @@
                         </a>
                         <div class="collapse" id="menuClients">
                             <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('/categorieclient') }}">Catégories de clients</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/categorieclient') }}">Catégories
+                                        de clients</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/clients') }}">Clients</a></li>
                             </ul>
                         </div>
                     </li>
 
-          <!-- GESTION COMMERCIALE -->
-          <li class="nav-item">
-            <a class="nav-link" href="#menuProduits" data-bs-toggle="collapse">
-              <i class="iconoir-box menu-icon"></i>
-              <span>Produits & Stocks</span>
-            </a>
-            <div class="collapse" id="menuProduits">
-              <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="{{url('categorieProduit')}}">Catégories de produits</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{url('familleProduit')}}">Familles de produits</a></li>
+                    <!-- GESTION COMMERCIALE -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menuProduits" data-bs-toggle="collapse">
+                            <i class="iconoir-box menu-icon"></i>
+                            <span>Produits & Stocks</span>
+                        </a>
+                        <div class="collapse" id="menuProduits">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="{{ url('categorieProduit') }}">Catégories
+                                        de produits</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('familleProduit') }}">Familles de
+                                        produits</a></li>
 
-                <li class="nav-item"><a class="nav-link" href="{{ url('produits') }}">Produits</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('produits') }}">Produits</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a></li>
 
-                <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
 
-                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les stocks</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
-              </ul>
-            </div>
-          </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les
+                                        stocks</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
+                            </ul>
+                        </div>
+                    </li>
 
                     <!-- GESTION DES TRANSACTIONS -->
                     <li class="nav-item">
@@ -73,28 +77,34 @@
                         </div>
                     </li>
 
-          <!-- Fournisseurs & Achats -->
-          <li class="nav-item">
-            <a class="nav-link" href="#menuFournisseurs" data-bs-toggle="collapse">
-              <i class="iconoir-truck menu-icon"></i>
-              <span>Fournisseurs & Achats</span>
-            </a>
-            <div class="collapse" id="menuFournisseurs">
-              <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="{{ url('categoriesFournisseur') }}">Catégories de fournisseurs</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('fournisseur') }}">Fournisseurs</a></li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#submenuAchats" data-bs-toggle="collapse">Commandes d'Achat</a>
-                  <div class="collapse" id="submenuAchats">
-                    <ul class="nav flex-column ms-3">
-                      <li class="nav-item"><a class="nav-link" href="{{ url('commandeAchat') }}">Nouvelle Commande</a></li>
-                      <li class="nav-item"><a class="nav-link" href="{{ url('reception') }}">Réception des Commandes Achats</a></li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </li>
+                    <!-- Fournisseurs & Achats -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menuFournisseurs" data-bs-toggle="collapse">
+                            <i class="iconoir-truck menu-icon"></i>
+                            <span>Fournisseurs & Achats</span>
+                        </a>
+                        <div class="collapse" id="menuFournisseurs">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('categoriesFournisseur') }}">Catégories de fournisseurs</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('fournisseur') }}">Fournisseurs</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#submenuAchats" data-bs-toggle="collapse">Commandes
+                                        d'Achat</a>
+                                    <div class="collapse" id="submenuAchats">
+                                        <ul class="nav flex-column ms-3">
+                                            <li class="nav-item"><a class="nav-link"
+                                                    href="{{ url('commandeAchat') }}">Nouvelle Commande</a></li>
+                                            <li class="nav-item"><a class="nav-link"
+                                                    href="{{ url('receptions') }}">Réception des Commandes Achats</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                     <!-- PARAMÈTRES & UTILISATEURS -->
                     <li class="nav-item">
                         <a class="nav-link" href="#menuUtilisateurs" data-bs-toggle="collapse">
@@ -104,8 +114,8 @@
                         <div class="collapse" id="menuUtilisateurs">
                             <ul class="nav flex-column">
                                 <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('/parametres/utilisateurs') }}">Utilisateurs</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/parametres/roles') }}">Rôles</a></li>
+                                        href="{{ url('/utilisateurs') }}">Utilisateurs</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/roles') }}">Rôles</a></li>
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ url('/entreprise') }}">Entreprises</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('exercice') }}">Exercice</a>

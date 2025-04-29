@@ -1,0 +1,24 @@
+{
+  "name": "gestion-commerciale",
+  "version": "1.0.0",
+  "description": "Application de gestion des réceptions et commandes d'achat.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "bootstrap": "^5.1.3",
+    "datatables.net": "^1.11.3",
+    "datatables.net-bs5": "^1.11.3"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "gestion",
+    "réceptions",
+    "commandes",
+    "achat"
+  ],
+  "author": "Votre Nom",
+  "license": "MIT"
+}

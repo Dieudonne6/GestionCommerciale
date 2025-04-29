@@ -1,0 +1,34 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class ReceptionCmdAchatSeeder extends Seeder
+{
+    public function run()
+    {
+        // Exemple de données à insérer dans la table reception_cmd_achats
+        DB::table('reception_cmd_achats')->insert([
+            [
+                'date' => '2023-10-01',
+                'reference' => 'BL-001',
+                'numBordereauLivraison' => 'BORD-001',
+                'statutRecep' => 'complète',
+                'idExercice' => 1,
+                'idCommande' => 1,
+                'idU' => 1,
+            ],
+            [
+                'date' => '2023-10-02',
+                'reference' => 'BL-002',
+                'numBordereauLivraison' => 'BORD-002',
+                'statutRecep' => 'en cours',
+                'idExercice' => 1,
+                'idCommande' => 2,
+                'idU' => 1,
+            ],
+        ]);
+    }
+}

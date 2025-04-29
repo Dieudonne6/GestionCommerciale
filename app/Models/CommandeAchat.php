@@ -53,15 +53,18 @@ class CommandeAchat extends Model
         return $this->belongsTo(Utilisateur::class, 'idU');
     }
 
-    public function detailCommandeAchat() {
-        return $this->hasMany(DetailCommandeAchat::class, 'idCommande');
+    public function lignes()
+    {
+        return $this->hasMany(DetailCommandeAchat::class, 'idCommande', 'idCommande');
     }
 
-    public function receptionCmdAchat() {
+    public function receptionCmdAchat()
+    {
         return $this->hasMany(ReceptionCmdAchat::class, 'idCommande');
     }
-    
-    public function factureNormalise() {
+
+    public function factureNormalise()
+    {
         return $this->hasMany(FactureNormalisee::class, 'idCommande');
     }
 }
