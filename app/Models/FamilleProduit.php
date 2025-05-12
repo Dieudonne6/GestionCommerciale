@@ -18,7 +18,8 @@ class FamilleProduit extends Model
         'TVA',
     ];
 
-    public function produit() {
+    public function produit()
+    {
         return $this->hasMany(Produit::class, 'idFamPro');
     }
 }

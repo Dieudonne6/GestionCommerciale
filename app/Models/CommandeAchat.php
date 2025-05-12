@@ -17,6 +17,7 @@ class CommandeAchat extends Model
 {
     use HasFactory;
 
+    protected $table = 'commande_achats';
     protected $primaryKey = 'idCommande'; // Clé primaire de la table
 
     protected $fillable = [
@@ -54,6 +55,11 @@ class CommandeAchat extends Model
     }
 
     public function lignes()
+    {
+        return $this->hasMany(DetailCommandeAchat::class, 'idCommande', 'idCommande');
+    }
+
+    public function detailCommandeAchat()
     {
         return $this->hasMany(DetailCommandeAchat::class, 'idCommande', 'idCommande');
     }

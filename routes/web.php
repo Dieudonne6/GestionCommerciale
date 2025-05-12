@@ -104,6 +104,8 @@ Route::resource('commandeAchat', CommandeAchatController::class)->middleware('au
 // Route AJAX pour suppression d'une ligne
 Route::delete('commandeAchat/ligne/{id}', [CommandeAchatController::class, 'deleteLigne'])
      ->name('commandeAchat.ligne.destroy');
+Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
+     ->name('commandeAchat.produit.tva');
 
 Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
 Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
@@ -253,6 +255,8 @@ Route::middleware(['auth'])->group(function () {
      Route::resource('commandeAchat', CommandeAchatController::class);
      Route::delete('commandeAchat/ligne/{id}', [CommandeAchatController::class, 'deleteLigne'])
           ->name('commandeAchat.ligne.destroy');
+     Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
+          ->name('commandeAchat.produit.tva');
 
      // Tableau de bord
      Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
@@ -311,6 +315,5 @@ Route::middleware(['auth'])->group(function () {
 
      // Reception
      Route::resource('receptions', ReceptionCmdAchatController::class);
-     Route::get('receptions/commande/{idCommande}/details', [ReceptionCmdAchatController::class, 'getCommandeDetails'])
-          ->name('receptions.commande.details');
+     Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])->name('receptions.commande-details');
 });

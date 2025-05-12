@@ -97,7 +97,7 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Fournisseur</label>
-                                <select name="idF" class="form-select">
+                                <select name="idF" class="form-select" required>
                                     <option value="">-- Choisir --</option>
                                     @foreach ($fournisseurs as $fr)
                                         <option value="{{ $fr->idF }}">{{ $fr->nom }}</option>
@@ -106,17 +106,17 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Référence</label>
-                                <input type="text" name="reference" class="form-control">
+                                <input type="text" name="reference" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Date</label>
-                                <input type="datetime-local" name="dateOp" class="form-control">
+                                <input type="datetime-local" name="dateOp" class="form-control" required>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Délais livraison</label>
-                                <input type="text" name="delailivraison" class="form-control">
+                                <input type="text" name="delailivraison" class="form-control" required>
                             </div>
                         </div>
                         <table class="table table-bordered mb-3">
@@ -124,8 +124,8 @@
                                 <tr>
                                     <th>Produit</th>
                                     <th>Quantité</th>
-                                    <th>PU HT</th>
-                                    <th>TVA (%)</th>
+                                    <th>Montant HT</th>
+                                    <th>tva (%)</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -134,6 +134,8 @@
                         <button type="button" class="btn btn-secondary" onclick="addLine('tableAddLines')">
                             Ajouter une ligne
                         </button>
+                        <input type="hidden" name="montantTotalHT" value="0">
+                        <input type="hidden" name="montantTotalTTC" value="0">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -200,8 +202,8 @@
                                     <tr>
                                         <th>Produit</th>
                                         <th>Quantité</th>
-                                        <th>PU HT</th>
-                                        <th>TVA (%)</th>
+                                        <th>Montant HT</th>
+                                        <th>tva (%)</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -209,11 +211,12 @@
                                     @foreach ($cmd->lignes as $index => $l)
                                         <tr>
                                             <td>
-                                                <select name="lignes[{{ $index }}][idPro]" class="form-select">
+                                                <select name="lignes[{{ $index }}][idPro]" class="form-select"
+                                                    onchange="gettva(this, {{ $index }})">
                                                     @foreach ($produits as $prd)
                                                         <option value="{{ $prd->idPro }}"
-                                                            {{ $l->idPro == $prd->idPro ? 'selected' : '' }}>
-                                                            {{ $prd->libelle }}</option>>
+                                                            data-tva="{{ $prd->familleProduit->TVA ?? 0 }}">
+                                                            {{ $prd->libelle }}</option>
                                                     @endforeach
                                                 </select>
                                                 <input type="hidden" name="lignes[{{ $index }}][idDetailCom]"
@@ -221,12 +224,10 @@
                                             </td>
                                             <td><input type="number" name="lignes[{{ $index }}][qteCmd]"
                                                     class="form-control" value="{{ $l->qteCmd }}"></td>
-                                            <td><input type="number" name="lignes[{{ $index }}][prixUnit]"
-                                                    class="form-control" value="{{ $l->prixUnit }}"></td>
+                                            <td><input type="number" name="lignes[{{ $index }}][montantHT]"
+                                                    class="form-control" value="{{ $l->montantHT }}"></td>
                                             <td><input type="number" name="lignes[{{ $index }}][tva]"
-                                                    class="form-control"
-                                                    value="{{ round(($l->montantTTC / $l->montantHT - 1) * 100, 2) }}">
-                                            </td>
+                                                    class="form-control" value="{{ $l->tva }}" readonly></td>
                                             <td><button type="button" class="btn btn-danger"
                                                     onclick="this.closest('tr').remove()">Supprimer</button></td>
                                         </tr>
@@ -278,25 +279,95 @@
     <script>
         let nextIndex = 0;
 
+        // Fonction pour charger la tva au chargement de la page
+        function loadInitialtva() {
+            document.querySelectorAll('select[name^="lignes"][name$="[idPro]"]').forEach((select, index) => {
+                const selectedOption = select.options[select.selectedIndex];
+                if (selectedOption) {
+                    const tva = selectedOption.getAttribute('data-tva');
+                    const tvaInput = select.closest('tr').querySelector(`input[name="lignes[${index}][tva]"]`);
+                    if (tvaInput) {
+                        tvaInput.value = tva;
+                    }
+                }
+            });
+        }
+
+        // Fonction pour calculer le montant TTC d'une ligne
+        function calculerMontantTTC(row) {
+            const qte = parseFloat(row.querySelector('input[name$="[qteCmd]"]').value) || 0;
+            const montantHT = parseFloat(row.querySelector('input[name$="[montantHT]"]').value) || 0;
+            const tva = parseFloat(row.querySelector('input[name$="[tva]"]').value) || 0;
+
+            const montantTTC = montantHT * (1 + tva / 100);
+            return montantTTC;
+        }
+
+        // Fonction pour mettre à jour les totaux
+        function updateTotaux() {
+            let totalHT = 0;
+            let totalTTC = 0;
+
+            document.querySelectorAll('tbody[id^="table"] tr').forEach(row => {
+                const montantHT = parseFloat(row.querySelector('input[name$="[montantHT]"]').value) || 0;
+                const montantTTC = calculerMontantTTC(row);
+
+                totalHT += montantHT;
+                totalTTC += montantTTC;
+            });
+
+            // Mettre à jour les champs de totaux si ils existent
+            const totalHTInput = document.querySelector('input[name="montantTotalHT"]');
+            const totalTTCInput = document.querySelector('input[name="montantTotalTTC"]');
+
+            if (totalHTInput) totalHTInput.value = totalHT.toFixed(2);
+            if (totalTTCInput) totalTTCInput.value = totalTTC.toFixed(2);
+        }
+
         function addLine(tableId) {
             const tbody = document.getElementById(tableId);
             const row = document.createElement('tr');
             row.innerHTML = `
-        <td>
-            <select name="lignes[${nextIndex}][idPro]" class="form-select">
-                <option value="">-- Produit --</option>
-                @foreach ($produits as $prd)
-                    <option value="{{ $prd->idPro }}">{{ $prd->libelle }}</option>
-                @endforeach
-            </select>
-        </td>
-        <td><input type="number" name="lignes[${nextIndex}][qteCmd]" class="form-control"></td>
-        <td><input type="number" name="lignes[${nextIndex}][prixUnit]" class="form-control"></td>
-        <td><input type="number" name="lignes[${nextIndex}][tva]" class="form-control" value="0"></td>
-        <td><button type="button" class="btn btn-danger" onclick="this.closest('tr').remove()">Supprimer</button></td>
-    `;
+                <td>
+                    <select name="lignes[${nextIndex}][idPro]" class="form-select" onchange="gettva(this, ${nextIndex})" required>
+                        <option value="">-- Produit --</option>
+                        @foreach ($produits as $prd)
+                            <option value="{{ $prd->idPro }}" data-tva="{{ $prd->familleProduit->TVA ?? 0 }}">
+                                {{ $prd->libelle }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td><input type="number" name="lignes[${nextIndex}][qteCmd]" class="form-control" required min="1" onchange="updateTotaux()"></td>
+                <td><input type="number" name="lignes[${nextIndex}][montantHT]" class="form-control" required min="0" step="0.01" onchange="updateTotaux()"></td>
+                <td><input type="number" name="lignes[${nextIndex}][tva]" class="form-control" readonly></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeLine(this)">Supprimer</button></td>
+            `;
             tbody.appendChild(row);
             nextIndex++;
+        }
+
+        function removeLine(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateTotaux();
+        }
+
+        function gettva(selectElement, index) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const tvaInput = selectElement.closest('tr').querySelector(`input[name="lignes[${index}][tva]"]`);
+
+            if (selectedOption && selectedOption.value) {
+                const tva = selectedOption.getAttribute('data-tva');
+                if (tvaInput) {
+                    tvaInput.value = tva;
+                    updateTotaux(); // Mettre à jour les totaux quand la TVA change
+                }
+            } else {
+                if (tvaInput) {
+                    tvaInput.value = '0';
+                    updateTotaux();
+                }
+            }
         }
 
         // Fonction pour réinitialiser les erreurs dans le modal
@@ -330,6 +401,11 @@
                     resetModalErrors(modal);
                 });
 
+                modal.addEventListener('shown.bs.modal', function() {
+                    loadInitialtva();
+                    updateTotaux();
+                });
+
                 var cancelButton = modal.querySelector('.btn-secondary');
                 if (cancelButton) {
                     cancelButton.addEventListener('click', function() {
@@ -337,6 +413,9 @@
                     });
                 }
             });
+
+            // Initialiser les totaux au chargement de la page
+            updateTotaux();
         });
     </script>
 @endsection
