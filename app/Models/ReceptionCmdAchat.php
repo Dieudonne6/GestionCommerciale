@@ -13,6 +13,7 @@ class ReceptionCmdAchat extends Model
 {
     use HasFactory;
 
+    protected $table = 'reception_cmd_achats';
     protected $primaryKey = 'idRecep'; // Clé primaire de la table
 
     protected $fillable = [

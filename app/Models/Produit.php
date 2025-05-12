@@ -12,6 +12,7 @@ use App\Models\DetailInventaire;
 use App\Models\DetailVente;
 use App\Models\DetailCommandeAchat;
 use App\Models\DetailProforma;
+use App\Models\Magasin;
 
 
 class Produit extends Model
@@ -62,4 +63,5 @@ class Produit extends Model
     public function detailProforma() {
         return $this->hasMany(DetailProforma::class, 'idPro');
     }
+
 }

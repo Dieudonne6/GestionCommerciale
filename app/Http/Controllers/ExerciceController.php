@@ -1,26 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Exercice;
 use Illuminate\Http\Request;
 
 class ExerciceController extends Controller
 {
-    public function exercice () {
+    public function exercice()
+    {
         $exercices = Exercice::all();
-        $exerciceAct =Exercice::where('statut', 1)->first();
-        $exerciceActif = $exerciceAct->annee;
+        $exerciceAct = Exercice::where('statutExercice', 1)->first();
+        $exerciceActif = $exerciceAct ? $exerciceAct->annee : null;
 
-        return view ('pages.parametres.exercice')->with('exercices', $exercices)->with('exerciceActif', $exerciceActif);
+        return view('pages.parametres.exercice')->with('exercices', $exercices)->with('exerciceActif', $exerciceActif);
     }
 
 
-    public function ajouterExercice (Request $request) {
+    public function ajouterExercice(Request $request)
+    {
 
 
         // Vérifier si l'exercice existe déjà
         $exerciceExiste = Exercice::where('annee', $request->input('annee'))
-        ->exists();
+            ->exists();
 
         if ($exerciceExiste) {
             // Retourner une erreur si l'exercice existe déjà
@@ -28,31 +31,29 @@ class ExerciceController extends Controller
         }
 
         // Mettre à jour le statut de tous les autres exercices à 0
-        Exercice::query()->update(['statut' => 0]);
+        Exercice::query()->update(['statutExercice' => 0]);
 
         // Ajout du nouveau exercice
         $exercice = new Exercice();
         $exercice->annee = $request->input('annee');
-        $exercice->statut = 1;
+        $exercice->statutExercice = 1;
         $exercice->dateDebut = $request->input('dateDebut');
         $exercice->dateFin = $request->input('dateFin');
         $exercice->save();
 
         return back()->with("status", "L'exercice a ete creer avec succes");
-
     }
 
-    public function activerExercice($id) {
+    public function activerExercice($idExercice)
+    {
 
-            // Mettre à jour le statut de tous les autres exercices à 0
-            Exercice::query()->update(['statut' => 0]);
+        // Mettre à jour le statut de tous les autres exercices à 0
+        Exercice::query()->update(['statutExercice' => 0]);
 
-            $exerciceSpecifique = Exercice::where('idE', $id)->first();
-            $exerciceSpecifique->statut = 1;
-            $exerciceSpecifique->update();
+        $exerciceSpecifique = Exercice::where('idExercice', $idExercice)->first();
+        $exerciceSpecifique->statutExercice = 1;
+        $exerciceSpecifique->update();
 
-            return back()->with("status", "L'exercice a ete activé avec succes");
-
-
+        return back()->with("status", "L'exercice a ete activé avec succes");
     }
 }
