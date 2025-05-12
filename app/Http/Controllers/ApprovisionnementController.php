@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Fournisseur;
 use App\Models\Produit;
 use App\Models\LigneCommande;
-use App\Models\Commande;
+use App\Models\CommandeAchat;
 class ApprovisionnementController extends Controller
 {
     //
@@ -14,7 +14,7 @@ class ApprovisionnementController extends Controller
     public function commandeAchat() {
         $allfournisseurs = Fournisseur::get();
         $allproduits = Produit::get();
-        $allcommande = Commande::with('fournisseur', 'lignesCommande')->get(); // Ajout de 'lignesCommande'
+        $allcommande = CommandeAchat::with('fournisseur', 'lignesCommande')->get(); // Ajout de 'lignesCommande'
         return view('pages.Approvisionnement.commandeAchat', compact('allfournisseurs','allproduits','allcommande'));
     }
     public function reception() {

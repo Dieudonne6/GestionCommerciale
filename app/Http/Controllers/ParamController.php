@@ -9,6 +9,8 @@ use App\Models\Utilisateur;
 use App\Models\Entreprise;
 use App\Models\Role;
 use App\Http\Requests\EntrepriseRequest;
+use Illuminate\Support\Facades\Config;
+
 
 
 use App\Exports\EntreprisesExport;
@@ -188,36 +190,89 @@ public function modifEntreprise ( EntrepriseRequest $request, $idE ) {
 }
 
 
-// export entreprise 
+// export table 
 
 
 
-public function entrepriseExport()
+public function Exporttable()
 {
-    // Récupérer toutes les tables de la base de données
-    $tables = DB::select('SHOW TABLES');
-    $tableNames = [];
+    // Récupérer les bases de données disponibles
+    $databases = DB::select('SHOW DATABASES');
+    $databaseNames = [];
 
-    foreach ($tables as $table) {
-        // Récupérer le nom de chaque table
-        $tableNames[] = $table->Tables_in_gestioncommerciale; // Remplacez "your_database_name" par le nom de votre base de données
-    }
-    
-    // Récupérer toutes les bases de données
-    $baseDeDonnes = DB::select('SHOW DATABASE');
-    $dbNames = [];
-
-    foreach ($baseDeDonnes as $baseDeDonne) {
-        // Récupérer le nom de chaque table
-        $dbNames[] = $baseDeDonne->gestioncommerciale; // Remplacez "your_database_name" par le nom de votre base de données
+    foreach ($databases as $database) {
+        // Récupérer le nom de chaque base de données
+        $databaseNames[] = $database->Database;
     }
 
-    // Passer la liste des tables à la vue
-    return view('pages.exporterTable.exporttable', ['tables' => $tableNames] , ['dbNames' => $dbNames]);
+    // Passer la liste des bases de données à la vue
+    return view('pages.exporterTable.exporttable', ['databases' => $databaseNames]);
+}
+
+public function getTables($databaseName)
+{
+    try {
+        // Créer une connexion dynamique à la base de données
+        Config::set('database.connections.dynamic', [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => $databaseName,
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+        ]);
+
+        // Utiliser cette connexion dynamique
+        $tables = DB::connection('dynamic')->select('SHOW TABLES');
+        $tableNames = [];
+
+        foreach ($tables as $table) {
+            $tableNames[] = $table->{"Tables_in_" . $databaseName}; // Dynamique selon la base de données
+        }
+
+        return response()->json($tableNames);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Impossible de se connecter à la base de données: ' . $e->getMessage()], 500);
+    }
 }
 
 
 public function Export(Request $request)
+{
+    $databaseName = $request->input('database');
+    $tableName = $request->input('table');
+
+    try {
+        // Configurer dynamiquement la connexion à la base de données choisie
+        Config::set('database.connections.dynamic', [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => $databaseName, // Base de données choisie par l'utilisateur
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+        ]);
+
+        // Utiliser la connexion dynamique
+        $data = DB::connection('dynamic')->table($tableName)->get();
+
+        // Utiliser Maatwebsite Excel pour exporter les données
+        return Excel::download(new GenericExport($tableName), $tableName . '.xlsx');
+        
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Erreur de connexion à la base de données : ' . $e->getMessage()], 500);
+    }
+}
+
+
+public function Exportss(Request $request)
 {
     // Définir les tables autorisées
     // $allowedTables = ['entreprise', 'clients', 'commandes'];
