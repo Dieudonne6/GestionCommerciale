@@ -15,7 +15,7 @@ class CategorieFournisseurController extends Controller
     $categoriesF = CategorieFournisseur::all();  // Cette méthode récupère toutes les lignes de la table
 
     // Retourner la vue avec les catégories récupérées
-    return view('pages.definition.categoriefournisseur', compact('categoriesF')); 
+    return view('pages.Fournisseur&Achat.categoriefournisseur', compact('categoriesF')); 
     }
 
     // Méthode pour enregistrer une nouvelle catégorie

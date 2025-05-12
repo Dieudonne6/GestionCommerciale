@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('utilisateurs', function (Blueprint $table) {
-            $table->bigIncrements('idU');            
+            $table->bigIncrements('idU');
             $table->string('nom');
             $table->string('adresse');
             $table->string('telephone');
             $table->string('mail');
+            $table->string('password');
             $table->unsignedBigInteger('idRole'); // Colonne pour la clé étrangère
-            $table->foreign('idRole')->references('idRole')->on('roles')->onDelete('cascade'); 
+            $table->foreign('idRole')->references('idRole')->on('roles')->onDelete('cascade');
             $table->unsignedBigInteger('idE'); // Colonne pour la clé étrangère
-            $table->foreign('idE')->references('idE')->on('entreprises')->onDelete('cascade'); 
+            $table->foreign('idE')->references('idE')->on('entreprises')->onDelete('cascade');
             $table->timestamps();
         });
     }

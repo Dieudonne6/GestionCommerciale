@@ -19,9 +19,9 @@
               <h4 class="card-title">Listes des Entreprises</h4>
             </div><!--end col-->
 
-            <a href="{{ url('/export-entreprises') }}" class="btn btn-success">
+            {{-- <a href="{{ url('/export-entreprises') }}" class="btn btn-success">
               Exporter en Excel
-            </a>
+            </a> --}}
 
             @if (Session::has('status'))
             <br>

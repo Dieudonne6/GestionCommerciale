@@ -74,7 +74,7 @@
                                     aria-labelledby="editUserModalLabel-{{ $user->idU }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <form action="{{ route('users.modifie', $user->idU) }}" method="POST">
+                                            <form action="{{ route('utilisateurs.modifie', $user->idU) }}" method="POST">
                                                 @csrf
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="editUserModalLabel-{{ $user->idU }}">
@@ -95,7 +95,8 @@
                                                             @enderror
                                                         </div>
                                                         <div class="col-md-6 mb-3">
-                                                            <label for="idE-{{ $user->idU }}" class="form-label">Entreprise</label>
+                                                            <label for="idE-{{ $user->idU }}"
+                                                                class="form-label">Entreprise</label>
                                                             <select name="idE"
                                                                 class="form-select @error('idE') is-invalid @enderror"
                                                                 required>
@@ -113,7 +114,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-6 mb-3">
-                                                            <label for="adresse-{{ $user->idU }}" class="form-label">Adresse</label>
+                                                            <label for="adresse-{{ $user->idU }}"
+                                                                class="form-label">Adresse</label>
                                                             <input type="text" name="adresse"
                                                                 class="form-control @error('adresse') is-invalid @enderror"
                                                                 value="{{ old('adresse', $user->adresse) }}" required>
@@ -122,7 +124,8 @@
                                                             @enderror
                                                         </div>
                                                         <div class="col-md-6 mb-3">
-                                                            <label for="telephone-{{ $user->idU }}" class="form-label">Téléphone</label>
+                                                            <label for="telephone-{{ $user->idU }}"
+                                                                class="form-label">Téléphone</label>
                                                             <input type="text" name="telephone"
                                                                 class="form-control @error('telephone') is-invalid @enderror"
                                                                 value="{{ old('telephone', $user->telephone) }}"
@@ -135,7 +138,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-6 mb-3">
-                                                            <label for="mail-{{ $user->idU }}" class="form-label">Email</label>
+                                                            <label for="mail-{{ $user->idU }}"
+                                                                class="form-label">Email</label>
                                                             <input type="email" name="mail"
                                                                 class="form-control @error('mail') is-invalid @enderror"
                                                                 value="{{ old('mail', $user->mail) }}" required>
@@ -144,7 +148,8 @@
                                                             @enderror
                                                         </div>
                                                         <div class="col-md-6 mb-3">
-                                                            <label for="idRole-{{ $user->idU }}" class="form-label">Rôle</label>
+                                                            <label for="idRole-{{ $user->idU }}"
+                                                                class="form-label">Rôle</label>
                                                             <select name="idRole"
                                                                 class="form-select @error('idRole') is-invalid @enderror"
                                                                 required>
@@ -164,7 +169,8 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Fermer</button>
-                                                    <button type="submit" class="btn btn-outline-warning">Modifier</button>
+                                                    <button type="submit"
+                                                        class="btn btn-outline-warning">Modifier</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -176,11 +182,13 @@
                                     aria-labelledby="deleteUserModalLabel-{{ $user->idU }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form action="{{ route('users.supprime', $user->idU) }}" method="POST">
+                                            <form action="{{ route('utilisateurs.supprime', $user->idU) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteUserModalLabel-{{ $user->idU }}">
+                                                    <h5 class="modal-title"
+                                                        id="deleteUserModalLabel-{{ $user->idU }}">
                                                         Supprimer utilisateur</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
@@ -188,10 +196,11 @@
                                                 <div class="modal-body">
                                                     Voulez-vous vraiment supprimer cet utilisateur ?
                                                 </div>
-                                                <div class="modal-footer">
+                                                <div class="modal-footer d-flex justify-content-between">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Annuler</button>
-                                                    <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+                                                    <button type="submit"
+                                                        class="btn btn-outline-danger">Supprimer</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -214,7 +223,7 @@
                     <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('users.enregistre') }}" method="POST">
+                <form action="{{ route('utilisateurs.enregistre') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <!-- Regroupement des champs -->
@@ -288,6 +297,24 @@
                                     @endforeach
                                 </select>
                                 @error('idRole')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" name="password"
+                                    class="form-control @error('password') is-invalid @enderror" required>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="password_confirmation" class="form-label">Confirmer le mot de passe</label>
+                                <input type="password" name="password_confirmation"
+                                    class="form-control @error('password_confirmation') is-invalid @enderror" required>
+                                @error('password_confirmation')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

@@ -51,7 +51,8 @@
                                 </tr>
 
                                 <!-- Modal de modification -->
-                                <div class="modal fade" id="editRoleModal{{ $role->idRole }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal fade" id="editRoleModal{{ $role->idRole }}" tabindex="-1"
+                                    aria-hidden="true">
                                     <div class="modal-dialog">
                                         <form action="{{ route('updateRole', $role->idRole) }}" method="POST">
                                             @csrf
@@ -59,12 +60,15 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Modifier le rôle</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="mb-3">
-                                                        <label for="libelle{{ $role->idRole }}" class="form-label">Nom du rôle</label>
-                                                        <input type="text" class="form-control @error('libelle') is-invalid @enderror"
+                                                        <label for="libelle{{ $role->idRole }}" class="form-label">Nom du
+                                                            rôle</label>
+                                                        <input type="text"
+                                                            class="form-control @error('libelle') is-invalid @enderror"
                                                             id="libelle{{ $role->idRole }}" name="libelle"
                                                             value="{{ old('libelle', $role->libelle) }}" required>
                                                         @error('libelle')
@@ -73,7 +77,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Annuler</button>
                                                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                                                 </div>
                                             </div>
@@ -82,7 +87,8 @@
                                 </div>
 
                                 <!-- Modal de suppression -->
-                                <div class="modal fade" id="deleteRoleModal{{ $role->idRole }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal fade" id="deleteRoleModal{{ $role->idRole }}" tabindex="-1"
+                                    aria-hidden="true">
                                     <div class="modal-dialog">
                                         <form action="{{ route('deleteRole', $role->idRole) }}" method="POST">
                                             @csrf
@@ -90,13 +96,16 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Supprimer le rôle</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>Êtes-vous sûr de vouloir supprimer le rôle <strong>{{ $role->libelle }}</strong> ?</p>
+                                                    <p>Êtes-vous sûr de vouloir supprimer le rôle
+                                                        <strong>{{ $role->libelle }}</strong> ?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Annuler</button>
                                                     <button type="submit" class="btn btn-danger">Supprimer</button>
                                                 </div>
                                             </div>
@@ -111,7 +120,8 @@
         </div>
 
         <!-- Modal d'ajout -->
-        <div class="modal fade @if ($errors->any()) show @endif" id="addRoleModal" tabindex="-1" aria-hidden="true" @if ($errors->any()) style="display: block;" @endif>
+        <div class="modal fade @if ($errors->any()) show @endif" id="addRoleModal" tabindex="-1"
+            aria-hidden="true" @if ($errors->any()) style="display: block;" @endif>
             <div class="modal-dialog">
                 <form action="{{ route('storeRole') }}" method="POST">
                     @csrf
@@ -167,13 +177,16 @@
         .modal-header {
             background-color: #fff !important;
         }
+
         .modal-title {
             color: #000 !important;
         }
+
         #datatable_1 td,
         #datatable_1 th {
             text-align: center;
         }
+
         .modal-content {
             border-radius: 8px;
         }
