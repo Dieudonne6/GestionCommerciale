@@ -177,15 +177,12 @@ Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProdui
 Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
 
 
-<<<<<<< HEAD
 Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
 Route::get('/get-tables/{databaseName}', [ParamController::class, 'getTables']);
 Route::get('/export-form',  [ParamController::class, 'Export'])->name('export');
-=======
 
 Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
 Route::post('/export-form',  [ParamController::class, 'Export'])->name('export');
->>>>>>> 8c1e66499864c2625b4b7a4a088c08339b0b81ad
 // Route::get('/export-entreprises', function () {
 //     return Excel::download(new EntreprisesExport, 'entreprises.xlsx');
 // });

@@ -10,13 +10,6 @@ use App\Models\Entreprise;
 use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\EntrepriseRequest;
-<<<<<<< HEAD
-use Illuminate\Support\Facades\Config;
-
-
-
-=======
->>>>>>> 8c1e66499864c2625b4b7a4a088c08339b0b81ad
 use App\Exports\EntreprisesExport;
 use App\Exports\GenericExport;
 use Maatwebsite\Excel\Facades\Excel;
