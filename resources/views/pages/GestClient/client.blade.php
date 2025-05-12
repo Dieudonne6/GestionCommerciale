@@ -86,22 +86,43 @@
                           @csrf
                           @method('PUT')
                           <div class="modal-body">
+
+                            {{-- 1) Type de client --}}
+                            <div class="mb-3">
+                              <label for="clientType{{ $client->idC }}">Type de Client</label>
+                              <select id="clientType{{ $client->idC }}" name="type"
+                                      class="form-control @error('type') is-invalid @enderror" required>
+                                <option value="physique" {{ $client->type === 'physique' ? 'selected' : '' }}>
+                                  Personne physique
+                                </option>
+                                <option value="morale" {{ $client->type === 'morale' ? 'selected' : '' }}>
+                                  Personne morale
+                                </option>
+                              </select>
+                              @error('type')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
                             <div class="row">
-                              <div class="col-md-6 mb-2">
+                              {{-- 2) IFU --}}
+                              <div class="col-md-6 mb-2" id="ifuField{{ $client->idC }}">
                                 <label for="IFU{{ $client->idC }}">IFU</label>
-                                <input type="number" class="form-control @error('IFU') is-invalid @enderror" id="IFU{{ $client->idC }}" name="IFU" placeholder="IFU" value="{{ $client->IFU }}" required>
-                                @error('IFU')
-                                  <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <input type="number" class="form-control @error('IFU') is-invalid @enderror"
+                                       id="IFU{{ $client->idC }}" name="IFU"
+                                       value="{{ $client->IFU }}" placeholder="IFU" required>
+                                @error('IFU')<div class="invalid-feedback">{{ $message }}</div>@enderror
                               </div>
-                              <div class="col-md-6 mb-2">
-                                <label for="nom{{ $client->idC }}">Nom &amp; Prénoms</label>
-                                <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom{{ $client->idC }}" name="nom" placeholder="Nom &amp; Prénoms" value="{{ $client->nom }}" required>
-                                @error('nom')
-                                  <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                              
+                              {{-- 3) Nom & Prénoms --}}
+                              <div class="col-md-6 mb-2" id="nomField{{ $client->idC }}">
+                                <label for="nom{{ $client->idC }}">Nom </label>
+                                <input type="text" class="form-control @error('nom') is-invalid @enderror"
+                                       id="nom{{ $client->idC }}" name="nom"
+                                       value="{{ $client->nom }}" placeholder="Nom " required>
+                                @error('nom')<div class="invalid-feedback">{{ $message }}</div>@enderror
                               </div>
                             </div>
+
+
                             <div class="row">
                               <div class="col-md-6 mb-2">
                                 <label for="adresse{{ $client->idC }}">Adresse</label>
@@ -193,17 +214,68 @@
       <form action="{{ route('clients.store') }}" method="POST">
         @csrf
         <div class="modal-body">
+
           <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="ifu">IFU</label>
-              <input type="number" class="form-control @error('IFU') is-invalid @enderror" id="ifu" name="IFU" value="{{ old('IFU') }}" required>
-              @error('IFU')
+            <!-- Nouveau champ Type de client -->
+            <div class="col-md-12 mb-3">
+              <label for="clientType">Type de Client</label>
+              <select 
+              class="form-control @error('type') is-invalid @enderror" 
+              id="clientType" 
+              name="type" 
+              required
+            >
+              <!-- Option vide : uniquement quand on veut forcer l'utilisateur à choisir manuellement -->
+              <option value="" disabled {{ old('type', 'physique') ? '' : 'selected' }}>
+                Sélectionner un type
+              </option>
+            
+              <!-- On indique que 'physique' est la valeur par défaut via old('type','physique') -->
+              <option value="physique" {{ old('type', 'physique') === 'physique' ? 'selected' : '' }}>
+                Personne physique
+              </option>
+            
+              <option value="morale" {{ old('type', 'physique') === 'morale' ? 'selected' : '' }}>
+                Personne morale
+              </option>
+            </select>
+              @error('type')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
-            <div class="col-md-6 mb-3">
-              <label for="nom">Nom &amp; Prénoms</label>
-              <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom" name="nom" placeholder="Nom &amp; Prénoms" value="{{ old('nom') }}" required>
+          </div>
+
+          
+          <div class="row">
+          <!-- IFU enveloppé pour être cachable -->
+          <div class="col-md-6 mb-3" id="ifuField">
+            <label for="ifu">IFU</label>
+            <input 
+              type="number" 
+              class="form-control @error('IFU') is-invalid @enderror" 
+              id="ifu" 
+              name="IFU" 
+              value="{{ old('IFU') }}" 
+              required
+            >
+            @error('IFU')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+
+
+
+            <!-- Nouveau : conteneur du nom -->
+            <div class="col-md-6 mb-3" id="nomField">
+              <label for="nom">Nom </label>
+              <input
+                type="text"
+                class="form-control @error('nom') is-invalid @enderror"
+                id="nom"
+                name="nom"
+                value="{{ old('nom') }}"
+                required
+              >
               @error('nom')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -256,6 +328,83 @@
 </div>
 @endsection
 
+{{-- Script pour cacher le champ IFU  --}}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const clientType = document.getElementById('clientType');
+    const ifuField   = document.getElementById('ifuField');
+    const nomField   = document.getElementById('nomField');
+  
+    function toggleFields() {
+      const isPhysique = clientType.value === 'physique';
+  
+      // 1) IFU
+      if (isPhysique) {
+        ifuField.classList.add('d-none');
+        ifuField.querySelector('input').required = false;
+      } else {
+        ifuField.classList.remove('d-none');
+        ifuField.querySelector('input').required = true;
+      }
+  
+      // 2) Nom : full width si Physique, 6-col sinon
+      if (isPhysique) {
+        nomField.classList.remove('col-md-6');
+        nomField.classList.add('col-md-12');
+      } else {
+        nomField.classList.remove('col-md-12');
+        nomField.classList.add('col-md-6');
+      }
+    }
+  
+    // Au chargement (pour old() ou défaut)
+    toggleFields();
+  
+    // À chaque changement
+    clientType.addEventListener('change', toggleFields);
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Parcours de chacun de vos modals édit
+    document.querySelectorAll('div[id^="editClientModal"]').forEach(modalEl => {
+      const idC = modalEl.id.replace('editClientModal','');
+      const selectType = modalEl.querySelector('#clientType' + idC);
+      const ifuField   = modalEl.querySelector('#ifuField' + idC);
+      const nomField   = modalEl.querySelector('#nomField' + idC);
+  
+      function toggleEditFields() {
+        const isPhys = selectType.value === 'physique';
+        // IFU
+        if (isPhys) {
+          ifuField.classList.add('d-none');
+          ifuField.querySelector('input').required = false;
+        } else {
+          ifuField.classList.remove('d-none');
+          ifuField.querySelector('input').required = true;
+        }
+        // Nom plein écran ou moitié
+        nomField.classList.toggle('col-md-12', isPhys);
+        nomField.classList.toggle('col-md-6', !isPhys);
+      }
+  
+      // Au chargement du modal (en cas de showAddClientModal)
+      toggleEditFields();
+  
+      // À chaque changement
+      selectType.addEventListener('change', toggleEditFields);
+  
+      // Aussi, si vous préférez vous assurer du bon état à l'ouverture :
+      modalEl.addEventListener('shown.bs.modal', toggleEditFields);
+    });
+  });
+</script>
+  
+  
+
+
 {{-- Scripts pour afficher automatiquement les modals en cas d'erreur --}}
 @if (session('showModifyClientModal'))
 <script>
@@ -273,6 +422,8 @@
       }, 300);
   });
 </script>
+
+
 @endif
 
 @if (session('showAddClientModal'))
@@ -283,6 +434,8 @@
   });
 </script>
 @endif
+
+
 
 @section('styles')
 <style>

@@ -71,30 +71,42 @@ public function ajouterProduit(ProduitRequest $request)
 
 
     public function modifierProduit(ProduitRequest $request, $idPro)
-{
-    $request->validated();
-    try {
-        $modifProduit = Produit::where('idPro', $idPro)->first();
-        $modifProduit->libelle = $request->input('libelle');
-        $modifProduit->idCatPro = $request->input('idCatPro');
-        $modifProduit->idFamPro = $request->input('idFamPro');
-        $modifProduit->prix = $request->input('prix');
-        $modifProduit->desc = $request->input('desc');
-        $modifProduit->stockAlert = $request->input('stockAlert');
-        $modifProduit->stockMinimum = $request->input('stockMinimum');            
-        if ($request->hasFile('image')) {
-            $modifProduit->image = file_get_contents($request->file('image')->getRealPath());
-        }
-        $modifProduit->update();  
-        // Supprime l'identifiant du modal des erreurs en session en cas de succès
-        session()->forget('errorModalId');
-        return back()->with("status", "Le produit a été modifié avec succès");
-    } catch (\Exception $e) {
-        return redirect()->back()
-            ->withErrors($e->getMessage())
-            ->with('errorModalId', 'ModifyBoardModal' . $idPro); // Utilisation de $idPro pour identifier dynamiquement le bon modal
-    }  
-}
+    {
+        $request->validated();
+        try {
+            // Mise à jour des infos du produit
+            $modifProduit = Produit::where('idPro', $idPro)->first();
+            $modifProduit->libelle = $request->input('libelle');
+            $modifProduit->idCatPro = $request->input('idCatPro');
+            $modifProduit->idFamPro = $request->input('idFamPro');
+            $modifProduit->prix = $request->input('prix');
+            $modifProduit->desc = $request->input('desc');
+            $modifProduit->stockAlert = $request->input('stockAlert');
+            $modifProduit->stockMinimum = $request->input('stockMinimum');            
+            if ($request->hasFile('image')) {
+                $modifProduit->image = file_get_contents($request->file('image')->getRealPath());
+            }
+            $modifProduit->update();
+    
+            // Mise à jour de la quantité stockée
+            $stocke = Stocke::where('idPro', $idPro)
+                            ->where('idMag', $request->input('idMag')) // Important si tu as plusieurs magasins
+                            ->first();
+    
+            if ($stocke) {
+                $stocke->qteStocke = $request->input('qteStocke');
+                $stocke->update();
+            }
+    
+            session()->forget('errorModalId');
+            return back()->with("status", "Le produit a été modifié avec succès");
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors($e->getMessage())
+                ->with('errorModalId', 'ModifyBoardModal' . $idPro);
+        }  
+    }
+    
 
 
 }

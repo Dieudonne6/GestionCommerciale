@@ -177,6 +177,9 @@ Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProdui
 Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
 
 
+Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
+Route::get('/get-tables/{databaseName}', [ParamController::class, 'getTables']);
+Route::get('/export-form',  [ParamController::class, 'Export'])->name('export');
 
 Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
 Route::post('/export-form',  [ParamController::class, 'Export'])->name('export');
@@ -257,6 +260,7 @@ Route::middleware(['auth'])->group(function () {
           ->name('commandeAchat.ligne.destroy');
      Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
           ->name('commandeAchat.produit.tva');
+     /* Route::get('/get-nouvelle-reference', [CommandeAchatController::class, 'getNouvelleReference']);           */
 
      // Tableau de bord
      Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);

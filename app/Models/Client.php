@@ -15,6 +15,7 @@ class Client extends Model
     protected $primaryKey = 'idC'; // Clé primaire de la table
 
     protected $fillable = [
+        'type',
         'IFU',
         'nom',
         'adresse',

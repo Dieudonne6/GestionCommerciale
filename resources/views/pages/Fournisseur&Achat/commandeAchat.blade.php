@@ -106,11 +106,11 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Référence</label>
-                                <input type="text" name="reference" class="form-control" required>
+                                <input type="text" name="reference" class="form-control" value="{{ $nextReference }}" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Date</label>
-                                <input type="datetime-local" name="dateOp" class="form-control" required>
+                                <input type="date" name="dateOp" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
                             </div>
                         </div>
                         <div class="row mb-3">

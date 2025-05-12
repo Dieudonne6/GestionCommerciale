@@ -31,8 +31,31 @@ class CommandeAchatController extends Controller
         $fournisseurs = Fournisseur::all();
         $produits = Produit::all();
 
-        return view('pages.Fournisseur&Achat.commandeAchat', compact('commandes', 'fournisseurs', 'produits'));
+        $lastCommande = CommandeAchat::orderBy('idCommande', 'desc')->first();
+    
+        if ($lastCommande) {
+            // Extraire le numéro de la dernière référence
+            $lastNumber = intval(substr($lastCommande->reference, 2));
+            $nextNumber = $lastNumber + 1;
+            $nextReference = 'Rf' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        } else {
+            // Si c'est la première commande
+            $nextReference = 'Rf0001';
+        }
+
+        return view('pages.Fournisseur&Achat.commandeAchat', compact('commandes', 'fournisseurs', 'produits', 'nextReference'));
     }
+
+/*     public function create()
+{
+    // Récupérer la dernière référence
+
+    
+
+    return view('pages.Fournisseur&Achat.commandeAchat', [
+        'nextReference' => $nextReference
+    ]);
+} */
 
     public function store(Request $request)
     {
