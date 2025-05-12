@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Utilisateur;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -20,7 +21,15 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect('/tableaudebord');
         }
-        return view('auth.login');
+
+        // Récupérer la liste des bases de données
+        $databases = DB::select('SHOW DATABASES');
+        $databaseNames = [];
+        foreach ($databases as $database) {
+            $databaseNames[] = $database->Database;
+        }
+
+        return view('auth.login', ['databases' => $databaseNames]);
     }
 
     public function login(Request $request)
@@ -28,18 +37,35 @@ class AuthController extends Controller
         $request->validate([
             'mail' => 'required|email',
             'password' => 'required',
+            'database' => 'required',
         ]);
 
-        $credentials = $request->only('mail', 'password');
+        try {
+            // Mettre à jour la configuration de la base de données
+            config(['database.connections.mysql.database' => $request->database]);
+            DB::purge('mysql');
+            DB::reconnect('mysql');
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/tableaudebord');
+            // Vérifier si la connexion à la base de données est réussie
+            DB::connection()->getPdo();
+
+            $credentials = $request->only('mail', 'password');
+
+            if (Auth::attempt($credentials)) {
+                // Stocker la base de données sélectionnée en session
+                session(['selected_database' => $request->database]);
+                $request->session()->regenerate();
+                return redirect()->intended('/tableaudebord');
+            }
+
+            return back()->withErrors([
+                'mail' => "Les informations d'identification ne correspondent pas.",
+            ]);
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'database' => "Impossible de se connecter à la base de données sélectionnée.",
+            ]);
         }
-
-        return back()->withErrors([
-            'mail' => "Les informations d'identification ne correspondent pas.",
-        ]);
     }
 
     public function logout(Request $request)

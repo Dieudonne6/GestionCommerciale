@@ -12,65 +12,13 @@
     <div class="startbar-menu">
         <div class="startbar-collapse" id="startbarCollapse" data-simplebar>
             <div class="d-flex align-items-start flex-column w-100">
-
-                <!-- Tableau de Bord -->
                 <ul class="navbar-nav mb-auto w-100">
+                    <!-- Tableau de Bord -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/tableaudebord') }}">
                             <i class="iconoir-home-simple menu-icon"></i>
                             <span>Tableau de Bord</span>
                         </a>
-                    </li>
-
-                    <!-- GESTION CLIENT -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#menuClients" data-bs-toggle="collapse">
-                            <i class="iconoir-box menu-icon"></i>
-                            <span>Gestion des Clients</span>
-                        </a>
-                        <div class="collapse" id="menuClients">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/categorieclient') }}">Catégories
-                                        de clients</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/clients') }}">Clients</a></li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <!-- GESTION COMMERCIALE -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#menuProduits" data-bs-toggle="collapse">
-                            <i class="iconoir-box menu-icon"></i>
-                            <span>Produits & Stocks</span>
-                        </a>
-                        <div class="collapse" id="menuProduits">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="{{ url('familleProduit') }}">Familles de
-                                        produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('categorieProduit') }}">Catégories
-                                        de produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
-
-                                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les
-                                        stocks</a></li>
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <!-- GESTION DES TRANSACTIONS -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#menuVentes" data-bs-toggle="collapse">
-                            <i class="iconoir-wallet menu-icon"></i>
-                            <span>Ventes & Facturation</span>
-                        </a>
-                        <div class="collapse" id="menuVentes">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="#">Facturation</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('ventes') }}">Ventes</a></li>
-                            </ul>
-                        </div>
                     </li>
 
                     <!-- Fournisseurs & Achats -->
@@ -101,6 +49,57 @@
                             </ul>
                         </div>
                     </li>
+
+                    <!-- GESTION COMMERCIALE -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menuProduits" data-bs-toggle="collapse">
+                            <i class="iconoir-box menu-icon"></i>
+                            <span>Produits & Stocks</span>
+                        </a>
+                        <div class="collapse" id="menuProduits">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="{{ url('familleProduit') }}">Familles de
+                                        produits</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('categorieProduit') }}">Catégories
+                                        de produits</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les
+                                        stocks</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- GESTION CLIENT -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menuClients" data-bs-toggle="collapse">
+                            <i class="iconoir-box menu-icon"></i>
+                            <span>Gestion des Clients</span>
+                        </a>
+                        <div class="collapse" id="menuClients">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/categorieclient') }}">Catégories
+                                        de clients</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/clients') }}">Clients</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- GESTION DES TRANSACTIONS -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menuVentes" data-bs-toggle="collapse">
+                            <i class="iconoir-wallet menu-icon"></i>
+                            <span>Ventes & Facturation</span>
+                        </a>
+                        <div class="collapse" id="menuVentes">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="#">Facturation</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('ventes') }}">Ventes</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <!-- PARAMÈTRES & UTILISATEURS -->
                     <li class="nav-item">
                         <a class="nav-link" href="#menuUtilisateurs" data-bs-toggle="collapse">
@@ -109,22 +108,17 @@
                         </a>
                         <div class="collapse" id="menuUtilisateurs">
                             <ul class="nav flex-column">
-                                
-                                {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/roles') }}">Rôles</a></li> --}}
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ url('/entreprise') }}">Entreprises</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('exercice') }}">Exercice</a></li>
-                                
-                                <li class="nav-item"><a class="nav-link"href="{{ url('/utilisateurs') }}">Utilisateurs</a></li>
-                                    
-                                <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a></li>
-
-                                {{-- <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('/parametres/modepaiement') }}">Modes de paiement</a></li> --}}
+                                <li class="nav-item"><a class="nav-link" href="{{ url('exercice') }}">Exercice</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('/utilisateurs') }}">Utilisateurs</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
-
                 </ul>
             </div>
         </div>
