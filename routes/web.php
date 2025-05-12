@@ -260,6 +260,7 @@ Route::middleware(['auth'])->group(function () {
           ->name('commandeAchat.ligne.destroy');
      Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
           ->name('commandeAchat.produit.tva');
+     /* Route::get('/get-nouvelle-reference', [CommandeAchatController::class, 'getNouvelleReference']);           */
 
      // Tableau de bord
      Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);

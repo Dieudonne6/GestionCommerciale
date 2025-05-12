@@ -167,7 +167,15 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
+                            <div class="mb-2">
+                              <label for="qteStocke">Quantité</label>
+                              <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ optional($allProduit->stocke->first())->qteStocke }}">
+                              @error('qteStocke')
+                                  <div class="invalid-feedback">{{ $message }}</div>
+                              @enderror
+                            </div>
+
                             <div class="mb-2">
                               <label for="desc">Description</label>
                               <textarea class="form-control @error('desc') is-invalid @enderror" id="desc" name="desc" rows="4">{{ $allProduit->desc }}</textarea>

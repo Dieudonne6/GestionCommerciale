@@ -82,7 +82,7 @@ class ClientController extends Controller
     ]);
 
     // 2. Validation conditionnelle de IFU pour les personnes morales
-    $validator->sometimes('IFU', 'required|numeric|unique:clients,IFU', function ($input) {
+    $validator->sometimes('IFU', 'required|digits:13|numeric|unique:clients,IFU', function ($input) {
         return $input->type === 'morale';
     });
 
@@ -144,7 +144,7 @@ public function update(Request $request, $idC)
     // 2) Validation conditionnelle de IFU pour les personnes morales
     $validator->sometimes(
         'IFU',
-        'required|numeric|unique:clients,IFU,'.$client->idC.',idC',
+        'required|digits:13|numeric|unique:clients,IFU,'.$client->idC.',idC',
         function ($input) {
             return $input->type === 'morale';
         }
