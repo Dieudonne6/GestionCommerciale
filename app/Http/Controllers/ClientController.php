@@ -19,7 +19,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'IFU'       => 'required|numeric|unique:clients,IFU',
+            'IFU' => 'required|digits:13|unique:clients,IFU',
             'nom'       => 'required|string|max:255',
             'adresse'   => 'required|string|max:255',
             'telephone' => 'required|string|max:50',
@@ -27,7 +27,7 @@ class ClientController extends Controller
             'idCatCl'   => 'required|exists:categorie_clients,idCatCl'
         ], [
             'IFU.required'       => 'L\'IFU est obligatoire.',
-            'IFU.numeric'        => 'L\'IFU doit être numérique.',
+            'IFU.digits'         => 'L\'IFU doit comporter exactement 13 chiffres.',
             'IFU.unique'         => 'Cet IFU existe déjà.',
             'nom.required'       => 'Le nom est obligatoire.',
             'adresse.required'   => 'L\'adresse est obligatoire.',
@@ -61,7 +61,7 @@ class ClientController extends Controller
         $client = Client::findOrFail($idC);
 
         $validator = Validator::make($request->all(), [
-            'IFU'       => 'required|numeric|unique:clients,IFU,'.$client->idC.',idC',
+            'IFU'       => 'required|digits:13|unique:clients,IFU,'.$client->idC.',idC',
             'nom'       => 'required|string|max:255',
             'adresse'   => 'required|string|max:255',
             'telephone' => 'required|string|max:50',
@@ -69,7 +69,7 @@ class ClientController extends Controller
             'idCatCl'   => 'required|exists:categorie_clients,idCatCl'
         ], [
             'IFU.required'       => 'L\'IFU est obligatoire.',
-            'IFU.numeric'        => 'L\'IFU doit être numérique.',
+            'IFU.digits'         => 'L\'IFU doit comporter exactement 13 chiffres.',
             'IFU.unique'         => 'Cet IFU existe déjà.',
             'nom.required'       => 'Le nom est obligatoire.',
             'adresse.required'   => 'L\'adresse est obligatoire.',
