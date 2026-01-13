@@ -22,8 +22,8 @@ class CategorieProduitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codeCatPro' => 'required|string|min:3',
-            'libelle' => 'required|string|min:3',
+            'codeCatPro' => 'required|string|min:3|unique:categorie_produits,codeCatPro',
+            'libelle' => 'required|string|min:3|unique:categorie_produits,libelle',
         ];
     }
 
@@ -32,9 +32,11 @@ class CategorieProduitRequest extends FormRequest
             'codeCatPro.required' => 'Le code Categorie est obligatoire.',
             'codeCatPro.string' => 'Le code Categorie doit être une chaîne de caractères.',
             'codeCatPro.min' => 'Le code Categorie doit avoir au minimum 3 caractères.',
+            'codeCatPro.unique' => 'Ce code Categorie existe déjà.',
             'libelle.required' => 'Le libelle est obligatoire.',
             'libelle.string' => 'Le libelle doit être une chaîne de caractères.',
             'libelle.min' => 'Le libelle doit avoir au minimum 3 caractères.',
+            'libelle.unique' => 'Ce libelle existe déjà.',
         ];
     }
 

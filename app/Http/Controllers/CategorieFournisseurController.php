@@ -21,15 +21,17 @@ class CategorieFournisseurController extends Controller
     // Méthode pour enregistrer une nouvelle catégorie
     public function store(Request $request)
     {
+
+        
         // Validation des données
         $validator = \Validator::make($request->all(), [
             'codeCatFour' => 'required|string|min:5|max:255|unique:categorie_fournisseurs,codeCatFour', // Ajout de min:5 pour imposer au moins 5 caractères
             'libelle' => 'required|string|min:5|max:255|unique:categorie_fournisseurs,libelle',// Ajout de min:5 pour imposer au moins 5 caractères
         ], [
-            'codeCatFour.required' => 'Le numéro de la catégorie est obligatoire.',
-            'codeCatFour.min' => 'Le numéro de la catégorie doit contenir au moins 5 caractères.',
-            'codeCatFour.max' => 'Le numéro de la catégorie ne peut pas dépasser 255 caractères.',
-            'codeCatFour.unique' => 'Ce numéro de catégorie existe déjà.',
+            'codeCatFour.required' => 'Le code de la catégorie est obligatoire.',
+            'codeCatFour.min' => 'Le code de catégorie doit contenir au moins 5 caractères.',
+            'codeCatFour.max' => 'Le code de catégorie ne peut pas dépasser 255 caractères.',
+            'codeCatFour.unique' => 'Ce code de catégorie existe déjà.',
             'libelle.required' => 'Le nom de la catégorie est obligatoire.',
             'libelle.min' => 'Le nom de la catégorie doit contenir au moins 5 caractères.',
             'libelle.max' => 'Le nom de la catégorie ne peut pas dépasser 255 caractères.',
@@ -74,10 +76,10 @@ class CategorieFournisseurController extends Controller
             'codeCatFour' => 'required|string|min:5|max:255|unique:categorie_fournisseurs,codeCatFour,'.$id.',idCatFour',
             'libelle' => 'required|string|min:5|max:255|unique:categorie_fournisseurs,libelle,'.$id.',idCatFour',
         ], [
-            'codeCatFour.required' => 'Le numéro de la catégorie est obligatoire.',
-            'codeCatFour.min' => 'Le numéro de la catégorie doit contenir au moins 5 caractères.',
-            'codeCatFour.max' => 'Le numéro de la catégorie ne peut pas dépasser 255 caractères.',
-            'codeCatFour.unique' => 'Ce numéro de catégorie existe déjà.',
+            'codeCatFour.required' => 'Le code de la catégorie est obligatoire.',
+            'codeCatFour.min' => 'Le code de la catégorie doit contenir au moins 5 caractères.',
+            'codeCatFour.max' => 'Le code de la catégorie ne peut pas dépasser 255 caractères.',
+            'codeCatFour.unique' => 'Ce code de catégorie existe déjà.',
             'libelle.required' => 'Le nom de la catégorie est obligatoire.',
             'libelle.min' => 'Le nom de la catégorie doit contenir au moins 5 caractères.',
             'libelle.max' => 'Le nom de la catégorie ne peut pas dépasser 255 caractères.',

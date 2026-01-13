@@ -53,8 +53,8 @@
                   <th >Nom</th>
                   <th >IFU</th>
                   <th >Adresse</th>
-                  <th >Mail</th>
-                  <th >Entreprise Principale</th>
+                  <th >Email</th>
+                  <th >Entreprise Prin</th>
                   <th >Actions</th>
                 </tr>
               </thead>

@@ -17,22 +17,31 @@ class ProduitController extends Controller
         $allProduits = Produit::with('stocke')->get();
         $allCategorieProduits = CategorieProduit::get();
         $allFamilleProduits = FamilleProduit::get();
-        $magasins = Magasin::get();
+
+        $user = auth()->user();
+        $userId = $user->idU;
+        $entrepriseId = $user->idE;
+        // dd($entrepriseId);
+        $magasins = Magasin::where('idE', $entrepriseId)
+            ->with('entreprise')
+            ->get();
+
+        // $magasins = Magasin::get();
         return view('pages.ProduitStock.produit', compact('allProduits', 'allCategorieProduits', 'allFamilleProduits', 'magasins'));
     }   
 
 public function ajouterProduit(ProduitRequest $request)
 {
     $request->validated();
-    $ProduitExiste = Produit::where('libelle', $request->input('libelle'))->exists();
-    if ($ProduitExiste) {
-        return back()->with(['erreur' => 'Ce produit existe déjà.']);
-    }
+    // $ProduitExiste = Produit::where('libelle', $request->input('libelle'))->exists();
+    // if ($ProduitExiste) {
+    //     return back()->with(['erreur' => 'Ce produit existe déjà.']);
+    // }
     try {
         $Produit = new Produit();
         $Produit->libelle = $request->input('libelle');
-        $Produit->idCatPro = $request->input('idCatPro');
-        $Produit->idFamPro = $request->input('idFamPro');
+        $Produit->idCatPro = $request->input('idCatPro') ;
+        $Produit->idFamPro = $request->input('idFamPro') ;
         /* $Produit->idMag = $request->input('idMag'); */
         $Produit->prix = $request->input('prix');
         $Produit->desc = $request->input('desc');
@@ -90,11 +99,10 @@ public function ajouterProduit(ProduitRequest $request)
     
             // Mise à jour de la quantité stockée
             $stocke = Stocke::where('idPro', $idPro)
-                            ->where('idMag', $request->input('idMag')) // Important si tu as plusieurs magasins
                             ->first();
     
             if ($stocke) {
-                $stocke->qteStocke = $request->input('qteStocke');
+                $stocke->idMag = $request->input('idMag');
                 $stocke->update();
             }
     

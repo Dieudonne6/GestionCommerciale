@@ -21,11 +21,12 @@ class CatClientController extends Controller
         // Création du validateur pour la validation manuelle
         $validator = Validator::make($request->all(), [
             'codeCatCl' => 'required|string|max:255|unique:categorie_clients,codeCatCl',
-            'libelle'   => 'required|string|max:255',
+            'libelle'   => 'required|string|max:255|unique:categorie_clients,libelle',
         ], [
             'codeCatCl.required' => 'Le code de la catégorie client est obligatoire.',
             'codeCatCl.unique'   => 'Ce code de catégorie client existe déjà.',
             'libelle.required'   => 'Le libellé de la catégorie client est obligatoire.',
+            'libelle.unique'   => 'Ce libellé de catégorie client existe déjà.',
         ]);
 
         // Si la validation échoue, on redirige avec les erreurs et on indique d'ouvrir le modal
@@ -69,10 +70,11 @@ class CatClientController extends Controller
         // Création du validateur pour la mise à jour
         $validator = Validator::make($request->all(), [
             'codeCatCl' => 'required|string|max:255|unique:categorie_clients,codeCatCl,' . $idCatCl . ',idCatCl',
-            'libelle'   => 'required|string|max:255',
+            'libelle'   => 'required|string|max:255|unique:categorie_clients,libelle',
         ], [
             'codeCatCl.required' => 'Le code de la catégorie client est obligatoire.',
             'codeCatCl.unique'   => 'Ce code de catégorie client existe déjà.',
+            'libelle.unique'   => 'Ce libellé de catégorie client existe déjà.',
             'libelle.required'   => 'Le libellé de la catégorie client est obligatoire.',
         ]);
 

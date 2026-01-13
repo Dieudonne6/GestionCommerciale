@@ -43,26 +43,18 @@
                             <table class="table mb-0 checkbox-all" id="datatable_1">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width: 16px;">
-                                            <div class="form-check mb-0 ms-n1">
-                                                <input type="checkbox" class="form-check-input" name="select-all"
-                                                    id="select-all">
-                                            </div>
-                                        </th>
-                                        <th class="text-center">Numéro</th>
-                                        <th class="ps-0 text-center">Libellé</th>
+                                        
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Code</th>
+                                        <th class="text-center">Libellé</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($categoriesF as $categoryF)
                                         <tr class="text-center">
-                                            <td style="width: 16px;">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" name="check"
-                                                        id="customCheck1">
-                                                </div>
-                                            </td>
+                                            
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $categoryF->codeCatFour }}</td>
                                             <td>{{ $categoryF->libelle }}</td>
                                             <td>
@@ -111,7 +103,7 @@
 
                                                             <!-- Champ pour le code de la catégorie -->
                                                             <div class="mb-3">
-                                                                <label for="codeCatFour" class="form-label">Numéro de la
+                                                                <label for="codeCatFour" class="form-label">Code de la
                                                                     Catégorie</label>
                                                                 <input type="text"
                                                                     class="form-control @error('codeCatFour') is-invalid @enderror"
@@ -202,7 +194,7 @@
                         @csrf
                         <!-- Code de la catégorie -->
                         <div class="mb-3">
-                            <label for="codeCatFour" class="form-label">Numéro de la Catégorie</label>
+                            <label for="codeCatFour" class="form-label">Code de la Catégorie</label>
                             <input type="text" class="form-control @error('codeCatFour') is-invalid @enderror"
                                 id="codeCatFour" name="codeCatFour" value="{{ old('codeCatFour') }}" required>
                             @error('codeCatFour')
