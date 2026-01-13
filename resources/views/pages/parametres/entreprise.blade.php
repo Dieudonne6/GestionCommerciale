@@ -186,7 +186,11 @@
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <label for="regime">Régime</label>
-                                    <input type="text" class="form-control @error('regime') is-invalid @enderror" id="regime" name="regime" value="{{ $allEntreprise->regime }}">
+                                    <select id="regime" name="regime" class="form-control @error('regime') is-invalid @enderror">
+                                        <option value="">Sélectionner un régime</option>
+                                        <option value="TPS" {{ $allEntreprise->regime == 'TPS' ? 'selected' : '' }}>TPS</option>
+                                        <option value="TVA" {{ $allEntreprise->regime == 'TVA' ? 'selected' : '' }}>TVA</option>
+                                    </select>
                                     @error('regime')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -334,7 +338,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="regime">Régime</label>
-                            <input type="text" class="form-control @error('regime') is-invalid @enderror" id="regime" name="regime" value="{{ old('regime') }}">
+                            <select id="regime" name="regime" class="form-control @error('regime') is-invalid @enderror">
+                                <option value="" selected>Sélectionner un régime</option>
+                                <option value="TPS" {{ old('regime') == 'TPS' ? 'selected' : '' }}>TPS</option>
+                                <option value="TVA" {{ old('regime') == 'TVA' ? 'selected' : '' }}>TVA</option>
+                            </select>
                             @error('regime')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

@@ -2,6 +2,8 @@
 @section('content')
     <!-- Page Content-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <div class="container-xxl">
 
@@ -162,8 +164,8 @@
                                                     <th>Article</th>
                                                     <th>Quantité</th>
                                                     <th>Prix Unitaire</th>
-                                                    <th>Montant HT</th>
-                                                    <th>Montant TTC</th>
+                                                    <th class="montant-header">Montant HT</th>
+                                                    <th class="ttc-header">Montant TTC</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -176,7 +178,7 @@
                                                         <td>
                                                             <select id="productSelect"
                                                                 name="lignes[{{ $index }}][idP]"
-                                                                class="form-select">
+                                                                class="form-select product-select2">
                                                                 <option value="">Sélectionner un produit</option>
                                                                 @foreach ($allproduits as $produit)
                                                                     <option value="{{ $produit->idPro }}"
@@ -197,7 +199,7 @@
                                                             <input type="number" name="lignes[{{ $index }}][montantht]"
                                                                 class="form-control montantht" value="{{ $ligne->prixUnitaire * $ligne->quantite }}" readonly>
                                                         </td>
-                                                        <td>
+                                                        <td class="ttc-cell">
                                                             <input type="number"
                                                                 name="lignes[{{ $index }}][montantttc]"
                                                                 class="form-control montantttc"
@@ -220,11 +222,11 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="form-label">Total HT:</label>
+                                                <label class="form-label montant-label">Total HT:</label>
                                                 <input type="text" id="totalHT" class="form-control" readonly>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Total TTC:</label>
+                                            <div class="col-md-6 ttc-section">
+                                                <label class="form-label ttc-label">Total TTC:</label>
                                                 <input type="text" id="totalTTC" class="form-control" readonly>
                                             </div>
                                         </div>
@@ -334,15 +336,15 @@
                                                 <th>Article</th>
                                                 <th>Quantité</th>
                                                 <th>Prix Unitaire</th>
-                                                <th>Montant HT</th>
-                                                <th>Montant TTC</th>
+                                                <th class="montant-header">Montant HT</th>
+                                                <th class="ttc-header">Montant TTC</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody id="ligneProduits">
                                             <tr>
                                                 <td>
-                                                    <select class="form-select" name="lignes[0][idP]" id="productSelect">
+                                                    <select class="form-select product-select2" name="lignes[0][idP]" id="productSelect">
                                                         <option value="">-- Produit --</option>
                                                         @foreach ($allproduits as $produit)
                                                             <option value="{{ $produit->idPro }}">
@@ -357,10 +359,12 @@
                                                     <input type="number" name="lignes[0][prixU]" class="form-control prixU">
                                                 </td>
                                                 <td>
-                                                    <input type="number" name="lignes[0][montantht]" class="form-control montantht" readonly>
+                                                    <input type="number" name="lignes[0][montantht]"
+                                                        class="form-control montantht" readonly>
                                                 </td>
-                                                <td>
-                                                    <input type="number" name="lignes[0][montantttc]" class="form-control montantttc">                                                      
+                                                <td class="ttc-cell">
+                                                    <input type="number" name="lignes[0][montantttc]"
+                                                        class="form-control montantttc">                                                      
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-danger"
@@ -404,8 +408,9 @@
 
   <script>
         let ligneIndex = 1;
+        let isTPS = {{ $regimeEntreprise === 'TPS' ? 'true' : 'false' }}; // Récupérer le régime depuis le contrôleur
 
-        // Auto-generate reference number
+        // Auto-generate reference number and initialize Select2
         $(document).ready(function() {
             $.get("{{ url('get-nouvelle-reference') }}", function(data) {
                 $('#reference').val(data.reference);
@@ -415,12 +420,76 @@
             var now = new Date();
             var dateTimeLocal = now.toISOString().slice(0,16);
             $('input[name="dateOperation"]').val(dateTimeLocal);
+            
+            // Initialize Select2 and event listeners
+            attachEventListeners();
+            initializeSelect2();
+            
+            // Vérifier le régime de l'entreprise (à adapter selon votre logique)
+            checkRegimeTPS();
+              
+            $(".delete-ligne").click(function() {
+                let ligneId = $(this).data("id");
+                let row = $(this).closest("tr");
+
+                $.ajax({
+                    url: "{{ url('deleteLigneVente') }}/" + ligneId,
+                    type: "DELETE",
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            row.remove();
+                            calculateTotals();
+                        } else {
+                            alert("Erreur lors de la suppression !");
+                        }
+                    },
+                    error: function(xhr) {
+                        alert("Une erreur s'est produite !");
+                    }
+                });
+            });
         });
+
+        function checkRegimeTPS() {
+            // Le régime est déjà défini depuis PHP via la variable isTPS
+            updateDisplayForRegime();
+        }
+
+        function updateDisplayForRegime() {
+            if (isTPS) {
+                // Masquer les éléments TTC
+                $('.ttc-header').hide();
+                $('.ttc-cell').hide();
+                $('.ttc-section').hide();
+                
+                // Changer les libellés
+                $('.montant-header').text('Montant total');
+                $('.montant-label').text('Montant total:');
+                
+                // Ajuster la largeur des colonnes
+                $('.montant-header').closest('th').attr('colspan', '2');
+            } else {
+                // Afficher les éléments TTC
+                $('.ttc-header').show();
+                $('.ttc-cell').show();
+                $('.ttc-section').show();
+                
+                // Restaurer les libellés
+                $('.montant-header').text('Montant HT');
+                $('.montant-label').text('Total HT:');
+                
+                // Restaurer la largeur des colonnes
+                $('.montant-header').closest('th').removeAttr('colspan');
+            }
+        }
 
         function ajouterVente() {
           const ligne = `<tr>
                           <td>
-                            <select id="productSelect" name="lignes[${ligneIndex}][idP]" class="form-select">
+                            <select id="productSelect" name="lignes[${ligneIndex}][idP]" class="form-select product-select2">
                               <option value="">Sélectionner un produit</option>
                               @foreach ($allproduits as $produit)
                                   <option value="{{ $produit->idPro }}">{{ $produit->libelle }}</option>
@@ -451,6 +520,7 @@
             document.getElementById('ligneProduits').insertAdjacentHTML('beforeend', ligne);
             ligneIndex++;
             attachEventListeners();
+            initializeSelect2();
           }
           
           function supprimerLigne(button) {
@@ -465,7 +535,7 @@
                 calculateTotals();
             });
 
-            $('.form-select').off('change').on('change', function() {
+            $('.product-select2').off('change').on('change', function() {
                 const productId = $(this).val();
                 const row = $(this).closest('tr');
                 
@@ -479,14 +549,34 @@
             });
           }
 
+          function initializeSelect2() {
+            $('.product-select2').select2({
+                placeholder: "Sélectionner un produit",
+                allowClear: false,
+                width: '100%'
+            });
+            
+            // Re-initialize Select2 when modal is shown
+            $('.modal').on('shown.bs.modal', function() {
+                $(this).find('.product-select2').select2({
+                    placeholder: "Sélectionner un produit",
+                    allowClear: false,
+                    width: '100%',
+                    dropdownParent: $(this)
+                });
+            });
+          }
+
           function calculateRowTotal(row) {
             const qte = parseFloat(row.find('.qte').val()) || 0;
             const prixU = parseFloat(row.find('.prixU').val()) || 0;
             const montantHT = qte * prixU;
-            const montantTTC = montantHT * 1.18;
+            const montantTTC = isTPS ? montantHT : montantHT * 1.18;
 
             row.find('.montantht').val(montantHT.toFixed(2));
-            row.find('.montantttc').val(montantTTC.toFixed(2));
+            if (!isTPS) {
+                row.find('.montantttc').val(montantTTC.toFixed(2));
+            }
           }
 
           function calculateTotals() {
@@ -501,7 +591,9 @@
             });
 
             $('#totalHT').val(totalHT.toFixed(2));
-            $('#totalTTC').val(totalTTC.toFixed(2));
+            if (!isTPS) {
+                $('#totalTTC').val(totalTTC.toFixed(2));
+            }
           }
 
           // Form validation
@@ -537,33 +629,6 @@
               }
           });
 
-          $(document).ready(function() {
-              attachEventListeners();
-              
-              $(".delete-ligne").click(function() {
-                  let ligneId = $(this).data("id");
-                  let row = $(this).closest("tr");
-
-                  $.ajax({
-                      url: "{{ url('deleteLigneVente') }}/" + ligneId,
-                      type: "DELETE",
-                      data: {
-                          _token: "{{ csrf_token() }}"
-                      },
-                      success: function(response) {
-                          if (response.success) {
-                              row.remove();
-                              calculateTotals();
-                          } else {
-                              alert("Erreur lors de la suppression !");
-                          }
-                      },
-                      error: function(xhr) {
-                          alert("Une erreur s'est produite !");
-                      }
-                  });
-              });
-          });
   </script>
 
 @endsection

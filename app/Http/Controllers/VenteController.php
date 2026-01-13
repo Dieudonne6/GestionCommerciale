@@ -18,7 +18,13 @@ class VenteController extends Controller
         $allproduits = Produit::get();
         $allVente = Vente::with('client', 'detailVente')->get();
         $modes = ModePaiement::get();
-        return view('pages.Facturation.ventes', compact('allClients', 'allproduits', 'allVente', 'modes'));
+        
+        // Récupérer le régime de l'entreprise connectée
+        $user = auth()->user();
+        $entreprise = $user->entreprise;
+        $regimeEntreprise = $entreprise ? $entreprise->regime : 'normal';
+        
+        return view('pages.Facturation.ventes', compact('allClients', 'allproduits', 'allVente', 'modes', 'regimeEntreprise'));
     }
 
     public function facturation() {
