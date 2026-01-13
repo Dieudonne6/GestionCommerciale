@@ -45,7 +45,7 @@ class Produit extends Model
     }
 
     public function stocke() {
-        return $this->hasMany(Stocke::class, 'idPro');
+        return $this->hasOne(Stocke::class, 'idPro');
     }
 
     public function detailInventaire() {

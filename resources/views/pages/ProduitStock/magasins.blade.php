@@ -78,7 +78,7 @@
                                             </a>
                                             
                                             <!-- Bouton Supprimer -->
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="##deleteModal{{ $magasin->idMag }}">
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $magasin->idMag }}">
                                                  Supprimer
                                             </button>
                                         </td>
@@ -189,6 +189,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     Êtes-vous sûr de vouloir supprimer ce magasin ?
+                                                    Le magasin avec tout les produits associés seront supprimés.
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -207,7 +208,7 @@
                     </div>
                 </div>
 
-@foreach($magasins as $magasin)
+                @foreach($magasins as $magasin)
                 <div class="modal fade" id="detailsModal{{ $magasin->idMag }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $magasin->idMag }}" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
@@ -250,7 +251,7 @@
                                             </div>
                                         </div>
                                     </div>
-@endforeach
+                @endforeach
                                     <!-- Modal d'ajout -->
                                     <div class="modal fade" id="addMagasinModal" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -297,14 +298,28 @@
                                                 
                                                 <div class="form-group">
                                                     <label for="entreprise">Entreprise</label>
-                                                    <select name="idE" class="form-control @error('idE') is-invalid  @enderror">
+                                                    {{-- <select name="idE" class="form-control @error('idE') is-invalid  @enderror">
                                                         <option value="">Aucune</option>
                                                         @foreach ($entreprises as $entreprise)
                                                             <option value="{{ $entreprise->idE }}" {{ old('idE') == $entreprise->idE ? 'selected' : '' }}>
                                                                 {{ $entreprise->nom }}
                                                             </option>
                                                         @endforeach
+                                                    </select> --}}
+
+                                                    <select disabled name="idE" class="form-control @error('idE') is-invalid @enderror">
+                                                        <option value="">Aucune</option>
+
+                                                        @foreach ($entreprises as $entreprise)
+                                                            <option value="{{ $entreprise->idE }}"
+                                                                {{ (old('idE', $entrepriseId) == $entreprise->idE) ? 'selected' : '' }}>
+                                                                {{ $entreprise->nom }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
+
+                                                    {{-- Champ caché pour envoyer la valeur --}}
+                                                    <input type="hidden" name="idE" value="{{ old('idE', $entrepriseId) }}">
                                                         @error('idE')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror

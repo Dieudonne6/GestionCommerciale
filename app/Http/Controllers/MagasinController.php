@@ -19,12 +19,22 @@ class MagasinController extends Controller
     // Afficher la liste des magasins
     public function index()
     {
-        $magasins = Magasin::with('entreprise')->get();
+        // $magasins = Magasin::with('entreprise')->get();
         $entreprises = Entreprise::all();
         $produits = Produit::all(); // Pour le modal d'ajout de produit
         $allCategorieProduits = CategorieProduit::get();
         $allFamilleProduits = FamilleProduit::get();
-        return view('pages.ProduitStock.magasins', compact('magasins', 'produits', 'entreprises', 'allCategorieProduits', 'allFamilleProduits'));
+
+        $user = auth()->user();
+        $userId = $user->idU;
+        $entrepriseId = $user->idE;
+        // dd($entrepriseId);
+        $magasins = Magasin::where('idE', $entrepriseId)
+            ->with('entreprise')
+            ->get();
+
+
+        return view('pages.ProduitStock.magasins', compact('magasins', 'produits', 'entreprises', 'allCategorieProduits', 'allFamilleProduits','entrepriseId'));
     }
 
     public function ajouterMagasin(Request $request)
@@ -60,7 +70,7 @@ class MagasinController extends Controller
             $magasins->idE = $request->input('idE');
             $magasins->save();
 
-            return redirect()->route('magasins')->with('success', 'Magasin ajouté avec succès !');
+            return redirect()->route('magasins')->with('status', 'Magasin ajouté avec succès !');
     } 
     // Afficher les détails d'un magasin (produits associés)
 
@@ -119,15 +129,28 @@ class MagasinController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Produit ajouté au stock avec succès !');
+        return redirect()->back()->with('status', 'Produit ajouté au stock avec succès !');
     } 
 
     // Supprimer un magasin
     public function destroy($id)
     {
         $magasin = Magasin::findOrFail($id);
-        $magasin->delete();
-        return redirect()->route('magasins')->with('success', 'Magasin supprimé avec succès.');
+
+        // $produits = Produit::where('idPro', )
+
+        DB::transaction(function () use ($magasin) {
+            // Supprimer les produits liés via stocke
+            $magasin->stocke()->each(function ($stock) {
+                $stock->produit()->delete();
+            });
+
+            // Supprimer le magasin
+            $magasin->delete();
+        });
+        // $magasin->delete();
+
+        return redirect()->route('magasins')->with('status', 'Magasin et produit associés supprimés avec succès.');
     }
 
     // Mettre à jour un magasin

@@ -73,7 +73,7 @@
                   <td class="text-center">{{ $allProduit->prix }}</td>
                   <td class="text-center">
                     @php
-                        $totalStocke = $allProduit->stocke->sum('qteStocke');
+                        $totalStocke = $allProduit->stocke->qteStocke;
                     @endphp
                     {{ $totalStocke > 0 ? $totalStocke : '0' }}
                   </td>                  
@@ -131,6 +131,7 @@
                             <div class="form-group">
                               <label for="idCatPro">Catégorie Produit</label>
                               <select id="idCatPro" name="idCatPro" class="form-control @error('idCatPro') is-invalid @enderror">
+                                      <option value="0" selected>Aucune</option>
                                   @foreach ($allCategorieProduits as $allCategorieProduit)
                                       <option value="{{ $allCategorieProduit->idCatPro }}" 
                                           {{ $allProduit->idCatPro == $allCategorieProduit->idCatPro ? 'selected' : '' }}>
@@ -147,6 +148,7 @@
                             <div class="form-group">
                               <label for="idFamPro">Famille Produit</label>
                               <select id="idFamPro" name="idFamPro" class="form-control @error('idFamPro') is-invalid @enderror">
+                                      <option value="0" selected>Aucune</option>
                                   @foreach ($allFamilleProduits as $allFamilleProduit)
                                       <option value="{{ $allFamilleProduit->idFamPro }}" 
                                           {{ $allProduit->idFamPro == $allFamilleProduit->idFamPro ? 'selected' : '' }}>
@@ -159,6 +161,23 @@
                               @enderror
                             </div>
 
+                            <div class="form-group">
+                              <label for="idMag">Magasin</label>
+                              <select id="idMag" name="idMag" class="form-control @error('idMag') is-invalid  @enderror">
+                                  <option value="0" selected>Aucune</option>
+                                  @foreach ($magasins as $magasin)
+                                      {{-- <option value="{{ $allFamilleProduit->idFamPro }}" {{ old('idFamPro', $allCategorieProduit->idFamPro) == $allCategorieProduit->idCatPro ? 'selected' : '' }}> --}}
+                                  <option value="{{ $magasin->idMag }}"
+                                      {{ optional($allProduit->stocke)->idMag == $magasin->idMag ? 'selected' : '' }}>
+                                      {{ $magasin->libelle }}
+                                  </option>
+                                  @endforeach
+                              </select>
+                              @error('idMag')
+                                  <div class="invalid-feedback">{{ $message }}</div>
+                              @enderror
+                            </div>    
+
                     
                             <div class="mb-2">
                                 <label for="prix">Prix</label>
@@ -168,13 +187,13 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-2">
+                            {{-- <div class="mb-2">
                               <label for="qteStocke">Quantité</label>
                               <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ optional($allProduit->stocke->first())->qteStocke }}">
                               @error('qteStocke')
                                   <div class="invalid-feedback">{{ $message }}</div>
                               @enderror
-                            </div>
+                            </div> --}}
 
                             <div class="mb-2">
                               <label for="desc">Description</label>
@@ -271,7 +290,7 @@
                   <div class="col-md-6 form-group">
                       <label for="idCatProAdd">Catégorie Produit</label>
                       <select id="idCatProAdd" name="idCatPro" class="form-control @error('idCatPro') is-invalid  @enderror">
-                          <option value="0" selected>Aucune</option>
+                          <option value="" >Aucune</option>
                           @foreach ($allCategorieProduits as $allCategorieProduit)
                               <option value="{{ $allCategorieProduit->idCatPro }}">
                                   {{ $allCategorieProduit->libelle }}
@@ -286,7 +305,7 @@
                   <div class="col-md-6 form-group">
                       <label for="idFamProAdd">Famille Produit</label>
                       <select id="idFamProAdd" name="idFamPro" class="form-control @error('idFamPro') is-invalid  @enderror">
-                          <option value="0" selected>Aucune</option>
+                          <option value="" >Aucune</option>
                           @foreach ($allFamilleProduits as $allFamilleProduit)
                               {{-- <option value="{{ $allFamilleProduit->idFamPro }}" {{ old('idFamPro', $allCategorieProduit->idFamPro) == $allCategorieProduit->idCatPro ? 'selected' : '' }}> --}}
                               <option value="{{ $allFamilleProduit->idFamPro }}">
@@ -335,7 +354,7 @@
 
                   <div class="col-md-6 mb-2">
                     <label for="qteStocke">Quantité</label>
-                    <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ old('qteStocke') }}" required>
+                    <input type="number" readonly name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="0" required>
                     @error('qteStocke')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

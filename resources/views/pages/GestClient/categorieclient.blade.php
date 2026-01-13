@@ -49,9 +49,9 @@
                             <table class="table mb-0" id="datatable_1">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>No</th>
-                                        <th>Code</th>
-                                        <th>Libellé</th>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Code</th>
+                                        <th class="text-center">Libellé</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>

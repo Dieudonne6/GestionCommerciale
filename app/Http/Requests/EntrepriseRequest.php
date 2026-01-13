@@ -23,7 +23,7 @@ class EntrepriseRequest extends FormRequest
     {
         return [
             'nom' => 'required|string|min:3',
-            'IFU' => 'required|string',
+            'IFU' => 'required|digits:13|numeric|unique:entreprises,IFU',
             'adresse' => 'required|string',
             'telephone' => 'required|string',
             'mail' => 'required|string',
@@ -42,7 +42,9 @@ class EntrepriseRequest extends FormRequest
             'nom.min' => 'Le nom doit contenir au moins 5 caractères.',
             
             'IFU.required' => 'Le numero IFU est obligatoire.',
-            'IFU.numeric' => 'Le numero IFU doit être un nombre valide.',
+            // 'IFU.numeric' => 'Le numero IFU doit être un nombre valide.',
+            'IFU.numeric'  => 'L\'IFU doit être numérique.',
+            'IFU.unique'   => 'Cet IFU existe déjà.',
             
             'telephone.required' => 'Le numero de telephone est obligatoire.',
             'telephone.numeric' => 'Le numero de telephone doit être un nombre valide.',

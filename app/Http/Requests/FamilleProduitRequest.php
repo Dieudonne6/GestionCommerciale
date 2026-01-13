@@ -22,10 +22,11 @@ class FamilleProduitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codeFamille' => 'required|string|min:5',
-            'libelle' => 'required|string|min:5',
+            'codeFamille' => 'required|string|min:5|unique:famille_produits,codeFamille',
+            'libelle' => 'required|string|min:5|unique:famille_produits,libelle',
             'TVA' => 'nullable',
         ];
+
 
     }
 
@@ -34,9 +35,11 @@ class FamilleProduitRequest extends FormRequest
             'codeFamille.required' => 'Le code Famille est obligatoire.',
             'codeFamille.string' => 'Le code Famille doit être une chaîne de caractères.',
             'codeFamille.min' => 'Le code Famille doit avoir au minimum 5 caractères.',
+            'codeFamille.unique' => 'Ce code de Famille existe déjà.',
             'libelle.required' => 'Le libelle est obligatoire.',
             'libelle.string' => 'Le libelle doit être une chaîne de caractères.',
             'libelle.min' => 'Le libelle doit avoir au minimum 5 caractères.',
+            'libelle.unique' => 'Ce libelle existe déjà.',
         ];
     }
 

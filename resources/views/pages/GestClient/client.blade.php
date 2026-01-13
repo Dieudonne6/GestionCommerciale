@@ -47,7 +47,7 @@
               <thead class="table-light">
                 <tr>
                   <th>No</th>
-                  <th class="ps-0">Nom &amp; Prénoms</th>
+                  <th class="ps-0">Nom</th>
                   <th>Adresse</th>
                   <th>Contact</th>
                   <th>Email</th>
@@ -92,10 +92,10 @@
                               <label for="clientType{{ $client->idC }}">Type de Client</label>
                               <select id="clientType{{ $client->idC }}" name="type"
                                       class="form-control @error('type') is-invalid @enderror" required>
-                                <option value="physique" {{ $client->type === 'physique' ? 'selected' : '' }}>
+                                <option value="physique" {{ $client->type == 'physique' ? 'selected' : '' }}>
                                   Personne physique
                                 </option>
-                                <option value="morale" {{ $client->type === 'morale' ? 'selected' : '' }}>
+                                <option value="morale" {{ $client->type == 'morale' ? 'selected' : '' }}>
                                   Personne morale
                                 </option>
                               </select>
@@ -204,7 +204,7 @@
 </div>
 
 <!-- Modal d'ajout -->
-<div class="modal fade @if ($errors->any()) show @endif" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" @if ($errors->any()) style="display: block;" @endif>
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -405,35 +405,55 @@
   
 
 
-{{-- Scripts pour afficher automatiquement les modals en cas d'erreur --}}
-@if (session('showModifyClientModal'))
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-      var clientId = "{{ session('showModifyClientModal') }}";
-      var existingModal = document.querySelector('.modal.show');
-      if (existingModal) {
-          var modalInstance = bootstrap.Modal.getInstance(existingModal);
-          modalInstance.hide();
-      }
-      var myModalElement = document.getElementById('editClientModal' + clientId);
-      var myModal = new bootstrap.Modal(myModalElement);
-      setTimeout(() => {
-          myModal.show();
-      }, 300);
-  });
-</script>
-
-
-@endif
-
+{{-- Show add modal when needed --}}
 @if (session('showAddClientModal'))
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-      var myModal = new bootstrap.Modal(document.getElementById('addClientModal'));
-      myModal.show();
-  });
+document.addEventListener("DOMContentLoaded", function() {
+  var modalEl = document.getElementById('addClientModal');
+  if (modalEl) {
+    // s'assurer qu'aucun modal visible n'empêche l'ouverture propre
+    var shown = document.querySelector('.modal.show');
+    if (shown && shown !== modalEl) {
+      bootstrap.Modal.getInstance(shown)?.hide();
+    }
+
+    var myModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    myModal.show();
+  } else {
+    console.warn('addClientModal introuvable');
+  }
+});
 </script>
 @endif
+
+{{-- Show edit modal for a specific client when needed --}}
+@if (session('showModifyClientModal'))
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var clientId = "{{ session('showModifyClientModal') }}"; // doit être l'id numérique (ex: 12)
+  var modalEl = document.getElementById('editClientModal' + clientId);
+  if (modalEl) {
+    // fermer tout modal déjà ouvert (évite conflit backdrop)
+    var shown = document.querySelector('.modal.show');
+    if (shown && shown !== modalEl) {
+      bootstrap.Modal.getInstance(shown)?.hide();
+    }
+
+    // Crée ou récupère l'instance du modal et l'ouvre proprement
+    var myModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    myModal.show();
+
+    // Optionnel : forcer le focus dans le modal
+    modalEl.addEventListener('shown.bs.modal', function () {
+      modalEl.querySelector('input,select,textarea,button')?.focus();
+    });
+  } else {
+    console.warn('Modal edition introuvable :', 'editClientModal' + clientId);
+  }
+});
+</script>
+@endif
+
 
 
 

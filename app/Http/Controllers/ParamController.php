@@ -69,7 +69,7 @@ class ParamController extends Controller
             $data = $validator->validated();
             $data['password'] = Hash::make($data['password']);
             Utilisateur::create($data);
-            return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
+            return redirect()->back()->with('status', 'Utilisateur ajouté avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()->with('erreur', 'Une erreur est survenue lors de la création de l\'utilisateur.');
         }
@@ -115,7 +115,7 @@ class ParamController extends Controller
 
         try {
             $utilisateur->update($validator->validated());
-            return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
+            return redirect()->back()->with('status', 'Utilisateur mis à jour avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()->with('erreur', 'Une erreur est survenue lors de la modification de l\'utilisateur.');
         }
@@ -127,7 +127,7 @@ class ParamController extends Controller
         try {
             $utilisateur = Utilisateur::findOrFail($idU);
             $utilisateur->delete();
-            return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
+            return redirect()->back()->with('status', 'Utilisateur supprimé avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()->with('erreur', 'Une erreur est survenue lors de la suppression de l\'utilisateur.');
         }
