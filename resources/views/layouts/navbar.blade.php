@@ -94,7 +94,7 @@
                         </a>
                         <div class="collapse" id="menuVentes">
                             <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="#">Facturation</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('facturation') }}">Facturation</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('ventes') }}">Ventes</a></li>
                             </ul>
                         </div>
@@ -115,6 +115,8 @@
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ url('/utilisateurs') }}">Utilisateurs</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement') }}">Modes de Paiement</a>
                                 </li>
                             </ul>
                         </div>
