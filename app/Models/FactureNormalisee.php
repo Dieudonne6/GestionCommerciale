@@ -22,6 +22,8 @@ class FactureNormalisee extends Model
         'montantTotalTTC',
         'TotalTVA',
         'groupeTaxation',
+        'statut',
+        'qrcode',
         'date',
         'idV',
         'idCommande',

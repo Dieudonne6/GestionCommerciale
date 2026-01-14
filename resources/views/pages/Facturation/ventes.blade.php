@@ -349,6 +349,9 @@
                                                                 {{ $produit->libelle }}</option>
                                                         @endforeach
                                                     </select>
+                                                        <!-- champ hidden pour envoyer le libelle -->
+                                                        <input type="hidden" name="lignes[0][libelle]" class="libelle">
+                                                        <input type="hidden" name="lignes[0][taxe]" class="form-control taxe">
                                                 </td>
                                                 <td>
                                                     <input type="number" name="lignes[0][qte]" class="form-control qte">
@@ -380,11 +383,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Total HT:</label>
-                                            <input type="text" id="totalHT" class="form-control" readonly>
+                                            <input type="text" id="totalHT" name="totalHT" class="form-control" readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Total TTC:</label>
-                                            <input type="text" id="totalTTC" class="form-control" readonly>
+                                            <input type="text" id="totalTTC" name="totalTTC" class="form-control" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -425,8 +428,10 @@
                               @foreach ($allproduits as $produit)
                                   <option value="{{ $produit->idPro }}">{{ $produit->libelle }}</option>
                               @endforeach
-                          </select>
-                          </td>
+                            </select>
+                              <input type="hidden" name="lignes[${ligneIndex}][libelle]" class="libelle">
+                              <input type="hidden" name="lignes[${ligneIndex}][taxe]" class="taxe">
+                            </td>
                           <td>
                             <input type="number" name="lignes[${ligneIndex}][qte]"
                             class="form-control qte">
@@ -471,7 +476,10 @@
                 
                 if (productId) {
                     $.get(`/get-produit-info/${productId}`, function(data) {
+                        console.log('produit info', data);
                         row.find('.prixU').val(data.prix);
+                        row.find('.libelle').val(data.libelle);
+                        row.find('.taxe').val(data.taxe);
                         calculateRowTotal(row);
                         calculateTotals();
                     });
@@ -482,8 +490,8 @@
           function calculateRowTotal(row) {
             const qte = parseFloat(row.find('.qte').val()) || 0;
             const prixU = parseFloat(row.find('.prixU').val()) || 0;
-            const montantHT = qte * prixU;
-            const montantTTC = montantHT * 1.18;
+            const montantTTC = qte * prixU ;
+            const montantHT = montantTTC / 1.18 ;
 
             row.find('.montantht').val(montantHT.toFixed(2));
             row.find('.montantttc').val(montantTTC.toFixed(2));
@@ -567,3 +575,4 @@
   </script>
 
 @endsection
+

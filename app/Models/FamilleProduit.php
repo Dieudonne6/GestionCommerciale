@@ -16,6 +16,7 @@ class FamilleProduit extends Model
         'codeFamille',
         'libelle',
         'TVA',
+        'groupe',
     ];
 
     public function produit()
