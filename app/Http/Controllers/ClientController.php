@@ -109,7 +109,7 @@ class ClientController extends Controller
             ->with('status', 'Le client a été créé avec succès');
     } catch (\Exception $e) {
         // Vous pouvez logger $e->getMessage() si besoin
-        dd($e->getMessage());
+        // dd($e->getMessage());
         return redirect()->route('clients.index')
             ->with('erreur', 'Une erreur est survenue lors de la création du client');
     }
@@ -157,13 +157,21 @@ public function update(Request $request, $idC)
         'IFU.unique'   => 'Cet IFU existe déjà.',
     ]);
 
+
+
+    
+
     // 4) Gestion des erreurs
     if ($validator->fails()) {
         session()->flash('showModifyClientModal', $idC);
         return redirect()->route('clients.index')
             ->withErrors($validator)
-            ->withInput();
+            ->withInput()
+            ->with('showModifyClientModal', true);
+
     }
+
+
 
     // 5) Mise à jour
     try {

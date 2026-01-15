@@ -22,6 +22,7 @@ use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReceptionCmdAchatController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\ModePaiementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -164,7 +165,7 @@ Route::get('modifVente/{idV}', [Controller::class, 'updateVente']);
 Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente']);
 
 // Vente 
-Route::get('vente', [VenteController::class, 'vente'])->name('vente');
+// Route::get('ventes', [VenteController::class, 'vente'])->name('ventes');
 
 
 
@@ -301,12 +302,15 @@ Route::middleware(['auth'])->group(function () {
      Route::delete('/roles/delete/{id}', [RolesController::class, 'deleteRole'])->name('deleteRole');
 
      // Vente
-     Route::post('/ajouterVente', [Controller::class, 'storeVente'])->name('ajouterVente.store');
-     Route::delete('/vente/{idV}', [Controller::class, 'destroyVente'])->name('Vente.destroy');
-     Route::put('modifVente/{idV}', [Controller::class, 'updateVente']);
-     Route::get('modifVente/{idV}', [Controller::class, 'updateVente']);
-     Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente']);
-     Route::get('vente', [VenteController::class, 'vente'])->name('vente');
+     Route::post('/ajouterVente', [VenteController::class, 'storeVente'])->name('ajouterVente.store');
+     Route::delete('/vente/{idV}', [VenteController::class, 'destroyVente'])->name('Vente.destroy');
+     Route::put('modifVente/{idV}', [VenteController::class, 'updateVente']);
+     Route::get('modifVente/{idV}', [VenteController::class, 'updateVente']);
+     Route::delete('/deleteLigneVente/{id}', [VenteController::class, 'deleteLigneVente']);
+     Route::get('ventes', [VenteController::class, 'vente'])->name('ventes');
+     Route::get('facturation', [VenteController::class, 'facturation'])->name('facturation');
+     Route::get('/get-nouvelle-reference', [VenteController::class, 'getNouvelleReference']);
+     Route::get('/get-produit-info/{id}', [VenteController::class, 'getProduitInfo']);
 
      // Produits
      Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);
@@ -334,4 +338,11 @@ Route::middleware(['auth'])->group(function () {
     ->name('receptions.commande-details');
 
 
+     Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])->name('receptions.commande-details');
+
+     // Modes de paiement
+     Route::get('/modepaiement', [ModePaiementController::class, 'index'])->name('modepaiement.index');
+     Route::post('/modepaiement', [ModePaiementController::class, 'store'])->name('modepaiement.store');
+     Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
+     Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 });

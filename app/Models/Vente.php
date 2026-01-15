@@ -30,6 +30,9 @@ class Vente extends Model
         'idExercice',
         'idModPaie',
         'idE',
+        'IFUClient',
+        'nomClient',
+        'telClient',
     ];
 
     public function client() {

@@ -17,6 +17,7 @@ class Entreprise extends Model
 
     protected $fillable = [
         'IFU',
+        'token',
         'nom',
         'logo',
         'adresse',
