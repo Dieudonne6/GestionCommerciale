@@ -10,6 +10,8 @@ use App\Models\Produit;
 class Stocke extends Model
 {
     use HasFactory;
+    
+    protected $table = 'stockes';
 
     protected $primaryKey = 'idStocke'; // Clé primaire de la table
 

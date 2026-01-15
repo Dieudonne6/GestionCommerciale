@@ -122,11 +122,12 @@
                         <table class="table table-bordered mb-3">
                             <thead>
                                 <tr>
+                                    <th>Magasin</th>
                                     <th>Produit</th>
                                     <th>Quantité</th>
                                     <th>Montant HT</th>
                                     <th>tva (%)</th>
-                                    <th></th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="tableAddLines"></tbody>
@@ -200,16 +201,29 @@
                             <table class="table table-bordered mb-3">
                                 <thead>
                                     <tr>
+                                        <th>Magasin</th>
                                         <th>Produit</th>
                                         <th>Quantité</th>
                                         <th>Montant HT</th>
                                         <th>tva (%)</th>
-                                        <th></th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableEditLines{{ $cmd->idCommande }}">
                                     @foreach ($cmd->lignes as $index => $l)
                                         <tr>
+                                            <td>
+                                                <select name="lignes[{{ $index }}][idMag]" class="form-select magasin-select"
+                                                    onchange="loadProduits(this, {{ $index }}, document.querySelector('select[name=\'lignes[{{ $index }}][idPro]\']').value)">
+                                                    @foreach ($magasins as $mag)
+                                                        <option value="{{ $mag->idMag }}" {{ $l->idMag == $mag->idMag ? 'selected' : '' }}>
+                                                            {{ $mag->libelle }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="hidden" name="lignes[{{ $index }}][idDetailCom]"
+                                                    value="{{ $l->idDetailCom }}">
+                                            </td>
                                             <td>
                                                 <select name="lignes[{{ $index }}][idPro]" class="form-select"
                                                     onchange="gettva(this, {{ $index }})">
@@ -323,28 +337,99 @@
             if (totalHTInput) totalHTInput.value = totalHT.toFixed(2);
             if (totalTTCInput) totalTTCInput.value = totalTTC.toFixed(2);
         }
+       
 
         function addLine(tableId) {
             const tbody = document.getElementById(tableId);
             const row = document.createElement('tr');
+
             row.innerHTML = `
                 <td>
-                    <select name="lignes[${nextIndex}][idPro]" class="form-select" onchange="gettva(this, ${nextIndex})" required>
-                        <option value="">-- Produit --</option>
-                        @foreach ($produits as $prd)
-                            <option value="{{ $prd->idPro }}" data-tva="{{ $prd->familleProduit->TVA ?? 0 }}">
-                                {{ $prd->libelle }}</option>
+                    <select 
+                        name="lignes[${nextIndex}][idMag]" 
+                        class="form-select magasin-select"
+                        onchange="loadProduits(this)"
+                        required>
+                        <option value="">-- Magasin --</option>
+                        @foreach ($magasins as $mag)
+                            <option value="{{ $mag->idMag }}">{{ $mag->libelle }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="lignes[${nextIndex}][qteCmd]" class="form-control" required min="1" onchange="updateTotaux()"></td>
-                <td><input type="number" name="lignes[${nextIndex}][montantHT]" class="form-control" required min="0" step="0.01" onchange="updateTotaux()"></td>
-                <td><input type="number" name="lignes[${nextIndex}][tva]" class="form-control" readonly></td>
-                <td><button type="button" class="btn btn-danger" onclick="removeLine(this)">Supprimer</button></td>
+
+                <td>
+                    <select 
+                        name="lignes[${nextIndex}][idPro]" 
+                        class="form-select produit-select"
+                        onchange="gettva(this, ${nextIndex})"
+                        required>
+                        <option value="">-- Produit --</option>
+                    </select>
+                </td>
+
+                <td>
+                    <input type="number" name="lignes[${nextIndex}][qteCmd]" 
+                        class="form-control" min="1" required onchange="updateTotaux()">
+                </td>
+
+                <td>
+                    <input type="number" name="lignes[${nextIndex}][montantHT]" 
+                        class="form-control" min="0" step="0.01" required onchange="updateTotaux()">
+                </td>
+
+                <td>
+                    <input type="number" name="lignes[${nextIndex}][tva]" 
+                        class="form-control" readonly>
+                </td>
+
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="removeLine(this)">Supprimer</button>
+                </td>
             `;
+
             tbody.appendChild(row);
             nextIndex++;
         }
+
+        function loadProduits(selectMagasin, index = null, selectedIdPro = null) {
+            const idMag = selectMagasin.value;
+            const row = selectMagasin.closest('tr');
+            const produitSelect = row.querySelector('.produit-select');
+
+            produitSelect.innerHTML = '<option value="">Chargement...</option>';
+
+            if (!idMag) {
+                produitSelect.innerHTML = '<option value="">-- Produit --</option>';
+                return;
+            }
+
+            fetch(`{{ url('/magasin') }}/${idMag}/produits`)
+                .then(res => res.json())
+                .then(produits => {
+                    let options = '<option value="">-- Produit --</option>';
+
+                    produits.forEach(produit => {
+                        const selected = (selectedIdPro && selectedIdPro == produit.idPro) ? 'selected' : '';
+                        options += `
+                            <option value="${produit.idPro}"
+                                data-tva="${produit.famille_produit ? produit.famille_produit.TVA : 0}"
+                                ${selected}>
+                                ${produit.libelle}
+                            </option>
+                        `;
+                    });
+
+                    produitSelect.innerHTML = options;
+
+                    // Mettre à jour la TVA si on a un produit déjà sélectionné
+                    if (selectedIdPro) gettva(produitSelect, index);
+                })
+                .catch(() => {
+                    produitSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                });
+        }
+
+
 
         function removeLine(button) {
             const row = button.closest('tr');
@@ -395,7 +480,15 @@
         // Ajouter les écouteurs d'événements pour les modals
         document.addEventListener('DOMContentLoaded', function() {
             var modals = document.querySelectorAll('.modal');
-
+            document.querySelectorAll('tbody[id^="tableEditLines"] tr').forEach((row, index) => {
+                const selectMag = row.querySelector('.magasin-select');
+                const selectPro = row.querySelector('.produit-select');
+                if (selectMag && selectMag.value) {
+                    const selectedIdPro = selectPro ? selectPro.value : null;
+                    loadProduits(selectMag, index, selectedIdPro);
+                }
+            });
+            
             modals.forEach(function(modal) {
                 modal.addEventListener('hidden.bs.modal', function() {
                     resetModalErrors(modal);
@@ -412,10 +505,14 @@
                         resetModalErrors(modal);
                     });
                 }
+               
+
             });
 
             // Initialiser les totaux au chargement de la page
             updateTotaux();
         });
     </script>
+    
+
 @endsection
