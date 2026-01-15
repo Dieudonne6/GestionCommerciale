@@ -85,10 +85,11 @@ class VenteController extends Controller
         $totalHT = $request->input('totalHT');
         $totalTTC = $request->input('totalTTC');
         $lignes = $request->input('lignes');
+        $libellModepaie = $request->input('libelleModePaie');
 
 
 
-        dd($lignes);
+        // dd($libellModepaie);
         // donne de l'entreprise vendeur
         $user = auth()->user();
         $userId = $user->idU;
@@ -98,10 +99,30 @@ class VenteController extends Controller
         $tokenEntreprise = $entreprise->token;
         $regimeEntreprise = $entreprise->regime;
 
+
+
+        foreach ($request->lignes as $ligne) {
+
+            $produit = Produit::with('stocke')->find($ligne['idP']);
+
+            if (!$produit) {
+                return back()->withErrors("Produit introuvable");
+            }
+
+            $stockDisponible = $produit->stocke->qteStocke ?? 0;
+
+            if ($ligne['qte'] > $stockDisponible) {
+                return back()->withErrors(
+                    "Stock insuffisant pour {$produit->libelle}. Disponible : {$stockDisponible}"
+                );
+            }
+        }
+
         // dd($ifuEntreprise, $tokenEntreprise);
         // preparation des items de la facture
         $items = []; // Initialiser un tableau vide pour les éléments
 
+        
         foreach ($lignes as $article ) {
             $items[] = [
                 // 'name' => 'Frais cantine pour : ' . $mois, 
@@ -128,11 +149,11 @@ class VenteController extends Controller
                 // "address"=> "string"
             ],
             "operator" => [
-                "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
+                "name" => "CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
             ],
             "payment" => [
                 [
-                    "name" => "ESPECES",  // mettre $ModPaie et s'assurer qu'il correspond a ('ESPECES, CHEQUE, AUTRE)
+                    "name" => $libellModepaie ?? "ESPECES",  // mettre $ModPaie et s'assurer qu'il correspond a ('ESPECES, CHEQUE, AUTRE)
                     "amount" => intval($totalTTC)
                 ]
             ],
@@ -281,7 +302,6 @@ class VenteController extends Controller
 
             // gestion du code qr sous forme d'image
 
-            // $fileNameqrcode = $elevyo  . time() . '.png';
             $result = Builder::create()
                 ->writer(new PngWriter())
                 ->data($qrCodeString)
@@ -291,89 +311,111 @@ class VenteController extends Controller
 
             $qrcodecontent = $result->getString();
 
-
-
-
-
-            // recuperer les nom des mois cochee
-
+            
             // Enregistrer la vente
-
-
             $idExercice = Exercice::where('statutExercice', 1)
-                ->firstOrFail()
-                ->idExercice;
+            ->firstOrFail()
+            ->idExercice;
 
-            $vente = new Vente();
-            $vente->dateOperation = $dateOperation;
-            $vente->montantTotal = $totalTTC;
-            $vente->reference = $this->genererNumeroVente();
-            $vente->statutVente = 1;
-            $vente->IFUClient = $IFUClient;
-            $vente->nomClient = $nomClient;
-            $vente->telClient = $telClient;
-            $vente->idU = $userId;
-            $vente->idE = $entrepriseId;
-            $vente->idExercice = $idExercice;
-            $vente->idModPaie = $idModPaie;
-            $vente->save();
-
-
-            // Enregistrer les details de la vente 
-
-            foreach ($lignes as $article ) {
-                DetailVente::create([
-                    'qte' => intval($article['qte']), 
-                    'prixUnit' => intval($article['prixU']), 
-                    'montantHT' => intval($article['montantht']), 
-                    'montantTTC' => intval($article['montantttc']), 
-                    'idPro' => intval($article['idP']), 
-                    'idV' => $vente->idV, 
-                ]); 
-            }
-
-           
-           
             // Créer un objet DateTime à partir de la chaîne de caractères
             $datezz = new DateTime($dateOperation);
 
             // Formater la date sans l'heure
             $datezzSansHeure = $datezz->format('Y-m-d');  // Cela donnera "2025-02-18"
+            
+            if ($regimeEntreprise == 'TPS') {
+                $TotalTVA = 0;
+            } else {
+                $TotalTVA = -(ceil($totalTTC / 1.18) - $totalTTC);
+            }
+            
 
 
 
+            // dd($datezzSansHeure);
+            // Debut de la transaction
+            DB::transaction(function () use (
+                $dateOperation,
+                $totalTTC,
+                $IFUClient,
+                $nomClient,
+                $telClient,
+                $userId,
+                $entrepriseId,
+                $idExercice,
+                $idModPaie,
+                $lignes,
+                $reffacture,
+                $codemecef,
+                $counters,
+                $nim,
+                $dateTime,
+                $jsonItem,
+                $taxGroupItemFacture,
+                $qrcodecontent,
+                $regimeEntreprise,
+                $TotalTVA ,
+            ) {
 
+                // =========================
+                // ENREGISTREMENT VENTE
+                // =========================
+                $vente = new Vente();
+                $vente->dateOperation = $dateOperation;
+                $vente->montantTotal = intval($totalTTC);
+                $vente->reference = $this->genererNumeroVente();
+                $vente->statutVente = 1;
+                $vente->IFUClient = intval($IFUClient);
+                $vente->nomClient = $nomClient;
+                $vente->telClient = intval($telClient);
+                $vente->idU = intval($userId);
+                $vente->idE = intval($entrepriseId);
+                $vente->idExercice = intval($idExercice);
+                $vente->idModPaie = intval($idModPaie);
+                $vente->save();
 
+                // =========================
+                // DETAILS DE VENTE
+                // =========================
+                foreach ($lignes as $article) {
+                    DetailVente::create([
+                        'qte' => intval($article['qte']),
+                        'prixUnit' => intval($article['prixU']),
+                        'montantHT' => intval($article['montantht']),
+                        'montantTTC' => intval($article['montantttc']),
+                        'idPro' => intval($article['idP']),
+                        'idV' => $vente->idV,
+                    ]);
+                }
 
-            // CALCUL DU TOTALHT ET TOTALTVA
+                // =========================
+                // MISE À JOUR DU STOCK
+                // =========================
+                foreach ($lignes as $ligne) {
+                    $produit = Produit::with('stocke')->findOrFail($ligne['idP']);
+                    $produit->stocke->decrement('qteStocke', $ligne['qte']);
+                }
 
-            // $TOTALHT = $montanttotal / 1.18;
-            // $totalHTArrondi = 0;
-            // $TOTALTVA = 0;
-
-            // ********************************
-
-            // dd($ifuEcoleFacture);
-            $facturenormalise = new Facturenormalisee();
-            $facturenormalise->reffacture = $reffacture;
-            $facturenormalise->CODEMECEF = $codemecef;
-            $facturenormalise->counter = $counters;
-            $facturenormalise->nim = $nim;
-            $facturenormalise->date = $dateTime;
-            // $facturenormalise->nom = $nameClient;
-            $facturenormalise->itemFacture = $jsonItem;
-            $facturenormalise->groupeTaxation = $taxGroupItemFacture;
-            // $facturenormalise->designation = 'Frais cantine pour: inscription et' . $moisConcatenes;
-            $facturenormalise->montantTotal = $totalTTC;
-            $facturenormalise->montantTotalTTC = $totalTTC;
-            // $facturenormalise->TOTALHT = $totalHTArrondi;
-            // $facturenormalise->TOTALTVA = $TOTALTVA;
-            $facturenormalise->qrcode = $qrcodecontent;
-            $facturenormalise->statut = 1;
-            $facturenormalise->idV = $vente->idV;
-            // $facturenormalise->typefac = 1;
-
-            $facturenormalise->save();
+                // =========================
+                // FACTURE NORMALISÉE
+                // =========================
+                $facturenormalise = new Facturenormalisee();
+                $facturenormalise->reffacture = $reffacture;
+                $facturenormalise->CODEMECEF = $codemecef;
+                $facturenormalise->counter = $counters;
+                $facturenormalise->nim = $nim;
+                $facturenormalise->date = $dateTime;
+                $facturenormalise->itemFacture = $jsonItem;
+                $facturenormalise->groupeTaxation = $taxGroupItemFacture;
+                $facturenormalise->montantTotal = intval($totalTTC);
+                $facturenormalise->montantTotalTTC = intval($totalTTC);
+                $facturenormalise->TotalTVA = $TotalTVA;
+                $facturenormalise->qrcode = $qrcodecontent;
+                $facturenormalise->regime = $regimeEntreprise;
+                $facturenormalise->statut = 1;
+                $facturenormalise->idV = $vente->idV;
+                $facturenormalise->save();
+            });
 
 
             dd('Oki');
@@ -542,7 +584,7 @@ class VenteController extends Controller
                 'prix' => $produit->prix,
                 'libelle' => $produit->libelle,
                 'taxe' => $produit->familleProduit->groupe,
-                'stock' => $produit->stocke->quantite ?? 0,
+                'stock' => $produit->stocke->qteStocke ?? 0,
             ]);
         }
         return response()->json([

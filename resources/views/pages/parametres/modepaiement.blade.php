@@ -46,7 +46,7 @@
                 <tr>
                   <th>No</th>
                   <th>Libellé</th>
-                  <th>Actions</th>
+                  {{-- <th>Actions</th> --}}
                 </tr>
               </thead>
 
@@ -63,10 +63,10 @@
                   </td>
                   <td>{{ $modePaiement->libelle }}</td>
 
-                <td>
+                {{-- <td>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$modePaiement->idModPaie}}"> Modifier</button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$modePaiement->idModPaie}}"> Supprimer</button>
-                  </td>
+                  </td> --}}
                 </tr>
 
                 <div class="modal fade" id="ModifyBoardModal{{ $modePaiement->idModPaie }}" tabindex="-1" aria-labelledby="ModifyBoardModal{{ $modePaiement->idModPaie }}" aria-hidden="true">
