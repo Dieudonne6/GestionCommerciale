@@ -23,7 +23,8 @@ class DetailCommandeAchat extends Model
         'montantTTC',
         'TVA',
         'idPro',
-        'idCommande'
+        'idCommande',
+        'qteRestante'
     ];
 
     public function produit()

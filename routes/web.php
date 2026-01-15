@@ -21,6 +21,7 @@ use App\Http\Controllers\MagasinController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReceptionCmdAchatController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModePaiementController;
 
 /*
@@ -33,6 +34,8 @@ use App\Http\Controllers\ModePaiementController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/test', [TestController::class, 'index'])->name('test');
 
 Route::get('/', function () {
      return redirect('/login');
@@ -102,6 +105,13 @@ Route::get('/client', [FournisseurController::class, 'client'])->name('client');
 // CommandeAchatController
 // Resource principale sur "commandeAchat" pour coller à votre nom de vue
 Route::resource('commandeAchat', CommandeAchatController::class)->middleware('auth');
+Route::middleware('auth')->get(
+    '/magasin/{idMag}/produits',
+    [CommandeAchatController::class, 'getProduitsByMagasin']
+);
+
+
+
 // Route AJAX pour suppression d'une ligne
 Route::delete('commandeAchat/ligne/{id}', [CommandeAchatController::class, 'deleteLigne'])
      ->name('commandeAchat.ligne.destroy');
@@ -262,6 +272,7 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
           ->name('commandeAchat.produit.tva');
      /* Route::get('/get-nouvelle-reference', [CommandeAchatController::class, 'getNouvelleReference']);           */
+     
 
      // Tableau de bord
      Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
@@ -323,6 +334,10 @@ Route::middleware(['auth'])->group(function () {
 
      // Reception
      Route::resource('receptions', ReceptionCmdAchatController::class);
+    Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])
+    ->name('receptions.commande-details');
+
+
      Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])->name('receptions.commande-details');
 
      // Modes de paiement

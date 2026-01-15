@@ -10,12 +10,16 @@ use App\Models\DetailCommandeAchat;
 use App\Models\Exercice;
 use App\Models\Entreprise;
 use App\Models\Utilisateur;
+use App\Models\Magasin;
+use App\Models\Stocke;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CommandeAchatController extends Controller
 {
+  
+
     public function index()
     {
         $user = auth()->user();
@@ -30,6 +34,7 @@ class CommandeAchatController extends Controller
 
         $fournisseurs = Fournisseur::all();
         $produits = Produit::all();
+        $magasins = Magasin::all();
 
         $lastCommande = CommandeAchat::orderBy('idCommande', 'desc')->first();
     
@@ -43,19 +48,8 @@ class CommandeAchatController extends Controller
             $nextReference = 'Rf0001';
         }
 
-        return view('pages.Fournisseur&Achat.commandeAchat', compact('commandes', 'fournisseurs', 'produits', 'nextReference'));
+        return view('pages.Fournisseur&Achat.commandeAchat', compact('commandes', 'fournisseurs', 'produits', 'magasins', 'nextReference'));
     }
-
-/*     public function create()
-{
-    // Récupérer la dernière référence
-
-    
-
-    return view('pages.Fournisseur&Achat.commandeAchat', [
-        'nextReference' => $nextReference
-    ]);
-} */
 
     public function store(Request $request)
     {
@@ -321,4 +315,17 @@ class CommandeAchatController extends Controller
             ], 500);
         }
     }
+
+     
+    public function getProduitsByMagasin($idMag)
+        {
+            return Produit::with('familleProduit')
+                ->whereIn(
+                    'idPro',
+                    Stocke::where('idMag', $idMag)->pluck('idPro')
+                )
+                ->get(['idPro', 'libelle', 'idFamPro']);
+        }
+
+
 }
