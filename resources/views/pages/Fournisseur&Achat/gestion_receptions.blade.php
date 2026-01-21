@@ -43,6 +43,10 @@
                                                 </span>
                                             </td>
                                             <td>
+                                                <button class="btn btn-sm btn-info me-1" data-bs-toggle="modal"
+                                                    data-bs-target="#detailReceptionModal{{ $rec->idRecep }}" title="Détails">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
                                                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
                                                     data-bs-target="#editReceptionModal{{ $rec->idRecep }}" title="Modifier"
                                                     {{ $rec->statutRecep === 'complète' ? 'disabled' : '' }}>
@@ -56,6 +60,33 @@
                                                 </button>
                                             </td>
                                         </tr>
+                                        <div class="modal fade" id="deleteReceptionModal{{ $rec->idRecep }}" tabindex="-1">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Confirmation</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        Voulez-vous vraiment supprimer cette réception ?
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
+                                                        <form method="POST" action="{{ route('receptions.destroy', $rec->idRecep) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-danger">Supprimer</button>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>                                     
+
                                     @endforeach
                                 </tbody>
                             </table>
@@ -66,6 +97,68 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal détail Réception --}}
+    @foreach ($receptions as $rec)
+        <div class="modal fade" id="detailReceptionModal{{ $rec->idRecep }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Détails de la réception {{ $rec->reference }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- Infos générales --}}
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label>Date réception</label>
+                                <input type="datetime-local" class="form-control" 
+                                    value="{{ \Carbon\Carbon::parse($rec->date)->format('Y-m-d\TH:i') }}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Référence</label>
+                                <input type="text" class="form-control" value="{{ $rec->reference }}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label>N° Bordereau</label>
+                                <input type="text" class="form-control" value="{{ $rec->numBordereauLivraison }}" readonly>
+                            </div>
+                        </div>
+
+                        {{-- Détails produits --}}
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Qté commandée</th>
+                                        <th>Qté restante</th>
+                                        <th>Qté réceptionnée</th>
+                                        <th>Prix unitaire</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($rec->detailReceptionCmdAchat as $i => $det)
+                                        @php $dc = $det->detailCommandeAchat; @endphp
+                                        <tr>
+                                            <td>{{ $dc->produit->libelle }}</td>
+                                            <td>{{ $dc->qteCmd }}</td>
+                                            <td>{{ $dc->qteRestante + $det->qteReceptionne }}</td>
+                                            <td>{{ $det->qteReceptionne }}</td>
+                                            <td>{{ $det->prixUnit }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
     {{-- Modal Nouvelle Réception --}}
     <div class="modal fade" id="addReceptionModal" tabindex="-1">
@@ -84,28 +177,43 @@
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Commande <span class="text-danger">*</span></label>
+                                <label class="form-label">Fournisseur <span class="text-danger">*</span></label>
                                 <select name="idCommande" id="selectCommande" class="form-select" required>
                                     <option value="">-- choisir --</option>
                                     @foreach ($commandes as $cmd)
-                                        <option value="{{ $cmd->idCommande }}">
+                                        <option 
+                                            value="{{ $cmd->idCommande }}"
+                                            data-reference="{{ $cmd->reference }}"
+                                        >
                                             {{ $cmd->reference }} — {{ $cmd->fournisseur->nom }}
                                         </option>
                                     @endforeach
                                 </select>
+
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Date réception <span class="text-danger">*</span></label>
                                 <input type="datetime-local" name="date" class="form-control" required
                                     value="{{ date('Y-m-d\TH:i') }}">
+
+                                @error('date')
+                                  <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Référence <span class="text-danger">*</span></label>
-                                <input type="text" name="reference" class="form-control" required>
+                                <input type="text" name="reference" id="inputReference" class="form-control" readonly required>
+                                @error('reference')
+                                  <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">N° bordereau livraison <span class="text-danger">*</span></label>
                                 <input type="text" name="numBordereauLivraison" class="form-control" required>
+
+                                @error('numBordereauLivraison')
+                                  <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -117,6 +225,7 @@
                                         <th>Qté commandée</th>
                                         <th>Qté restante</th>
                                         <th>Qté réceptionnée</th>
+                                        <th>Qté restante après réception</th>
                                         <th>Prix unitaire</th>
                                         <th>Magasin</th>
                                     </tr>
@@ -137,81 +246,152 @@
         </div>
     </div>
 
+    {{-- Modal modification Réception --}}
+    @foreach ($receptions as $rec)
+        <div class="modal fade" id="editReceptionModal{{ $rec->idRecep }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <form method="POST" action="{{ route('receptions.update', $rec->idRecep) }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modifier la réception {{ $rec->reference }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{-- Infos générales --}}
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-4">
+                                    <label>Date réception</label>
+                                    <input type="datetime-local" name="date"
+                                        class="form-control"
+                                        value="{{ \Carbon\Carbon::parse($rec->date)->format('Y-m-d\TH:i') }}"
+                                        required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Référence</label>
+                                    <input type="text" name="reference" class="form-control"
+                                        value="{{ $rec->reference }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>N° Bordereau</label>
+                                    <input type="text" name="numBordereauLivraison" class="form-control"
+                                        value="{{ $rec->numBordereauLivraison }}" required>
+                                </div>
+                            </div>
+
+                            {{-- Détails produits --}}
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Produit</th>
+                                            <th>Qté commandée</th>
+                                            <th>Qté restante</th>
+                                            <th>Qté réceptionnée</th>
+                                            <th>Prix unitaire</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($rec->detailReceptionCmdAchat as $i => $det)
+                                        @php $dc = $det->detailCommandeAchat; @endphp
+                                        <tr>
+                                            <td>{{ $dc->produit->libelle }}</td>
+                                            <td>{{ $dc->qteCmd }}</td>
+                                            <td>{{ $dc->qteRestante + $det->qteReceptionne }}</td>
+                                            <td>
+                                                <input type="number" name="details[{{ $i }}][qteReceptionne]"
+                                                    class="form-control" min="1"
+                                                    max="{{ $dc->qteRestante + $det->qteReceptionne }}"
+                                                    value="{{ $det->qteReceptionne }}" required>
+                                                <input type="hidden" name="details[{{ $i }}][idDetailCom]"
+                                                    value="{{ $det->idDetailCom }}">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="details[{{ $i }}][prixUnit]"
+                                                    class="form-control" value="{{ $det->prixUnit }}" readonly>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endforeach
+
+
     @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                $('#datatable_receptions').DataTable({
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
-                    },
-                    order: [
-                        [1, 'desc']
-                    ]
-                });
+       <script>
+            document.getElementById('selectCommande').addEventListener('change', function () {
+                const option = this.selectedOptions[0];
+                const reference = option.getAttribute('data-reference');
+                const idCommande = this.value;
 
-                const selectCommande = document.getElementById('selectCommande');
-                const detailsTableBody = document.getElementById('detailsTableBody');
-                const errorContainer = document.getElementById('errorContainer');
-                const errorList = document.getElementById('errorList');
-                const submitBtn = document.getElementById('submitBtn');
+                // remplir le champ référence
+                document.getElementById('inputReference').value = reference;
 
-                function showErrors(errors) {
-                    errorList.innerHTML = '';
-                    errors.forEach(err => {
-                        const li = document.createElement('li');
-                        li.textContent = err;
-                        errorList.appendChild(li);
-                    });
-                    errorContainer.classList.remove('d-none');
-                }
-
-                function hideErrors() {
-                    errorContainer.classList.add('d-none');
-                    errorList.innerHTML = '';
-                }
-
-                selectCommande.addEventListener('change', function() {
-                    const id = this.value;
-                    if (!id) return detailsTableBody.innerHTML = '';
-
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Chargement...';
-
-                    fetch(`/receptions/commande-details/${id}`)
+                // charger les détails de la commande
+                if (idCommande) {
+                    fetch(`/receptions/commande-details/${idCommande}`)
                         .then(res => res.json())
                         .then(data => {
-                            if (data.success) {
-                                detailsTableBody.innerHTML = '';
-                                data.details.forEach((d, i) => {
-                                    const row = document.createElement('tr');
-                                    row.innerHTML = `
-                                <td><input type="hidden" name="details[${i}][idDetailCom]" value="${d.idDetailCom}">${d.produit}</td>
-                                <td class="text-end">${d.qteCmd}</td>
-                                <td class="text-end">${d.qteRestante}</td>
-                                <td><input type="number" name="details[${i}][qteReceptionne]" class="form-control text-end" required min="1" max="${d.qteRestante}" value="${d.qteRestante}"></td>
-                                <td><input type="number" name="details[${i}][prixUnit]" class="form-control text-end" required min="0" step="0.01" value="${d.prixUnit}"></td>
-                                <td>
-                                    <select name="details[${i}][idMagasin]" class="form-select" required>
-                                        <option value="">-- Sélectionner --</option>
-                                        @foreach ($magasins as $m)
-                                            <option value="{{ $m->idMagasin }}">{{ $m->libelle }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>`;
-                                    detailsTableBody.appendChild(row);
-                                });
-                                hideErrors();
-                            } else {
-                                showErrors([data.message]);
+                            if (!data.success) {
+                                alert(data.message);
+                                return;
                             }
-                        })
-                        .catch(() => showErrors(['Erreur lors du chargement des détails']))
-                        .finally(() => {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = '<i class="fa-solid fa-save me-1"></i> Enregistrer';
+
+                            const tbody = document.getElementById('detailsTableBody');
+                            tbody.innerHTML = '';
+
+                            data.details.forEach((d, i) => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td>${d.produit}</td>
+                                    <td>${d.qteCmd}</td>
+                                    <td class="qteRestanteCell">
+                                        ${d.qteRestante}
+                                    </td>                                   
+                                    <td>
+                                        <input type="number" name="details[${i}][qteReceptionne]" 
+                                            class="form-control qteReceptionneInput" min="1" max="${d.qteRestante}" required>
+                                       
+                                            <input type="hidden" name="details[${i}][iddetailcom]" 
+                                            class="form-control"  value="${d.idDetailCom}" required>
+                                    </td>
+                                    <td><span class="qteRestanteApres">${d.qteRestante}</span></td>
+                                    <td>
+                                        <input type="number" name="details[${i}][prixUnit]" 
+                                            class="form-control" value="${d.prixUnit}" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="details[${i}][idMag]" value="${d.idMag}">
+                                        ${d.idMag}
+                                    </td>
+                                `;
+                                tbody.appendChild(tr);
+
+                                // Attacher le listener pour mise à jour Qté restante après réception
+                                const input = tr.querySelector('.qteReceptionneInput');
+                                const qteRestanteSpan = tr.querySelector('.qteRestanteApres');
+                                input.addEventListener('input', function() {
+                                    const val = parseInt(this.value || 0);
+                                    const max = parseInt(this.max);
+                                    qteRestanteSpan.textContent = val <= max ? max - val : 0;
+                                });
+                            });
                         });
-                });
+                }
             });
+            
         </script>
     @endpush
 @endsection

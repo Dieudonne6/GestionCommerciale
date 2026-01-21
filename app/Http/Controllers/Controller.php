@@ -86,7 +86,8 @@ class Controller extends BaseController
 
         return redirect()->back()->with('success', 'Caisse supprimée avec succès.');
     }
-
+    
+ 
     // Affichage de la liste des réceptions
     public function indexreception()
     {
@@ -123,7 +124,7 @@ class Controller extends BaseController
             'dateReception'        => 'required|date',
             'RefNumBonReception'   => 'required|string|max:255',
             'lignes.*.idP'         => 'required|exists:produits,idP',
-            'lignes.*.idMagasin'   => 'required|exists:magasins,idMgs',
+            'lignes.*.idMag'   => 'required|exists:magasins,idMgs',
             'lignes.*.qteLivre'    => 'required|integer|min:1',
         ]);
 
@@ -217,7 +218,7 @@ class Controller extends BaseController
             'dateReception'        => 'required|date',
             'RefNumBonReception'   => 'required|string|max:255',
             'lignes.*.idP'         => 'required|exists:produits,idP',
-            'lignes.*.idMagasin'   => 'required|exists:magasins,idMgs',
+            'lignes.*.idMag'   => 'required|exists:magasins,idMgs',
             'lignes.*.qteLivre'    => 'required|integer|min:1',
             'lignes.*.prixUn'      => 'required|numeric|min:0',
             'lignes.*.qteRestant'  => 'required|integer|min:0',
