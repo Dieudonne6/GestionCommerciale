@@ -195,13 +195,13 @@
               </div>
             </div>
 
-            <div class="mb-2">
+            {{-- <div class="mb-2">
               <label for="qteStocke">Quantité en Stock</label>
               <input type="number" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ optional($allProduit->stocke)->qteStocke ?? 0 }}">
               @error('qteStocke')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
-            </div>
+            </div> --}}
 
             <div class="mb-2">
               <label for="desc">Description</label>
@@ -351,7 +351,7 @@
 
               <div class="col-md-6 mb-2">
                 <label for="qteStockeAdd">Quantité</label>
-                <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStockeAdd" value="0" required>
+                <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStockeAdd" value="0" readonly>
                 @error('qteStocke')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

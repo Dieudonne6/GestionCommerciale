@@ -105,7 +105,7 @@ public function ajouterProduit(ProduitRequest $request)
     
             if ($stocke) {
                 $stocke->idMag = $request->input('idMag');
-                $stocke->qteStocke = $request->input('qteStocke');
+                // $stocke->qteStocke = $request->input('qteStocke');
                 $stocke->update();
             }
     
