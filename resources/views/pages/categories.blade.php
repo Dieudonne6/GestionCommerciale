@@ -53,7 +53,7 @@
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody> 
                                     @foreach ($categories as $category)
                                         <tr class="text-center">
                                             <td style="width: 16px;">

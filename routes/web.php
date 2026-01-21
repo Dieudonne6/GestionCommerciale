@@ -369,6 +369,8 @@ Route::middleware(['auth'])->group(function () {
      Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 });
 
-
+// Pour le bail de fermeture de journée
+Route::get('/fermetures', [FermetureController::class, 'index'])
+    ->name('fermeture.index');
 Route::get('/fermeture-journee', [FermetureController::class, 'store'])
     ->name('fermeture.journee');
