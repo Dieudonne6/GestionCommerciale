@@ -18,7 +18,7 @@
             @endif
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header no-print">
                         <div class="row align-items-center">
                             <div class="col">
                                 <h4 class="card-title">Inventaire des Produits</h4>
@@ -28,29 +28,51 @@
                         </div><!--end row-->
                     </div><!--end card-header-->
 
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-md-4">
+                    <div class="row mb-3 align-items-center no-print">
+                        <div class="col-md-8">
                         <form method="POST" action="{{ route('inventaires.search') }}" class="row mb-4">
                             @csrf
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Date début</label>
                                 <input type="date" name="date_debut" class="form-control" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Date fin</label>
                                 <input type="date" name="date_fin" class="form-control" required>
                             </div>
 
-                            <div class="col-md-4 d-flex align-items-end">
+                            <div class="col-md-3 d-flex align-items-end">
                                 <button class="btn btn-primary w-100">Afficher</button>
                             </div>
+
+       
                         </form>
+
+
+                            <div class=" d-flex align-items-end">
+                            @if(isset($dateDebut, $dateFin))
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button onclick="printInventaire()" class="btn btn-secondary w-100 no-print">
+                                        🖨️ Imprimer
+                                    </button>
+                                </div>
+                            @endif
+                            </div>
 
                         </div>
                     </div>
 
                     <div class="card-body pt-0">
+
+                        {{-- @if(isset($dateDebut, $dateFin))
+                            <div class="alert alert-info text-center fw-bold mb-4">
+                                📊 Inventaire des produits du 
+                                {{ \Carbon\Carbon::parse($dateDebut)->format('d/m/Y') }} 
+                                au 
+                                {{ \Carbon\Carbon::parse($dateFin)->format('d/m/Y') }}
+                            </div>
+                        @endif --}}
 
                         {{-- <div class="table-responsive">
                             <table class="table mb-0 checkbox-all" id="datatable_1">
@@ -98,6 +120,18 @@
                             </table>
                         </div> --}}
 
+
+                    <div id="zone-impression">
+
+                            {{-- Titre --}}
+                            @if(isset($dateDebut, $dateFin))
+                            <h4 class="text-center my-4">
+                                Inventaire des produits du 
+                                {{ \Carbon\Carbon::parse($dateDebut)->format('d/m/Y') }} 
+                                au 
+                                {{ \Carbon\Carbon::parse($dateFin)->format('d/m/Y') }}
+                            </h4>
+                            @endif
                         @if(isset($receptions))
                         <h5 class="mt-4">📦 Entrées de stock (Réceptions)</h5>
 
@@ -153,6 +187,38 @@
                         @endif
 
 
+                        @if(isset($recapProduits))
+                            <h5 class="mt-5">📊 Récapitulatif des stocks</h5>
+
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Stock initial</th>
+                                        <th>Total réceptionné</th>
+                                        <th>Total vendu</th>
+                                        <th>Stock final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($recapProduits as $recap)
+                                    <tr>
+                                        <td>{{ $recap['produit'] }}</td>
+                                        <td class="text-end">{{ $recap['stock_initial'] }}</td>
+                                        <td class="text-end text-success">{{ $recap['receptionne'] }}</td>
+                                        <td class="text-end text-danger">{{ $recap['vendu'] }}</td>
+                                        <td class="text-end fw-bold">
+                                            {{ $recap['stock_final'] }}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @endif
+
+
+
+                    </div>
                     </div>
                 </div>
             </div> <!-- end col -->
@@ -166,6 +232,59 @@
 
  <!-- Script pour afficher le modal après actualisation si erreurs -->
 
+ <script>
+function printInventaire() {
+
+    let contenu = document.getElementById('zone-impression').innerHTML;
+
+    let printWindow = window.open('', '', 'height=800,width=1000');
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Inventaire</title>
+
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 15px;
+                }
+
+                table, th, td {
+                    border: 1px solid #000;
+                }
+
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                }
+
+                h4, h5 {
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            ${contenu}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+    }, 500);
+}
+</script>
 
 
 @section('styles')
@@ -191,6 +310,14 @@
         border-radius: 8px;
     }
 </style>
+    
+
+
+
+
+
+
+
 @endsection
 
 

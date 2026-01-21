@@ -26,7 +26,7 @@ class ProduitRequest extends FormRequest
             'prix' => 'required|numeric',
             'desc' => 'required|string|min:10|max:1000',
             'idCatPro' => 'nullable|integer',
-            'idFamPro' => 'nullable|integer',
+            'idFamPro' => 'required|integer',
             'idMag' => 'nullable|integer',
             'stockAlert' => 'nullable|integer|min:0',
             'stockMinimum' => 'nullable|integer|min:0',

@@ -144,8 +144,8 @@
               <select class="form-select" id="filterStock">
                 <option value="">Tous les stocks</option>
                 <option value="rupture">Rupture</option>
-                <option value="critical">Critique</option>
-                <option value="low">Risque de rupture</option>
+                <option value="low">Critique</option>
+                <option value="critical">Risque de rupture</option>
                 <option value="normal">Normal</option>
               </select>
             </div>

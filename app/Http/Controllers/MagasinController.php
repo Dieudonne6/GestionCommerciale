@@ -80,9 +80,11 @@ class MagasinController extends Controller
         // Vérifier si le produit existe déjà
         $produit = Produit::where('libelle', $request->libelle)->first();
 
+        // dd($request->all(), $idMag);
+
         $validator = \Validator::make($request->all(), [
             'libelle' => 'required|string|max:255',
-            'qteStocke' => 'required|integer|min:1',
+            'qteStocke' => 'nullable|integer|min:0',
             'idCatPro' => 'required',
             'idFamPro' => 'required',
         ], [
@@ -96,6 +98,7 @@ class MagasinController extends Controller
             return redirect()->route('magasins')->withErrors($validator);
         }
 
+        // dd('jojo');
         if (!$produit) {
             // Création du produit s'il n'existe pas
             $produit = Produit::create([

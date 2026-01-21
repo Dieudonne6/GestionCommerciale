@@ -73,7 +73,13 @@
                   <td class="text-center">{{ $allProduit->prix }}</td>
                   <td class="text-center">
                     @php
-                        $totalStocke = $allProduit->stocke->qteStocke;
+                    if ($allProduit->stocke) {
+                      $totalStocke = $allProduit->stocke->qteStocke;
+                      # code...
+                    } else {
+                      # code...
+                      $totalStocke = 0;
+                    }
                     @endphp
                     {{ $totalStocke > 0 ? $totalStocke : '0' }}
                   </td>                  
@@ -195,13 +201,13 @@
               </div>
             </div>
 
-            <div class="mb-2">
+            {{-- <div class="mb-2">
               <label for="qteStocke">Quantité en Stock</label>
               <input type="number" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ optional($allProduit->stocke)->qteStocke ?? 0 }}">
               @error('qteStocke')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
-            </div>
+            </div> --}}
 
             <div class="mb-2">
               <label for="desc">Description</label>
@@ -336,8 +342,8 @@
             <div class="row">
               <div class="col-md-6 form-group">
                 <label for="idMagAdd">Magasin</label>
-                <select id="idMagAdd" name="idMag" class="form-control @error('idMag') is-invalid  @enderror">
-                  <option value="0" selected>Aucune</option>
+                <select id="idMagAdd" name="idMag" class="form-control @error('idMag') is-invalid  @enderror" required>
+                  <option value="0">Aucune</option>
                   @foreach ($magasins as $magasin)
                     <option value="{{ $magasin->idMag }}">
                       {{ $magasin->libelle }}
@@ -351,7 +357,7 @@
 
               <div class="col-md-6 mb-2">
                 <label for="qteStockeAdd">Quantité</label>
-                <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStockeAdd" value="0" required>
+                <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStockeAdd" value="0" readonly>
                 @error('qteStocke')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

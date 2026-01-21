@@ -77,6 +77,9 @@
                                 <li class="nav-item"><a class="nav-link"
                                         href="">Inventaires</a>
                                 </li>
+                                       <a class="nav-link" href="{{ route('transferts.index') }}">Transferts entre magasins</a>
+                                    </li>
+
                             </ul>
                         </div>
                     </li>
