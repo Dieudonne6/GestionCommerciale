@@ -342,8 +342,8 @@
             <div class="row">
               <div class="col-md-6 form-group">
                 <label for="idMagAdd">Magasin</label>
-                <select id="idMagAdd" name="idMag" class="form-control @error('idMag') is-invalid  @enderror">
-                  <option value="0" selected>Aucune</option>
+                <select id="idMagAdd" name="idMag" class="form-control @error('idMag') is-invalid  @enderror" required>
+                  <option value="0">Aucune</option>
                   @foreach ($magasins as $magasin)
                     <option value="{{ $magasin->idMag }}">
                       {{ $magasin->libelle }}
