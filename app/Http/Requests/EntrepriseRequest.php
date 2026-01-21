@@ -23,7 +23,7 @@ class EntrepriseRequest extends FormRequest
     {
         return [
             'nom' => 'required|string|min:3',
-            'IFU' => 'required|digits:13|numeric|unique:entreprises,IFU',
+            'IFU' => 'required|digits:13|numeric',
             'adresse' => 'required|string',
             'telephone' => 'required|string',
             'mail' => 'required|string',

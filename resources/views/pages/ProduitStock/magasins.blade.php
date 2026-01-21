@@ -109,7 +109,7 @@
                                                         <div class="row">
                                                             <div class="col-md-6 mb-2">
                                                                 <label for="qteStocke">Quantité</label>
-                                                                <input type="number" name="qteStocke" class="form-control" required>
+                                                                <input type="number" name="qteStocke" class="form-control" value="0" readonly>
                                                             </div>
                                                             <div class="col-md-6 mb-2">
                                                                 <label for="prix">Prix</label>

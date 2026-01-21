@@ -22,6 +22,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReceptionCmdAchatController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModePaiementController;
+use App\Http\Controllers\InventaireController;
 use App\Http\Controllers\FermetureController;
 use App\Http\Controllers\ProduitStockController;
 use App\Http\Controllers\TransfertMagasinController;
@@ -300,7 +301,7 @@ Route::middleware(['auth'])->group(function () {
 
      // Vente
      Route::post('/ajouterVente', [VenteController::class, 'storeVente'])->name('ajouterVente.store');
-     Route::delete('/vente/{idV}', [VenteController::class, 'destroyVente'])->name('Vente.destroy');
+     Route::post('/deletevente/{idFacture}', [VenteController::class, 'deletevente'])->name('deletevente');
      Route::put('modifVente/{idV}', [VenteController::class, 'updateVente']);
      Route::get('modifVente/{idV}', [VenteController::class, 'updateVente']);
      Route::delete('/deleteLigneVente/{id}', [VenteController::class, 'deleteLigneVente']);
@@ -308,6 +309,7 @@ Route::middleware(['auth'])->group(function () {
      Route::get('facturation', [VenteController::class, 'facturation'])->name('facturation');
      Route::get('/get-nouvelle-reference', [VenteController::class, 'getNouvelleReference']);
      Route::get('/get-produit-info/{id}', [VenteController::class, 'getProduitInfo']);
+     Route::get('duplicatafacture/{id}', [VenteController::class, 'duplicatafacture'])->name('duplicatafacture');
 
      // Produits
      Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);
@@ -323,7 +325,15 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/Produits', [ProduitController::class, 'Produits']);
      Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
      Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
-     Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifProduit');
+     Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
+     
+     // inventaire
+     // Route::get('/inventaire', [InventaireController::class, 'inventaire']);
+     Route::get('/inventaires', [InventaireController::class, 'index'])->name('inventaires');
+     Route::post('/inventaires', [InventaireController::class, 'search'])->name('inventaires.search');
+     // Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
+
+
 
      // Export
      Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);

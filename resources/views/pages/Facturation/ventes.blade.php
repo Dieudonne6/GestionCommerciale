@@ -41,6 +41,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>No Vente</th>
+                                        <th>Codemecef Fac</th>
                                         <th>Client</th>
                                         <th data-type="date" data-format="YYYY/DD/MM">Date Operation</th>
                                         <th>Montant Total</th>
@@ -51,12 +52,13 @@
                                     @foreach ($allVente as $vente)
                                         <tr>
                                             <td>{{ $vente->reference }}</td>
+                                            <td>{{ $vente->factureNormalise?->CODEMECEF ?? '-' }}</td>
                                             <td>{{ $vente->nomClient ?: ($vente->client ? $vente->client->identiteCl : 'Non défini') }}</td>
                                             <td>{{ $vente->dateOperation }}</td>
                                             <td>{{ $vente->montantTotal }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#ModifyBoardModal{{ $vente->idV }}"> Modifier</button>
+                                                {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModifyBoardModal{{ $vente->idV }}"> Modifier</button> --}}
                                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                     data-bs-target="#deleteBoardModal{{ $vente->idV }}">
                                                     Supprimer</button>
@@ -74,15 +76,22 @@
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Êtes-vous sûr de vouloir supprimer cette vente?
-                                                    </div>
+                                                        Êtes-vous sûr de vouloir supprimer cette vente? <br><br>
+                                                        <strong>Si oui , Veuillez entrer le CODEMECEF  de la facture de cette vente.</strong><br><br>
+
+                                                            <form method="POST"
+                                                            action="{{ route('deletevente', $vente->factureNormalise->idFacture) }}">
+                                                            @csrf
+                                                            {{-- @method('DELETE') --}}
+                                                            <div class="col-md-12 mb-2">
+                                                                <label for="codemecef" style="font-weight: bold !important; color: #382f2f">CODEMECEF</label>
+                                                                <input class="form-control mb-3" type="text" name="codemecef" required>
+                                                            </div>                                                    
+                                                        </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Annuler</button>
-                                                        <form method="POST"
-                                                            action="{{ route('Vente.destroy', $vente->idV) }}">
-                                                            @csrf
-                                                            @method('DELETE')
+
                                                             <button type="submit" class="btn btn-danger">Supprimer</button>
                                                         </form>
                                                     </div>
@@ -99,7 +108,7 @@
         </div><!--end row-->
         @foreach ($allVente as $vente)
             {{-- Modal de modification --}}
-            <div class="modal fade" id="ModifyBoardModal{{ $vente->idV }}" tabindex="-1"
+            {{-- <div class="modal fade" id="ModifyBoardModal{{ $vente->idV }}" tabindex="-1"
                 aria-labelledby="ModifyBoardModal{{ $vente->idV }}" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -239,7 +248,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- <div class="modal fade" id="delteBoardModal{{$allcmd->idCmd}}" tabindex="-1" aria-labelledby="delteBoardModal{{$allcmd->idCmd}}" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -297,19 +306,22 @@
                                     <input class="form-control mb-3" type="text" name="telClient" value="">
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label for="reference" class="form-label">Numero vente</label>
-                                    <input class="form-control mb-3" type="text" name="reference" id="reference" readonly>
+                                    <label for="numvente" class="form-label">Numero vente</label>
+                                    <input class="form-control mb-3" type="text" name="reference" id="numvente" value="{{ $numVente }}" readonly>
                                 </div>
                                 <div class="mb-2 col-md-4">
                                     <label for="modepaiement" class="form-label">Mode paiement</label>
-                                    <select name="idModPaie" class="form-control" id="modepaiement">
+                                    <select name="idModPaie" class="form-control" id="modepaiement" required>
                                         <option value="">Sélectionner un mode</option>
                                         @foreach ($modes as $mode)
-                                            <option value="{{ $mode->idModPaie }}" {{ strtolower($mode->libelle) == 'espèces' ? 'selected' : '' }}>
+                                            <option value="{{ $mode->idModPaie }}" {{ strtolower($mode->libelle) == 'ESPECES' ? 'selected' : '' }}>
                                                 {{ $mode->libelle }}
                                             </option>
-                                        @endforeach
-                                    </select>
+                                            @endforeach
+                                        </select>
+                                        {{-- <input type="hidden" name="libellModepaie" value="{{ $mode->libelle }}"> --}}
+                                        <input type="hidden" name="libelleModePaie" id="libelleModePaie">
+
                                 </div>
                             
                                 <div class="col-md-4 mb-2">
@@ -354,12 +366,13 @@
                                                         <!-- champ hidden pour envoyer le libelle -->
                                                         <input type="hidden" name="lignes[0][libelle]" class="libelle">
                                                         <input type="hidden" name="lignes[0][taxe]" class="form-control taxe">
+                                                        <input type="hidden" name="lignes[0][stock]" class="form-control stock-disponible">
                                                 </td>
                                                 <td>
                                                     <input type="number" name="lignes[0][qte]" class="form-control qte">
                                                 </td>
                                                 <td>
-                                                    <input type="number" name="lignes[0][prixU]" class="form-control prixU">
+                                                    <input type="number" name="lignes[0][prixU]" class="form-control prixU" readonly>
                                                 </td>
                                                 <td>
                                                     <input type="number" name="lignes[0][montantht]"
@@ -426,7 +439,7 @@
             
             // Initialize Select2 and event listeners
             attachEventListeners();
-            initializeSelect2();
+            // initializeSelect2();
             
             // Vérifier le régime de l'entreprise (à adapter selon votre logique)
             checkRegimeTPS();
@@ -490,7 +503,8 @@
         }
 
         function ajouterVente() {
-          const ligne = `<tr>
+            if (isTPS) {
+                        const ligne = `<tr>
                           <td>
                             <select id="productSelect" name="lignes[${ligneIndex}][idP]" class="form-select product-select2">
                               <option value="">Sélectionner un produit</option>
@@ -500,6 +514,7 @@
                             </select>
                               <input type="hidden" name="lignes[${ligneIndex}][libelle]" class="libelle">
                               <input type="hidden" name="lignes[${ligneIndex}][taxe]" class="taxe">
+                              <input type="hidden" name="lignes[${ligneIndex}][stock]" class="stock-disponible"
                             </td>
                           <td>
                             <input type="number" name="lignes[${ligneIndex}][qte]"
@@ -507,7 +522,43 @@
                           </td>
                           <td>
                             <input type="number" name="lignes[${ligneIndex}][prixU]"
-                            class="form-control prixU">
+                            class="form-control prixU" readonly>
+                          </td>
+                          <td>
+                            <input type="number" name="lignes[${ligneIndex}][montantht]"
+                            class="form-control montantht" readonly>
+                            <input type="hidden" name="lignes[${ligneIndex}][montantttc]"
+                            class="form-control montantttc">
+                          </td>
+                          <td>
+                            <button type="button" class="btn btn-danger"
+                            onclick="supprimerLigne(this)">Supprimer</button>
+                          </td>
+                        </tr>`;
+
+                            document.getElementById('ligneProduits').insertAdjacentHTML('beforeend', ligne);
+                            ligneIndex++;
+                            attachEventListeners();
+                    } else {
+                        const ligne = `<tr>
+                          <td>
+                            <select id="productSelect" name="lignes[${ligneIndex}][idP]" class="form-select product-select2">
+                              <option value="">Sélectionner un produit</option>
+                              @foreach ($allproduits as $produit)
+                                  <option value="{{ $produit->idPro }}">{{ $produit->libelle }}</option>
+                              @endforeach
+                            </select>
+                              <input type="hidden" name="lignes[${ligneIndex}][libelle]" class="libelle">
+                              <input type="hidden" name="lignes[${ligneIndex}][taxe]" class="taxe">
+                              <input type="hidden" name="lignes[${ligneIndex}][stock]" class="stock-disponible"
+                            </td>
+                          <td>
+                            <input type="number" name="lignes[${ligneIndex}][qte]"
+                            class="form-control qte">
+                          </td>
+                          <td>
+                            <input type="number" name="lignes[${ligneIndex}][prixU]"
+                            class="form-control prixU" readonly>
                           </td>
                           <td>
                             <input type="number" name="lignes[${ligneIndex}][montantht]"
@@ -522,10 +573,13 @@
                             onclick="supprimerLigne(this)">Supprimer</button>
                           </td>
                         </tr>`;
-            document.getElementById('ligneProduits').insertAdjacentHTML('beforeend', ligne);
-            ligneIndex++;
-            attachEventListeners();
-            initializeSelect2();
+
+                            document.getElementById('ligneProduits').insertAdjacentHTML('beforeend', ligne);
+                            ligneIndex++;
+                            attachEventListeners();
+                    }
+
+            // initializeSelect2();
           }
           
           function supprimerLigne(button) {
@@ -551,34 +605,55 @@
                         row.find('.prixU').val(data.prix);
                         row.find('.libelle').val(data.libelle);
                         row.find('.taxe').val(data.taxe);
+                        row.find('.stock-disponible').val(data.stock);
                         calculateRowTotal(row);
                         calculateTotals();
                     });
                 }
             });
+
+            // Quand la quantité change
+            $(document).on('input', '.qte', function () {
+                const row = $(this).closest('tr');
+                const qteSaisie = parseFloat($(this).val()) || 0;
+                const stock = parseFloat(row.find('.stock-disponible').val()) || 0;
+
+                if (qteSaisie > stock) {
+                    alert(`Stock insuffisant ! Disponible : ${stock}`);
+                    $(this).val(stock);
+                }
+
+                calculateRowTotal(row);
+                calculateTotals();
+            });
           }
 
-          function initializeSelect2() {
-            $('.product-select2').select2({
-                placeholder: "Sélectionner un produit",
-                allowClear: false,
-                width: '100%'
-            });
+        //   function initializeSelect2() {
+        //     $('.product-select2').select2({
+        //         placeholder: "Sélectionner un produit",
+        //         allowClear: false,
+        //         width: '100%'
+        //     });
             
-            // Re-initialize Select2 when modal is shown
-            $('.modal').on('shown.bs.modal', function() {
-                $(this).find('.product-select2').select2({
-                    placeholder: "Sélectionner un produit",
-                    allowClear: false,
-                    width: '100%',
-                    dropdownParent: $(this)
-                });
-            });
-          }
+        //     // Re-initialize Select2 when modal is shown
+        //     $('.modal').on('shown.bs.modal', function() {
+        //         $(this).find('.product-select2').select2({
+        //             placeholder: "Sélectionner un produit",
+        //             allowClear: false,
+        //             width: '100%',
+        //             dropdownParent: $(this)
+        //         });
+        //     });
+        //   }
 
-          function calculateRowTotal(row) {
+            function calculateRowTotal(row) {
             const qte = parseFloat(row.find('.qte').val()) || 0;
             const prixU = parseFloat(row.find('.prixU').val()) || 0;
+            
+            // Le prixU est déjà TTC dans la base
+            // const montantHT = qte * prixU;
+            // const montantTTC = isTPS ? montantHT : montantHT * 1.18; // Convertir en HT seulement si TVA
+
             // const montantTTC = qte * prixU ;
             // const montantHT = montantTTC / 1.18 ;
             
@@ -587,9 +662,10 @@
             const montantHT = isTPS ? montantTTC : montantTTC / 1.18; // Convertir en HT seulement si TVA
 
             row.find('.montantht').val(montantHT.toFixed(2));
-            if (!isTPS) {
-                row.find('.montantttc').val(montantTTC.toFixed(2));
-            }
+            row.find('.montantttc').val(montantTTC.toFixed(2));
+            // if (!isTPS) {
+            //     row.find('.montantttc').val(montantTTC.toFixed(2));
+            // }
           }
 
           function calculateTotals() {
@@ -604,13 +680,14 @@
             });
 
             $('#totalHT').val(totalHT.toFixed(2));
-            if (!isTPS) {
-                $('#totalTTC').val(totalTTC.toFixed(2));
-            }
+            $('#totalTTC').val(totalTTC.toFixed(2));
+            // if (!isTPS) {
+            //     $('#totalTTC').val(totalTTC.toFixed(2));
+            // }
           }
 
           // Form validation
-          $('form').submit(function(e) {
+          $('#addBoaModal').submit(function(e) {
               let isValid = true;
               const errors = [];
 
@@ -644,5 +721,15 @@
 
   </script>
 
+
+<script>
+    document.getElementById('modepaiement').addEventListener('change', function () {
+        let selectedOption = this.options[this.selectedIndex];
+        document.getElementById('libelleModePaie').value = selectedOption.text;
+    });
+</script>
+
+
 @endsection
+
 
