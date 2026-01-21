@@ -91,18 +91,21 @@ public function ajouterProduit(ProduitRequest $request)
             $modifProduit->prix = $request->input('prix');
             $modifProduit->desc = $request->input('desc');
             $modifProduit->stockAlert = $request->input('stockAlert');
-            $modifProduit->stockMinimum = $request->input('stockMinimum');            
-            if ($request->hasFile('image')) {
+            $modifProduit->stockMinimum = $request->input('stockMinimum');
+            
+            // Mettre à jour l'image seulement si une nouvelle est fournie
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $modifProduit->image = file_get_contents($request->file('image')->getRealPath());
             }
+            
             $modifProduit->update();
     
-            // Mise à jour de la quantité stockée
-            $stocke = Stocke::where('idPro', $idPro)
-                            ->first();
+            // Mise à jour de la quantité stockée et du magasin
+            $stocke = Stocke::where('idPro', $idPro)->first();
     
             if ($stocke) {
                 $stocke->idMag = $request->input('idMag');
+                $stocke->qteStocke = $request->input('qteStocke');
                 $stocke->update();
             }
     

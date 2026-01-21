@@ -88,8 +88,7 @@ class VenteController extends Controller
 
 
 
-        dd($lignes);
-        // donne de l'entreprise vendeur
+                // donne de l'entreprise vendeur
         $user = auth()->user();
         $userId = $user->idU;
         $entrepriseId = $user->idE;
@@ -376,8 +375,7 @@ class VenteController extends Controller
             $facturenormalise->save();
 
 
-            dd('Oki');
-
+            
             // $paramse = Params2::first();
 
             // $logoUrl = $paramse ? $paramse->logoimage : null;

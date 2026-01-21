@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategorieFournisseurController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParamController;
@@ -22,6 +21,7 @@ use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReceptionCmdAchatController;
 use App\Http\Controllers\ModePaiementController;
+use App\Http\Controllers\ProduitStockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,11 +62,6 @@ Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])-
 // Route::delete('suppClient/{id}', [ExerciceController::class, 'deleteClient']);
 Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
-
-/* Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
-Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
-Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
-Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy'); */
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
@@ -175,7 +170,7 @@ Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::clas
 Route::get('/Produits', [ProduitController::class, 'Produits']);
 Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
 Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
-Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
+Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifProduit');
 
 
 Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
@@ -315,7 +310,7 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/Produits', [ProduitController::class, 'Produits']);
      Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
      Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
-     Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
+     Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifProduit');
 
      // Export
      Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
@@ -328,6 +323,12 @@ Route::middleware(['auth'])->group(function () {
      // Modes de paiement
      Route::get('/modepaiement', [ModePaiementController::class, 'index'])->name('modepaiement.index');
      Route::post('/modepaiement', [ModePaiementController::class, 'store'])->name('modepaiement.store');
+
+     // Gestion des stocks
+     Route::get('/consulter-stocks', [ProduitStockController::class, 'consulterStocks'])->name('stocks.consulter');
+     Route::get('/ajuster-stocks', [ProduitStockController::class, 'ajusterStocks'])->name('stocks.ajuster');
+     Route::post('/ajuster-stock', [ProduitStockController::class, 'ajusterStock'])->name('stocks.ajuster.stock');
+     Route::get('/stock-details/{idStocke}', [ProduitStockController::class, 'getStockDetails'])->name('stocks.details');
      Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
      Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 });

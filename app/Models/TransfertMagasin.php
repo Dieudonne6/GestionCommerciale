@@ -16,9 +16,18 @@ class TransfertMagasin extends Model
         'dateTransfert',
         'referenceTransfert',
         'idMag',
+        'idMagSource',
     ];
 
     public function magasin() {
         return $this->belongsTo(Magasin::class, 'idMag');
+    }
+    
+    public function magasinSource() {
+        return $this->belongsTo(Magasin::class, 'idMagSource');
+    }
+    
+    public function details() {
+        return $this->hasMany(DetailTransfertMagasin::class, 'idTransMag');
     }
 }
