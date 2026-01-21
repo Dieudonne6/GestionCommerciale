@@ -41,6 +41,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>No Vente</th>
+                                        <th>Codemecef Fac</th>
                                         <th>Client</th>
                                         <th data-type="date" data-format="YYYY/DD/MM">Date Operation</th>
                                         <th>Montant Total</th>
@@ -51,12 +52,13 @@
                                     @foreach ($allVente as $vente)
                                         <tr>
                                             <td>{{ $vente->reference }}</td>
+                                            <td>{{ $vente->factureNormalise?->CODEMECEF ?? '-' }}</td>
                                             <td>{{ $vente->nomClient ?: ($vente->client ? $vente->client->identiteCl : 'Non défini') }}</td>
                                             <td>{{ $vente->dateOperation }}</td>
                                             <td>{{ $vente->montantTotal }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#ModifyBoardModal{{ $vente->idV }}"> Modifier</button>
+                                                {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModifyBoardModal{{ $vente->idV }}"> Modifier</button> --}}
                                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                     data-bs-target="#deleteBoardModal{{ $vente->idV }}">
                                                     Supprimer</button>
@@ -74,15 +76,22 @@
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Êtes-vous sûr de vouloir supprimer cette vente?
-                                                    </div>
+                                                        Êtes-vous sûr de vouloir supprimer cette vente? <br><br>
+                                                        <strong>Si oui , Veuillez entrer le CODEMECEF  de la facture de cette vente.</strong><br><br>
+
+                                                            <form method="POST"
+                                                            action="{{ route('deletevente', $vente->factureNormalise->idFacture) }}">
+                                                            @csrf
+                                                            {{-- @method('DELETE') --}}
+                                                            <div class="col-md-12 mb-2">
+                                                                <label for="codemecef" style="font-weight: bold !important; color: #382f2f">CODEMECEF</label>
+                                                                <input class="form-control mb-3" type="text" name="codemecef" required>
+                                                            </div>                                                    
+                                                        </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Annuler</button>
-                                                        <form method="POST"
-                                                            action="{{ route('Vente.destroy', $vente->idV) }}">
-                                                            @csrf
-                                                            @method('DELETE')
+
                                                             <button type="submit" class="btn btn-danger">Supprimer</button>
                                                         </form>
                                                     </div>
@@ -297,12 +306,12 @@
                                     <input class="form-control mb-3" type="text" name="telClient" value="">
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label for="reference" class="form-label">Numero vente</label>
-                                    <input class="form-control mb-3" type="text" name="reference" id="reference" readonly>
+                                    <label for="numvente" class="form-label">Numero vente</label>
+                                    <input class="form-control mb-3" type="text" name="reference" id="numvente" value="{{ $numVente }}" readonly>
                                 </div>
                                 <div class="mb-2 col-md-4">
                                     <label for="modepaiement" class="form-label">Mode paiement</label>
-                                    <select name="idModPaie" class="form-control" id="modepaiement">
+                                    <select name="idModPaie" class="form-control" id="modepaiement" required>
                                         <option value="">Sélectionner un mode</option>
                                         @foreach ($modes as $mode)
                                             <option value="{{ $mode->idModPaie }}" {{ strtolower($mode->libelle) == 'ESPECES' ? 'selected' : '' }}>
@@ -673,7 +682,7 @@
           }
 
           // Form validation
-          $('form').submit(function(e) {
+          $('#addBoaModal').submit(function(e) {
               let isValid = true;
               const errors = [];
 
@@ -717,6 +726,5 @@
 
 
 @endsection
-
 
 

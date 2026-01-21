@@ -60,6 +60,6 @@ class Vente extends Model
     }
 
     public function factureNormalise() {
-        return $this->hasMany(FactureNormalisee::class, 'idV');
+        return $this->hasOne(FactureNormalisee::class, 'idV');
     }
 }

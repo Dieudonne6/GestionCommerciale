@@ -16,6 +16,7 @@ class FactureNormalisee extends Model
     protected $fillable = [
         'itemFacture',
         'CODEMECEF',
+        'CODEMECEFfacOriginale',
         'nim',
         'counter',
         'montantTotal',
@@ -27,6 +28,8 @@ class FactureNormalisee extends Model
         'date',
         'idV',
         'idCommande',
+        'regime',
+        'idV',
     ];
 
     public function vente() {

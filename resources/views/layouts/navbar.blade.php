@@ -67,6 +67,8 @@
                                         stocks</a></li>
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('inventaire') }}">Inventaire</a></li>
                             </ul>
                         </div>
                     </li>
