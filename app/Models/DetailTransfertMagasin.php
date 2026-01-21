@@ -15,9 +15,14 @@ class DetailTransfertMagasin extends Model
     protected $fillable = [
         'qteTransferer',
         'idPro',
+        'idTransMag',
     ];
 
     public function produit() {
         return $this->belongsTo(Produit::class, 'idPro');
+    }
+    
+    public function transfert() {
+        return $this->belongsTo(TransfertMagasin::class, 'idTransMag');
     }
 }

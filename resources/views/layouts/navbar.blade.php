@@ -63,10 +63,14 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ url('categorieProduit') }}">Catégories
                                         de produits</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les
+                                <li class="nav-item"><a class="nav-link" href="{{ route('stocks.consulter') }}">Consulter les
                                         stocks</a></li>
+                                {{-- <li class="nav-item"><a class="nav-link"
+                                        href="{{ route('stocks.ajuster') }}">Ajustement des stocks</a></li> --}}
                                 <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
+                                        href="{{ route('transferts.index') }}">Transferts entre magasins</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="">Inventaires</a></li>
                             </ul>
                         </div>
                     </li>

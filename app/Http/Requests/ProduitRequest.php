@@ -21,14 +21,27 @@ class ProduitRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'libelle' => 'required|string|min:5',
             'prix' => 'required|numeric',
             'desc' => 'required|string|min:10|max:1000',
-            'idCatPro' => 'required|integer',
-            'idFamPro' => 'required|integer',
-            'image' => 'file|image|mimes:jpg,jpeg,png|max:2048',  // Extension jpg, jpeg, png et taille max 2 Mo
+            'idCatPro' => 'nullable|integer',
+            'idFamPro' => 'nullable|integer',
+            'idMag' => 'nullable|integer',
+            'stockAlert' => 'nullable|integer|min:0',
+            'stockMinimum' => 'nullable|integer|min:0',
+            'qteStocke' => 'nullable|integer|min:0',
+            'image' => 'nullable|file|image|mimes:jpg,jpeg,png|max:2048',
         ];
+
+        // Pour la création (quand il n'y a pas d'ID dans la route)
+        if (!$this->route('idPro')) {
+            $rules['idMag'] = 'required|integer';
+            $rules['qteStocke'] = 'required|integer|min:0';
+            $rules['image'] = 'required|file|image|mimes:jpg,jpeg,png|max:2048';
+        }
+
+        return $rules;
     }
 
     public function messages(): array
@@ -43,10 +56,25 @@ class ProduitRequest extends FormRequest
             
             'desc.required' => 'La description est obligatoire.',
             'desc.string' => 'La description doit être une chaîne de caractères.',
+            'desc.min' => 'La description doit contenir au moins 10 caractères.',
+            'desc.max' => 'La description ne doit pas dépasser 1000 caractères.',
             
-            'idCatPro.required' => 'La categorie est obligatoire.',
-            'idFamPro.required' => 'La famille est obligatoire.',
+            'idCatPro.integer' => 'La catégorie doit être un entier valide.',
+            'idFamPro.integer' => 'La famille doit être un entier valide.',
+            'idMag.required' => 'Le magasin est obligatoire.',
+            'idMag.integer' => 'Le magasin doit être un entier valide.',
             
+            'stockAlert.integer' => 'Le seuil d\'alerte doit être un nombre entier.',
+            'stockAlert.min' => 'Le seuil d\'alerte doit être supérieur ou égal à 0.',
+            
+            'stockMinimum.integer' => 'Le stock minimum doit être un nombre entier.',
+            'stockMinimum.min' => 'Le stock minimum doit être supérieur ou égal à 0.',
+            
+            'qteStocke.required' => 'La quantité est obligatoire.',
+            'qteStocke.integer' => 'La quantité doit être un nombre entier.',
+            'qteStocke.min' => 'La quantité doit être supérieure ou égale à 0.',
+            
+            'image.required' => 'L\'image est obligatoire pour la création d\'un produit.',
             'image.file' => 'Le fichier doit être un fichier valide.',
             'image.image' => 'Le fichier doit être une image.',
             'image.mimes' => 'L\'image doit avoir l\'une des extensions suivantes : jpg, jpeg, png.',
