@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('transfert_magasins', function (Blueprint $table) {
+            // Supprimer la colonne si elle existe
+            if (Schema::hasColumn('transfert_magasins', 'idMagSource')) {
+                $table->dropColumn('idMagSource');
+            }
+        });
+        
+        Schema::table('transfert_magasins', function (Blueprint $table) {
+            $table->unsignedBigInteger('idMagSource')->after('referenceTransfert')->nullable();
+            $table->foreign('idMagSource')->references('idMag')->on('magasins')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('transfert_magasins', function (Blueprint $table) {
+            $table->dropForeign(['idMagSource']);
+            $table->dropColumn('idMagSource');
+        });
+    }
+};

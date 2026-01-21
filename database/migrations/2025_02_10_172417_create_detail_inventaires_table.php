@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('detail_inventaires', function (Blueprint $table) {
             $table->bigIncrements('idDetailInv');            
-            $table->date('stockTheorique');
-            $table->string('stockReel');
-            $table->string('prixUnit');
+            $table->integer('stockTheorique');
+            $table->integer('stockReel');
+            $table->decimal('prixUnit', 10, 2);
             $table->unsignedBigInteger('idInventaire'); // Colonne pour la clé étrangère
             $table->foreign('idInventaire')->references('idInventaire')->on('inventaires')->onDelete('cascade');  
             $table->unsignedBigInteger('idPro'); // Colonne pour la clé étrangère

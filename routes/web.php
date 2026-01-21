@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategorieFournisseurController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParamController;
@@ -24,6 +23,9 @@ use App\Http\Controllers\ReceptionCmdAchatController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModePaiementController;
 use App\Http\Controllers\InventaireController;
+use App\Http\Controllers\FermetureController;
+use App\Http\Controllers\ProduitStockController;
+use App\Http\Controllers\TransfertMagasinController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,11 +68,6 @@ Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])-
 // Route::delete('suppClient/{id}', [ExerciceController::class, 'deleteClient']);
 Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
-
-/* Route::get('/produits', [ProduitsController::class, 'index'])->name('produits');
-Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produits.store');
-Route::put('/produits/{idP}', [ProduitsController::class, 'update'])->name('produits.update');
-Route::delete('/produits/{idP}', [ProduitsController::class, 'destroy'])->name('produits.destroy'); */
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
@@ -186,7 +183,7 @@ Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::clas
 Route::get('/Produits', [ProduitController::class, 'Produits']);
 Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
 Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
-Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
+Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifProduit');
 
 
 Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
@@ -353,6 +350,25 @@ Route::middleware(['auth'])->group(function () {
      // Modes de paiement
      Route::get('/modepaiement', [ModePaiementController::class, 'index'])->name('modepaiement.index');
      Route::post('/modepaiement', [ModePaiementController::class, 'store'])->name('modepaiement.store');
+
+     // Gestion des stocks
+     Route::get('/consulter-stocks', [ProduitStockController::class, 'consulterStocks'])->name('stocks.consulter');
+     Route::get('/ajuster-stocks', [ProduitStockController::class, 'ajusterStocks'])->name('stocks.ajuster');
+     Route::post('/ajuster-stock', [ProduitStockController::class, 'ajusterStock'])->name('stocks.ajuster.stock');
+     Route::get('/stock-details/{idStocke}', [ProduitStockController::class, 'getStockDetails'])->name('stocks.details');
+     Route::get('/produit-image/{idPro}', [ProduitStockController::class, 'getProduitImage'])->name('produits.image');
+     
+     // Transferts entre magasins
+     Route::get('/transferts', [TransfertMagasinController::class, 'index'])->name('transferts.index');
+     Route::post('/transferts', [TransfertMagasinController::class, 'store'])->name('transferts.store');
+     Route::get('/transferts/{idTransMag}', [TransfertMagasinController::class, 'show'])->name('transferts.show');
+     Route::get('/transferts/{idTransMag}/details', [TransfertMagasinController::class, 'showDetails'])->name('transferts.details');
+     Route::get('/transferts/stocks/{idMag}', [TransfertMagasinController::class, 'getStocksByMagasin'])->name('transferts.stocks.magasin');
+     
      Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
      Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 });
+
+
+Route::get('/fermeture-journee', [FermetureController::class, 'store'])
+    ->name('fermeture.journee');

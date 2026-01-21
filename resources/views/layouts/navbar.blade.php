@@ -63,12 +63,20 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ url('categorieProduit') }}">Catégories
                                         de produits</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('Produits') }}">Produits</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('stocks') }}">Consulter les
+                                <li class="nav-item"><a class="nav-link" href="{{ route('stocks.consulter') }}">Consulter les
                                         stocks</a></li>
+                                {{-- <li class="nav-item"><a class="nav-link"
+                                        href="{{ route('stocks.ajuster') }}">Ajustement des stocks</a></li> --}}
+                                {{-- <li class="nav-item"><a class="nav-link"
+                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li> --}}
                                 <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li>
+                                        href="{{ url('inventaire') }}">Inventaire</a>
+                                    </li>
+                                    <li>
+                                        href="{{ route('transferts.index') }}">Transferts entre magasins</a></li>
                                 <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('inventaire') }}">Inventaire</a></li>
+                                        href="">Inventaires</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -118,8 +126,9 @@
                                         href="{{ url('/utilisateurs') }}">Utilisateurs</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement') }}">Modes de Paiement</a>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement')}}">Modes de Paiement</a>
                                 </li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('fermeture.journee') }}">Fermeture de la journée</a> </li>
                             </ul>
                         </div>
                     </li>

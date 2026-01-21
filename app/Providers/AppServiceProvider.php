@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 // use App\Models\Exercice;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\DB;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,35 @@ class AppServiceProvider extends ServiceProvider
         // $exerciceActif = $exerciceAct ? $exerciceAct->annee : null;
 
         // View::share('exerciceActif', $exerciceActif);
+
+        View::composer('*', function ($view) {
+
+        $notifications = DB::table('stockes')
+            ->join('produits', 'produits.idPro', '=', 'stockes.idPro')
+            ->select(
+                'produits.libelle',
+                'produits.stockMinimum',
+                'stockes.qteStocke'
+            )
+            ->get()
+            ->filter(function ($item) {
+                return $item->qteStocke <= $item->stockMinimum;
+            })
+          ->map(function ($item) {
+
+                if ($item->qteStocke == 0) {
+                    $item->type = 'rupture';
+                    $item->texte = "est en rupture de stock";
+                } else {
+                    $item->type = 'risque';
+                    $item->texte = "est en risque de rupture de stock";
+                }
+
+                return $item;
+            });
+
+        $view->with('stockNotifications', $notifications);
+    }); 
     }
 
 

@@ -601,6 +601,7 @@
                 if (productId) {
                     $.get(`/get-produit-info/${productId}`, function(data) {
                         console.log('produit info', data);
+                        // Le prix reste tel quel (TTC dans la base)
                         row.find('.prixU').val(data.prix);
                         row.find('.libelle').val(data.libelle);
                         row.find('.taxe').val(data.taxe);
@@ -653,6 +654,10 @@
             // const montantHT = qte * prixU;
             // const montantTTC = isTPS ? montantHT : montantHT * 1.18; // Convertir en HT seulement si TVA
 
+            // const montantTTC = qte * prixU ;
+            // const montantHT = montantTTC / 1.18 ;
+            
+            // Le prixU est déjà TTC dans la base
             const montantTTC = qte * prixU;
             const montantHT = isTPS ? montantTTC : montantTTC / 1.18; // Convertir en HT seulement si TVA
 
