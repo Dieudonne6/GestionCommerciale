@@ -23,6 +23,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReceptionCmdAchatController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModePaiementController;
+use App\Http\Controllers\FermetureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -346,3 +347,7 @@ Route::middleware(['auth'])->group(function () {
      Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
      Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 });
+
+
+Route::get('/fermeture-journee', [FermetureController::class, 'store'])
+    ->name('fermeture.journee');

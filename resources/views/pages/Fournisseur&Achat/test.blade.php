@@ -184,11 +184,13 @@
         }
     }
 
-    .qr {
-        display: none;
-        justify-content: center;
-        align-items: center;
-       
+   
+    .vendor-info .qr {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100%;
+        margin-top: 10px;
     }
+
 </style>
 @endsection

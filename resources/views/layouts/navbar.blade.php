@@ -116,8 +116,9 @@
                                         href="{{ url('/utilisateurs') }}">Utilisateurs</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('magasins') }}">Magasins</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement') }}">Modes de Paiement</a>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement')}}">Modes de Paiement</a>
                                 </li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('fermeture.journee') }}">Fermeture de la journée</a> </li>
                             </ul>
                         </div>
                     </li>
