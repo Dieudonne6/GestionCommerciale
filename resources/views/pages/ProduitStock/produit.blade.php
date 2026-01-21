@@ -73,7 +73,13 @@
                   <td class="text-center">{{ $allProduit->prix }}</td>
                   <td class="text-center">
                     @php
-                        $totalStocke = $allProduit->stocke->qteStocke;
+                    if ($allProduit->stocke) {
+                      $totalStocke = $allProduit->stocke->qteStocke;
+                      # code...
+                    } else {
+                      # code...
+                      $totalStocke = 0;
+                    }
                     @endphp
                     {{ $totalStocke > 0 ? $totalStocke : '0' }}
                   </td>                  
