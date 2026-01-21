@@ -10,26 +10,13 @@ class Fermetures extends Model
     use HasFactory;
 
     protected $table = 'fermetures';
-    protected $primaryKey = 'idfermeture';
+    protected $primaryKey = 'idFermeture';
 
-    protected $fillable = [
-        'qtestock',
-        'idPro',
-        'idU',
-        'date',
-        'heure',
-    ];
+    protected $fillable = ['idU', 'date', 'heure'];
 
-    public $timestamps = true;
-
-    public function stock()
+    public function details()
     {
-        return $this->belongsTo(Stocke::class, 'idPro', 'idPro');
-    }
-
-    // relation avec utilisateurs
-    public function utilisateur()
-    {
-        return $this->belongsTo(Utilisateur::class, 'idU', 'idU');
+        return $this->hasMany(DetailFermeture::class, 'idFermeture');
     }
 }
+

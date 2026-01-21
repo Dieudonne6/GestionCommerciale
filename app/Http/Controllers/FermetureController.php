@@ -2,26 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Fermetures;
+use App\Models\DetailFermetures;
 use App\Models\Stocke;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FermetureController extends Controller
 {
-    public function store()
+    public function store(Request $request)
     {
-        $stocks = Stocke::all();
+        $date = now()->toDateString();
 
-        foreach ($stocks as $stock) {
-            Fermetures::create([
-                'idPro'    => $stock->idPro,
-                'qtestock' => $stock->qteStocke,
-                'idU'      => Auth::id(),
-                'date'     => now()->toDateString(),
-                'heure'    => now()->toTimeString(),
+        // Vérifier si la fermeture existe déjà
+        // $existe = Fermetures::where('date', $date)->first();
+
+        // if ($existe) {
+        //     return back()->with('error', 'La fermeture de cette journée est déjà effectuée');
+        // }
+
+        DB::transaction(function () use ($date) {
+
+            $fermeture = Fermetures::create([
+                'idU'  => Auth::id(),
+                'date' => $date,
+                'heure'=> now()->toTimeString(),
             ]);
-        }
 
-        return redirect()->back()->with('success', 'Fermeture de la journée effectuée');
+            $stocks = Stocke::all();
+
+            foreach ($stocks as $stock) {
+                DetailFermetures::create([
+                    'idFermeture' => $fermeture->idFermeture,
+                    'idPro'       => $stock->idPro,
+                    'qteStocke'   => $stock->qteStocke,
+                ]);
+            }
+        });
+
+        return back()->with('success', 'Fermeture de la journée effectuée');
     }
 }
