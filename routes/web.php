@@ -22,6 +22,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReceptionCmdAchatController;
 use App\Http\Controllers\ModePaiementController;
 use App\Http\Controllers\ProduitStockController;
+use App\Http\Controllers\TransfertMagasinController;
 
 /*
 |--------------------------------------------------------------------------
@@ -329,6 +330,15 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/ajuster-stocks', [ProduitStockController::class, 'ajusterStocks'])->name('stocks.ajuster');
      Route::post('/ajuster-stock', [ProduitStockController::class, 'ajusterStock'])->name('stocks.ajuster.stock');
      Route::get('/stock-details/{idStocke}', [ProduitStockController::class, 'getStockDetails'])->name('stocks.details');
+     Route::get('/produit-image/{idPro}', [ProduitStockController::class, 'getProduitImage'])->name('produits.image');
+     
+     // Transferts entre magasins
+     Route::get('/transferts', [TransfertMagasinController::class, 'index'])->name('transferts.index');
+     Route::post('/transferts', [TransfertMagasinController::class, 'store'])->name('transferts.store');
+     Route::get('/transferts/{idTransMag}', [TransfertMagasinController::class, 'show'])->name('transferts.show');
+     Route::get('/transferts/{idTransMag}/details', [TransfertMagasinController::class, 'showDetails'])->name('transferts.details');
+     Route::get('/transferts/stocks/{idMag}', [TransfertMagasinController::class, 'getStocksByMagasin'])->name('transferts.stocks.magasin');
+     
      Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
      Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 });
