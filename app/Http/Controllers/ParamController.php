@@ -136,8 +136,9 @@ class ParamController extends Controller
     // Affiche la liste des entreprises
     public function entreprise()
     {
-        $allEntreprises = Entreprise::get();
-        return view('pages.parametres.entreprise', compact('allEntreprises'));
+        $Entreprises = Entreprise::get();
+        // dd($Entreprises);
+        return view('pages.parametres.entreprise', compact('Entreprises'));
     }
 
     // Ajoute une nouvelle entreprise

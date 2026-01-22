@@ -24,6 +24,7 @@ class DetailReceptionCmdAchat extends Model
         return $this->belongsTo(DetailCommandeAchat::class, 'idDetailCom');
     }
 
+    
     public function receptionCmdAchat() {
         return $this->belongsTo(ReceptionCmdAchat::class, 'idRecep');
     }

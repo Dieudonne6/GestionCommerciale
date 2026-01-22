@@ -27,18 +27,23 @@ class InventaireController extends Controller
         $dateDebut = $request->date_debut;
         $dateFin   = $request->date_fin;
 
+
+
         /* ============================
         ENTRÉES DE STOCK
         ============================ */
         $receptions = DetailReceptionCmdAchat::with([
-                'detailCommandeAchat.produit',
-                'receptionCmdAchat.commandeAchat.fournisseur'
-            ])
-            ->whereHas('receptionCmdAchat', function ($q) use ($dateDebut, $dateFin) {
-                $q->whereBetween('created_at', [$dateDebut, $dateFin])
-                ->where('statutRecep', 'en cours');
-            })
-            ->get();
+            'detailCommandeAchat.produit',
+            'receptionCmdAchat.commandeAchat.fournisseur'
+        ])
+        ->whereHas('receptionCmdAchat', function ($q) use ($dateDebut, $dateFin) {
+            $q->whereBetween('date', [$dateDebut, $dateFin])
+            ->whereIn('statutRecep', ['en cours', 'complète']);
+        })
+        ->get();
+
+        
+
 
         /* ============================
         SORTIES DE STOCK
@@ -49,6 +54,39 @@ class InventaireController extends Controller
                 ->where('statutVente', 1);
             })
             ->get();
+
+
+        // version avec seulement les donnees de l exercice en actif
+
+        // $exercice = Exercice::where('statutExercice', 1)->firstOrFail();
+
+        // $dateDebutExercice = $exercice->dateDebut;
+        // $dateFinExercice   = $exercice->dateFin;
+
+
+
+        // $receptions = DetailReceptionCmdAchat::with([
+        //     'detailCommandeAchat.produit',
+        //     'receptionCmdAchat.commandeAchat.fournisseur'
+        // ])
+        // ->whereHas('receptionCmdAchat', function ($q) use ($dateDebutExercice, $dateFinExercice, $exercice) {
+        //     $q->whereBetween('date', [$dateDebutExercice, $dateFinExercice])
+        //     ->whereIn('statutRecep', ['en cours', 'complète'])
+        //     ->where('idExercice', $exercice->idExercice);
+        // })
+        // ->get();
+
+
+        // $ventes = DetailVente::with(['produit', 'vente'])
+        // ->whereHas('vente', function ($q) use ($dateDebutExercice, $dateFinExercice, $exercice) {
+        //     $q->whereBetween('dateOperation', [$dateDebutExercice, $dateFinExercice])
+        //     ->where('statutVente', 1)
+        //     ->where('idExercice', $exercice->idExercice);
+        // })
+        // ->get();
+
+
+            // 
 
         /* ============================
         DERNIÈRE FERMETURE AVANT DATE DÉBUT

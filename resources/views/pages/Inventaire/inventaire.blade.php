@@ -28,7 +28,7 @@
                         </div><!--end row-->
                     </div><!--end card-header-->
 
-                    <div class="row mb-3 align-items-center no-print">
+                    <div class="row mb-3 align-items-center no-print" style="margin-left: 20px;">
                         <div class="col-md-8">
                         <form method="POST" action="{{ route('inventaires.search') }}" class="row mb-4">
                             @csrf
@@ -289,6 +289,11 @@ function printInventaire() {
 
 @section('styles')
 <style>
+
+    #entete {
+        margin-left: 20px !important;
+    }
+
     #datatable_1 td,
     #datatable_1 th {
         text-align: center;

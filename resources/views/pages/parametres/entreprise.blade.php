@@ -37,9 +37,14 @@
             </div>
             @endif
             <div class="col-auto">
+              @if (!$Entreprises)
               <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter une Entreprise</button>
-              </div><!--end col-->
+              </div><!--end col--> 
+              @else
+                  
+              @endif
+
             </div><!--end col-->
           </div><!--end row-->
         </div>
@@ -63,7 +68,7 @@
                 $i = 1
               @endphp
               <tbody>
-                @foreach ($allEntreprises as $allEntreprise)
+                @foreach ($Entreprises as $allEntreprise)
                 <tr>
                   <td >
                     <p class="d-inline-block align-middle mb-0">
@@ -83,7 +88,7 @@
                   <td >{{ $allEntreprise->adresse }}</td>
                   <td >{{ $allEntreprise->mail }}</td>
                   <td>
-                    {{ optional($allEntreprises->firstWhere('idE', $allEntreprise->idParent))->nom ?? 'Aucune' }}
+                    {{ optional($Entreprises->firstWhere('idE', $allEntreprise->idParent))->nom ?? 'Aucune' }}
                 </td>                  
                 {{-- <td>
                     @php
@@ -94,7 +99,7 @@
 
                 <td >
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allEntreprise->idE}}"> Modifier</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allEntreprise->idE}}"> Supprimer</button>
+                    {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allEntreprise->idE}}"> Supprimer</button> --}}
                   </td>
                 </tr>
 
@@ -200,7 +205,7 @@
                                 <label for="idParent">Entreprise Principale</label>
                                 <select id="idParent" name="idParent" class="form-control @error('idParent') is-invalid @enderror">
                                     <option value="">Aucune</option>
-                                    @foreach ($allEntreprises as $allEntrpri)
+                                    @foreach ($Entreprises as $allEntrpri)
                                         <option value="{{ $allEntrpri->idE }}" 
                                             {{ $allEntreprise->idParent == $allEntrpri->idE ? 'selected' : '' }}>
                                             {{ $allEntrpri->nom }}
@@ -352,7 +357,7 @@
                             <label for="idParent">Entreprise Principale</label>
                             <select id="idParent" name="idParent" class="form-control">
                                 <option value="" selected>Aucune</option>
-                                @foreach ($allEntreprises as $allEntrpri)
+                                @foreach ($Entreprises as $allEntrpri)
                                 <option value="{{ $allEntrpri->idE }}">
                                     {{ $allEntrpri->nom }}
                                 </option>
