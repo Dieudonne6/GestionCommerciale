@@ -58,7 +58,9 @@ class FermetureController extends Controller
         $existe = Fermetures::where('date', $date)->first();
 
         if ($existe) {
-            return back()->with('error', 'La fermeture de cette journée est déjà effectuée');
+            return redirect()
+            ->route('fermeture.index')
+            ->with('error', 'La fermeture de cette journée est déjà effectuée, donc les ventes enrégistrées après la première fermeture ne seront pas comptabilisées dans certaines situations.');
         }
 
         DB::transaction(function () use ($date) {
