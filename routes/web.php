@@ -372,5 +372,7 @@ Route::middleware(['auth'])->group(function () {
 // Pour le bail de fermeture de journée
 Route::get('/fermetures', [FermetureController::class, 'index'])
     ->name('fermeture.index');
-Route::get('/fermeture-journee', [FermetureController::class, 'store'])
+// Route::get('/fermeture-journee', [FermetureController::class, 'store'])
+//     ->name('fermeture.journee');
+Route::post('/fermeture-journee', [FermetureController::class, 'store'])
     ->name('fermeture.journee');

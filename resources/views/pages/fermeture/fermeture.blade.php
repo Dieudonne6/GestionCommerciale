@@ -4,6 +4,11 @@
 <div class="container my-4" id="print-area">
 
     {{-- Message --}}
+    @if(session('error'))
+        <div class="alert alert-danger no-print">
+            {{ session('error') }}
+        </div>
+    @endif
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -12,11 +17,18 @@
 
     {{-- Bouton Imprimer --}}
     <div class="d-flex justify-content-end mb-3 no-print">
-        <button onclick="window.print()" class="btn btn-primary btn-sm">
+        <button onclick="window.print()" class="btn btn-primary btn-sm no-print">
             <i class="iconoir-printer"></i> Imprimer le récapitulatif
         </button>
     </div>
-
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
     @php
         // Totaux
         $totalQteProduits = collect($recapProduits)->sum('qte');

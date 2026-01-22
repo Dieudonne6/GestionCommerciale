@@ -19,23 +19,36 @@ class ReceptionCmdAchatController extends Controller
     public function index()
     {
         try {
+            // Exercice actif
+            $exerciceActif = Exercice::where('statutExercice', 1)->first();
+
+            if (!$exerciceActif) {
+                return redirect()->back()->with('erreur', 'Aucun exercice actif.');
+            }
+
+            // Réceptions de l'exercice actif
             $receptions = ReceptionCmdAchat::with([
-                'commandeAchat.fournisseur',
-                'detailReceptionCmdAchat.detailCommandeAchat.produit',
-                'exercice',
-                'utilisateur'
-            ])
+                    'commandeAchat.fournisseur',
+                    'detailReceptionCmdAchat.detailCommandeAchat.produit',
+                    'exercice',
+                    'utilisateur'
+                ])
+                ->where('idExercice', $exerciceActif->idExercice)
                 ->orderBy('date', 'desc')
                 ->get();
 
-            // Récupérer les commandes validées uniquement
+            // Commandes validées ou en cours de l'exercice actif
             $commandes = CommandeAchat::with(['fournisseur', 'detailCommandeAchat.produit'])
                 ->whereIn('statutCom', ['validée', 'en cours'])
+                ->where('idExercice', $exerciceActif->idExercice)
                 ->get();
 
+            // Magasins (si tu veux filtrer par exercice, ajoute ->where('idExercice', $exerciceActif->idExercice))
             $magasins = Magasin::all();
+
+            // Exercices actifs
             $exercices = Exercice::where('statutExercice', 'actif')->get();
- 
+
             return view('pages.Fournisseur&Achat.gestion_receptions', compact(
                 'receptions',
                 'commandes',
@@ -45,8 +58,7 @@ class ReceptionCmdAchatController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('erreur', 'Erreur lors du chargement des données: ' . $e->getMessage());
         }
-    }
-    
+    }  
 
     public function getCommandeDetails($idCommande)
     {
@@ -101,26 +113,30 @@ class ReceptionCmdAchatController extends Controller
     /**
      * Met à jour les statuts de la réception et de la commande
      */
-    private function updateStatuts(ReceptionCmdAchat $reception)
+   private function updateStatuts(ReceptionCmdAchat $reception)
     {
         $commande = $reception->commandeAchat;
         $totalQteRestante = $commande->detailCommandeAchat->sum('qteRestante');
-        $totalQteRecue = $commande->detailCommandeAchat->sum('qteRecue');
 
-        // Mise à jour du statut de la réception
         if ($totalQteRestante <= 0) {
-            $reception->update(['statutRecep' => 'complète']);
-        } else {
-            $reception->update(['statutRecep' => 'en cours']);
-        }
 
-        // Mise à jour du statut de la commande
-        if ($totalQteRestante <= 0) {
+            //  TOUTES les réceptions passent à complète
+            ReceptionCmdAchat::where('idCommande', $commande->idCommande)
+                ->update(['statutRecep' => 'complète']);
+
+            // commande complète
             $commande->update(['statutCom' => 'complète']);
-        } else if ($totalQteRecue > 0) {
+
+        } else {
+
+            // réception courante reste en cours
+            $reception->update(['statutRecep' => 'en cours']);
+
+            // commande partiellement reçue
             $commande->update(['statutCom' => 'en cours']);
         }
     }
+
 
     public function store(Request $request)
     {
@@ -130,7 +146,7 @@ class ReceptionCmdAchatController extends Controller
         try {                       
             $request->validate([
                 'date' => 'required|date',
-                'reference' => 'required|string|max:255|unique:reception_cmd_achats,reference',
+                'reference' => 'required|string|max:255',
                 'numBordereauLivraison' => 'required|string|max:255|unique:reception_cmd_achats,numBordereauLivraison',
                 // 'idExercice' => 'required|exists:exercices,idExercice',
                 'idCommande' => 'required|exists:commande_achats,idCommande',
@@ -150,9 +166,9 @@ class ReceptionCmdAchatController extends Controller
                 ->firstOrFail()
                 ->idExercice;  
 
-                if ($commande->statutCom !== 'validée' && $commande->statutCom !== 'En cours') {
-                    throw new \Exception('La commande doit être validée ou en cours pour créer une réception');
-                }
+                // if ($commande->statutCom !== 'validée' && $commande->statutCom !== 'en cours') {
+                //     throw new \Exception('La commande doit être validée ou en cours pour créer une réception');
+                // }
 
                 // Création de la réception
                 $reception = ReceptionCmdAchat::create([

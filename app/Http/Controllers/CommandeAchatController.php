@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Validator;
 
 class CommandeAchatController extends Controller
 {
-  
 
     public function index()
     {
@@ -27,8 +26,18 @@ class CommandeAchatController extends Controller
             return redirect()->route('login')->with('erreur', 'Utilisateur non valide ou non connecté.');
         }
 
+        $exerciceActif = Exercice::where('statutExercice', 1)->first();
+        if (!$exerciceActif) {
+            return back()->with('erreur', 'Aucun exercice actif.');
+        }
+
         // Récupère toutes les commandes avec fournisseurs et produits
+        // $commandes = CommandeAchat::with(['fournisseur', 'lignes.produit.familleProduit'])
+        //     ->orderBy('dateOp', 'desc')
+        //     ->get();
+
         $commandes = CommandeAchat::with(['fournisseur', 'lignes.produit.familleProduit'])
+            ->where('idExercice', $exerciceActif->idExercice)
             ->orderBy('dateOp', 'desc')
             ->get();
 

@@ -127,7 +127,14 @@
                                 </li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement')}}">Modes de Paiement</a>
                                 </li>
-                                <li class="nav-item"> <a class="nav-link" href="{{ route('fermeture.journee') }}">Fermeture de la journée</a> </li>
+                                <li class="nav-item">
+                                    <form action="{{ route('fermeture.journee') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="nav-link btn btn-link text-start w-100">
+                                            Fermeture de la journée
+                                        </button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
                     </li>
