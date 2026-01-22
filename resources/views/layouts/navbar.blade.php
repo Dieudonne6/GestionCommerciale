@@ -70,15 +70,11 @@
                                 {{-- <li class="nav-item"><a class="nav-link"
                                         href="{{ url('stocks/ajustement') }}">Ajustement des stocks</a></li> --}}
                                 <li class="nav-item"><a class="nav-link"
-                                        href="{{ url('inventaire') }}">Inventaire</a>
+                                        href="{{ url('inventaires') }}">Inventaire</a>
                                     </li>
                                     <li class="nav-item">
                                       <a class="nav-link" href="{{ route('transferts.index') }}">Transferts entre magasins</a></li>
-                                <li class="nav-item"><a class="nav-link"
-                                        href="">Inventaires</a>
-                                </li>
-                                       <a class="nav-link" href="{{ route('transferts.index') }}">Transferts entre magasins</a>
-                                    </li>
+                                
 
                             </ul>
                         </div>
