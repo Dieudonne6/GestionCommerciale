@@ -99,12 +99,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#menuVentes" data-bs-toggle="collapse">
                             <i class="iconoir-wallet menu-icon"></i>
-                            <span>Ventes & Facturation</span>
+                            <span>Ventes & Factures</span>
                         </a>
                         <div class="collapse" id="menuVentes">
                             <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="{{ url('facturation') }}">Facturation</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('ventes') }}">Ventes</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('facturation') }}">Liste des Factures</a></li>
                             </ul>
                         </div>
                     </li>

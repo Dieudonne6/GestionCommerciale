@@ -55,7 +55,12 @@ class VenteController extends Controller
         $allClients = Client::get();
         $allproduits = Produit::get();
         $numVente = $this->genererNumeroVente();
-        $allVente = Vente::where('statutVente', 1)->with('client', 'detailVente', 'factureNormalise')->get();
+        $exerciceActif = Exercice::where('statutExercice', 1)->firstOrFail();
+        $allVente = Vente::where('statutVente', 1)
+            ->where('idExercice', $exerciceActif->idExercice)
+            ->with('client', 'detailVente', 'factureNormalise')
+            ->get();
+        // $allVente = Vente::where('statutVente', 1)->with('client', 'detailVente', 'factureNormalise')->get();
         $modes = ModePaiement::get();
         
         // Récupérer le régime de l'entreprise connectée
@@ -66,26 +71,61 @@ class VenteController extends Controller
         return view('pages.Facturation.ventes', compact('allClients', 'allproduits', 'allVente', 'modes', 'regimeEntreprise', 'numVente'));
     }
 
+    // public function facturation(Request $request)
+    // {
+    //     $type = $request->query('type', 'all');
+
+    //     $query = FactureNormalisee::where('statut', 1)
+    //         ->with('vente', 'commandeAchat')
+    //         ->orderBy('date', 'desc');
+
+    //     if ($type === 'FV') {
+    //         // Factures de vente
+    //         $query->where('counter', 'like', '% FV');
+    //     } elseif ($type === 'FA') {
+    //         // Factures d'avoir
+    //         $query->where('counter', 'like', '% FA');
+    //     }
+
+    //     $allFactures = $query->get();
+
+    //     return view('pages.Facturation.facturation', compact('allFactures', 'type'));
+    // }
+
+
     public function facturation(Request $request)
     {
         $type = $request->query('type', 'all');
 
+        $exerciceActif = Exercice::where('statutExercice', 1)->first();
+
+        if (!$exerciceActif) {
+            abort(404, 'Aucun exercice actif');
+        }
+
         $query = FactureNormalisee::where('statut', 1)
-            ->with('vente', 'commandeAchat')
+            ->with(['vente', 'commandeAchat'])
+            ->where(function ($q) use ($exerciceActif) {
+                $q->whereHas('vente', function ($v) use ($exerciceActif) {
+                    $v->where('idExercice', $exerciceActif->idExercice);
+                })
+                ->orWhereHas('commandeAchat', function ($c) use ($exerciceActif) {
+                    $c->where('idExercice', $exerciceActif->idExercice);
+                });
+            })
             ->orderBy('date', 'desc');
 
         if ($type === 'FV') {
-            // Factures de vente
-            $query->where('counter', 'like', '% FV');
+            $query->where('counter', 'like', '%FV');
         } elseif ($type === 'FA') {
-            // Factures d'avoir
-            $query->where('counter', 'like', '% FA');
+            $query->where('counter', 'like', '%FA');
         }
 
         $allFactures = $query->get();
 
         return view('pages.Facturation.facturation', compact('allFactures', 'type'));
     }
+
 
 
     
