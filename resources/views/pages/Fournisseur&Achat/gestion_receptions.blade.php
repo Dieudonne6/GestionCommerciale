@@ -332,13 +332,9 @@
     @push('scripts')
        <script>
             document.getElementById('selectCommande').addEventListener('change', function () {
-                console.log('jojo');
                 const option = this.selectedOptions[0];
                 const reference = option.getAttribute('data-reference');
                 const idCommande = this.value;
-
-                
-
 
                 // remplir le champ référence
                 document.getElementById('inputReference').value = reference;
@@ -355,10 +351,6 @@
 
                             const tbody = document.getElementById('detailsTableBody');
                             tbody.innerHTML = '';
-
-
-                            console.log(data.details);
-                            
 
                             data.details.forEach((d, i) => {
                                 const tr = document.createElement('tr');

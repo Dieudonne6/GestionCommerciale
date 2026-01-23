@@ -234,7 +234,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Filtrage par magasin
@@ -406,4 +406,4 @@ function showAjustmentModal(stockId, type) {
     }, 500);
 }
 </script>
-@endsection
+@endpush

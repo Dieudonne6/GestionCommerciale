@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategorieProduitRequest extends FormRequest
 {
@@ -22,8 +23,25 @@ class CategorieProduitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codeCatPro' => 'required|string|min:3|unique:categorie_produits,codeCatPro',
-            'libelle' => 'required|string|min:3|unique:categorie_produits,libelle',
+            // 'codeCatPro' => 'required|string|min:3|unique:categorie_produits,codeCatPro',
+            'codeCatPro' => [
+                'required',
+                'string',
+                'min:3',
+                Rule::unique('categorie_produits', 'codeCatPro')
+                    ->when($idCatPro, fn ($rule) => $rule->ignore($idCatPro, 'idCatPro')),
+            ],
+
+
+            'libelle' => [
+                'required',
+                'string',
+                'min:3',
+                Rule::unique('categorie_produits', 'libelle')
+                    ->when($idCatPro, fn ($rule) => $rule->ignore($idCatPro, 'idCatPro')),
+            ],
+            
+            // 'libelle' => 'required|string|min:3|unique:categorie_produits,libelle',
         ];
     }
 

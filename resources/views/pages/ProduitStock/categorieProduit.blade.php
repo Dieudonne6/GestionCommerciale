@@ -70,8 +70,8 @@
                   <td >{{ $allCategorieProduit->codeCatPro }}</td>
                   <td >{{ $allCategorieProduit->libelle }}</td>
                   <td >
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allCategorieProduit->idCatPro}}"> Modifier</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allCategorieProduit->idCatPro}}"> Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allCategorieProduit->idCatPro}}"> Modifier</button>
+                    {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allCategorieProduit->idCatPro}}"> Supprimer</button> --}}
                   </td>
                 </tr>
                 <div class="modal fade" id="ModifyBoardModal{{ $allCategorieProduit->idCatPro }}" tabindex="-1" aria-labelledby="ModifyBoardModal{{ $allCategorieProduit->idCatPro }}" aria-hidden="true">
