@@ -143,7 +143,7 @@
                                         <tr>
                                             <td>{{ $dc->produit->libelle }}</td>
                                             <td>{{ $dc->qteCmd }}</td>
-                                            <td>{{ $dc->qteRestante + $det->qteReceptionne }}</td>
+                                            <td>{{ $dc->qteRestante }}</td>
                                             <td>{{ $det->qteReceptionne }}</td>
                                             <td>{{ $det->prixUnit }}</td>
                                         </tr>
@@ -298,11 +298,11 @@
                                         <tr>
                                             <td>{{ $dc->produit->libelle }}</td>
                                             <td>{{ $dc->qteCmd }}</td>
-                                            <td>{{ $dc->qteRestante + $det->qteReceptionne }}</td>
+                                            <td>{{ $dc->qteRestante }}</td>
                                             <td>
                                                 <input type="number" name="details[{{ $i }}][qteReceptionne]"
                                                     class="form-control" min="1"
-                                                    max="{{ $dc->qteRestante + $det->qteReceptionne }}"
+                                                    max="{{ $dc->qteRestante }}"
                                                     value="{{ $det->qteReceptionne }}" required>
                                                 <input type="hidden" name="details[{{ $i }}][idDetailCom]"
                                                     value="{{ $det->idDetailCom }}">
@@ -330,68 +330,88 @@
 
 
     @push('scripts')
-       <script>
+        <script>
             document.getElementById('selectCommande').addEventListener('change', function () {
+
                 const option = this.selectedOptions[0];
                 const reference = option.getAttribute('data-reference');
                 const idCommande = this.value;
 
-                // remplir le champ référence
                 document.getElementById('inputReference').value = reference;
 
-                // charger les détails de la commande
-                if (idCommande) {
-                    fetch(`/receptions/commande-details/${idCommande}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            if (!data.success) {
-                                alert(data.message);
-                                return;
-                            }
+                if (!idCommande) return;
 
-                            const tbody = document.getElementById('detailsTableBody');
-                            tbody.innerHTML = '';
+                fetch(`/receptions/commande-details/${idCommande}`)
+                    .then(res => res.json())
+                    .then(data => {
 
-                            data.details.forEach((d, i) => {
-                                const tr = document.createElement('tr');
-                                tr.innerHTML = `
-                                    <td>${d.produit}</td>
-                                    <td>${d.qteCmd}</td>
-                                    <td class="qteRestanteCell">
-                                        ${d.qteRestante}
-                                    </td>                                   
-                                    <td>
-                                        <input type="number" name="details[${i}][qteReceptionne]" 
-                                            class="form-control qteReceptionneInput" min="1" max="${d.qteRestante}" required>
-                                       
-                                            <input type="hidden" name="details[${i}][iddetailcom]" 
-                                            class="form-control"  value="${d.idDetailCom}" required>
-                                    </td>
-                                    <td><span class="qteRestanteApres">${d.qteRestante}</span></td>
-                                    <td>
-                                        <input type="number" name="details[${i}][prixUnit]" 
-                                            class="form-control" value="${d.prixUnit}" readonly>
-                                    </td>
-                                    <td>
-                                        <input type="hidden" name="details[${i}][idMag]" value="${d.idMag}">
-                                        ${d.idMag}
-                                    </td>
-                                `;
-                                tbody.appendChild(tr);
+                        if (!data.success) {
+                            alert(data.message);
+                            return;
+                        }
 
-                                // Attacher le listener pour mise à jour Qté restante après réception
-                                const input = tr.querySelector('.qteReceptionneInput');
-                                const qteRestanteSpan = tr.querySelector('.qteRestanteApres');
-                                input.addEventListener('input', function() {
-                                    const val = parseInt(this.value || 0);
-                                    const max = parseInt(this.max);
-                                    qteRestanteSpan.textContent = val <= max ? max - val : 0;
-                                });
+                        const tbody = document.getElementById('detailsTableBody');
+                        tbody.innerHTML = '';
+
+                        data.details.forEach((d, i) => {
+
+                            const tr = document.createElement('tr');
+
+                            tr.innerHTML = `
+                                <td>${d.produit}</td>
+                                <td>${d.qteCmd}</td>
+                                <td>${d.qteRestante}</td>
+                                <td>
+                                    <input type="number"
+                                        name="details[${i}][qteReceptionne]"
+                                        class="form-control qteReceptionneInput"
+                                        min="1"
+                                        max="${d.qteRestante}"
+                                        required>
+                                    <input type="hidden"
+                                        name="details[${i}][iddetailcom]"
+                                        value="${d.idDetailCom}">
+                                </td>
+                                <td class="qteRestanteApres">${d.qteRestante}</td>
+                                <td>
+                                    <input type="number"
+                                        name="details[${i}][prixUnit]"
+                                        class="form-control"
+                                        value="${d.prixUnit}" readonly>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="details[${i}][idMag]" value="${d.idMag}">
+                                    ${d.idMag}
+                                </td>
+                            `;
+
+                            tbody.appendChild(tr);
+
+                            const input = tr.querySelector('.qteReceptionneInput');
+                            const restanteCell = tr.querySelector('.qteRestanteApres');
+                            const max = parseInt(d.qteRestante);
+
+                            input.addEventListener('input', function () {
+
+                                let val = parseInt(this.value || 0);
+
+                                if (val > max) {
+                                    alert(`La quantité restante a réceptionné est ${max}, vous ne pouvez donc réceptionner plus de ${max}.`);
+                                    this.value = max;
+                                    val = max;
+                                }
+
+                                if (val < 1) {
+                                    this.value = 1;
+                                    val = 1;
+                                }
+
+                                restanteCell.textContent = max - val;
                             });
                         });
-                }
+                    });
             });
-            
         </script>
+
     @endpush
 @endsection
