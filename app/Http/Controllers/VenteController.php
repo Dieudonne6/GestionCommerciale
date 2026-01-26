@@ -431,9 +431,9 @@ class VenteController extends Controller
                 $vente->montantTotal = intval($totalTTC);
                 $vente->reference = $referenceVente;
                 $vente->statutVente = 1;
-                $vente->IFUClient = intval($IFUClient);
+                $vente->IFUClient = $IFUClient;
                 $vente->nomClient = $nomClient;
-                $vente->telClient = intval($telClient);
+                $vente->telClient = $telClient;
                 $vente->idU = intval($userId);
                 $vente->idE = intval($entrepriseId);
                 $vente->idExercice = intval($idExercice);

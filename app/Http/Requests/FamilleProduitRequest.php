@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class FamilleProduitRequest extends FormRequest
 {
@@ -21,11 +23,29 @@ class FamilleProduitRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        $idFamPro = $this->route('idFamPro');
+
         return [
-            'codeFamille' => 'required|string|min:5|unique:famille_produits,codeFamille',
-            'libelle' => 'required|string|min:5|unique:famille_produits,libelle',
+            'codeFamille' => [
+                'required',
+                'string',
+                'min:5',
+                Rule::unique('famille_produits', 'codeFamille')
+                    ->when($idFamPro, fn ($rule) => $rule->ignore($idFamPro, 'idFamPro')),
+            ],
+
+            'libelle' => [
+                'required',
+                'string',
+                'min:5',
+                Rule::unique('famille_produits', 'libelle')
+                    ->when($idFamPro, fn ($rule) => $rule->ignore($idFamPro, 'idFamPro')),
+            ],
+
             'TVA' => 'nullable',
         ];
+        
 
 
     }

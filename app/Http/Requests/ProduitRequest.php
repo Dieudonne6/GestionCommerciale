@@ -24,12 +24,13 @@ class ProduitRequest extends FormRequest
         $rules = [
             'libelle' => 'required|string|min:5',
             'prix' => 'required|numeric',
-            'desc' => 'required|string|min:10|max:1000',
+            'desc' => 'nullable|string|min:10|max:1000',
             'idCatPro' => 'nullable|integer',
             'idFamPro' => 'required|integer',
-            'idMag' => 'nullable|integer',
-            'stockAlert' => 'nullable|integer|min:0',
-            'stockMinimum' => 'nullable|integer|min:0',
+            'idMag' => 'required|integer',
+            'stockAlert' => 'required|integer|min:0',
+            // 'stockMinimum' => 'required|integer|min:0',
+            'stockMinimum'  => 'required|integer|min:0|lt:stockAlert',
             'qteStocke' => 'nullable|integer|min:0',
             'image' => 'nullable|file|image|mimes:jpg,jpeg,png|max:2048',
         ];
@@ -64,11 +65,14 @@ class ProduitRequest extends FormRequest
             'idMag.required' => 'Le magasin est obligatoire.',
             'idMag.integer' => 'Le magasin doit être un entier valide.',
             
+            'stockAlert.required' => 'Le seuil d\'alerte est obligatoire.',
             'stockAlert.integer' => 'Le seuil d\'alerte doit être un nombre entier.',
             'stockAlert.min' => 'Le seuil d\'alerte doit être supérieur ou égal à 0.',
             
+            'stockMinimum.required' => 'Le stock minimum est obligatoire.',
             'stockMinimum.integer' => 'Le stock minimum doit être un nombre entier.',
             'stockMinimum.min' => 'Le stock minimum doit être supérieur ou égal à 0.',
+            'stockMinimum.lt' => 'Le stock minimum doit être strictement inférieur au seuil d’alerte.',
             
             'qteStocke.required' => 'La quantité est obligatoire.',
             'qteStocke.integer' => 'La quantité doit être un nombre entier.',

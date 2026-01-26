@@ -74,8 +74,8 @@
                   <td >{{ $allFamilleProduit->TVA }}%</td>
                   <td >{{ $allFamilleProduit->TVA == '0' ? 'E' : ($allFamilleProduit->TVA == '18' ? 'B' : '') }}</td>
                   <td >
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allFamilleProduit->idFamPro}}"> Modifier</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allFamilleProduit->idFamPro}}"> Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allFamilleProduit->idFamPro}}"> Modifier</button>
+                    {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allFamilleProduit->idFamPro}}"> Supprimer</button> --}}
                   </td>
                 </tr>
                 <div class="modal fade" id="ModifyBoardModal{{ $allFamilleProduit->idFamPro }}" tabindex="-1" aria-labelledby="ModifyBoardModal{{ $allFamilleProduit->idFamPro }}" aria-hidden="true">
@@ -128,8 +128,11 @@
                               <label for="TVA">TVA</label>
                                 <select class="form-control @error('TVA') is-invalid @enderror" id="TVA_{{ $allFamilleProduit->idFamPro }}" name="TVA" onchange="updateGroupe_{{ $allFamilleProduit->idFamPro }}(this.value)">
                                   <option value="" {{ $allFamilleProduit->TVA == '' ? 'selected' : '' }}>Sélectionner TVA</option>
-                                  <option value="0" {{ $allFamilleProduit->TVA == '0' ? 'selected' : '' }}>0%</option>
+                                  @if ($regimeEntreprise == "TVA")   
                                   <option value="18" {{ $allFamilleProduit->TVA == '18' ? 'selected' : '' }}>18%</option>
+                                  @else
+                                  <option value="0" {{ $allFamilleProduit->TVA == '0' ? 'selected' : '' }}>0%</option>
+                                  @endif
                                 </select>
                                 @error('TVA')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -247,8 +250,11 @@
                       <label for="TVA">TVA</label>
                         <select class="form-control @error('TVA') is-invalid @enderror" id="TVA" name="TVA" onchange="updateGroupe(this.value)">
                           <option value="" {{ old('TVA') == '' ? 'selected' : '' }}>Sélectionner TVA</option>
-                          <option value="0" {{ old('TVA') == '0' ? 'selected' : '' }}>0%</option>
-                          <option value="18" {{ old('TVA') == '18' ? 'selected' : '' }}>18%</option>
+                          @if ($regimeEntreprise == "TVA")   
+                            <option value="18" {{ old('TVA') == '18' ? 'selected' : '' }} selected>18%</option>
+                          @else
+                            <option value="0" {{ old('TVA') == '0' ? 'selected' : '' }} selected>0%</option>
+                          @endif
                         </select>
                         @error('TVA')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -257,7 +263,11 @@
 
                     <div class="mb-2">
                       <label for="groupe">Groupe</label>
-                        <input type="text" class="form-control" id="groupe" name="groupe" value="" readonly>
+                        @if ($regimeEntreprise == "TVA")   
+                          <input type="text" class="form-control" id="groupe" name="groupe" value="B" readonly>
+                        @else
+                          <input type="text" class="form-control" id="groupe" name="groupe" value="E" readonly>
+                        @endif
                     </div>
                 </div>
                 <div class="modal-footer">

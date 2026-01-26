@@ -10,12 +10,22 @@ class FamilleProduitController extends Controller
 {
 
     public function familleProduit(){
+        $user = auth()->user();
+        $userId = $user->idU;
+        $entrepriseId = $user->idE;
+        $entreprise = $user->entreprise;
+        $regimeEntreprise = $entreprise->regime;
+
+        // dd($regimeEntreprise);
+
         $allFamilleProduits = FamilleProduit::get();
-        return view('pages.ProduitStock.familleProduit', compact('allFamilleProduits'));
+        return view('pages.ProduitStock.familleProduit', compact('allFamilleProduits', 'regimeEntreprise'));
     }
 
 
     public function ajouterFamilleProduit( FamilleProduitRequest $request ) {
+
+        // dd($request->all());
 
         $request->validated();
 
@@ -35,6 +45,7 @@ class FamilleProduitController extends Controller
             $FamilleProduit->codeFamille = $request->input('codeFamille');
             $FamilleProduit->libelle = $request->input('libelle');
             $FamilleProduit->TVA = $request->input('TVA');
+            $FamilleProduit->groupe = $request->input('groupe');
             $FamilleProduit->save();
 
             return back()->with("status", "La famille de produit a été creer avec succes");

@@ -280,7 +280,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 let selectedProducts = [];
 
@@ -538,4 +538,4 @@ function showTransfertDetails(idTransMag) {
         });
 }
 </script>
-@endsection
+@endpush
