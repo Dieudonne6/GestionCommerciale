@@ -44,7 +44,7 @@
             <table class="table mb-0 checkbox-all" id="datatable_1">
               <thead class="table-light">
                 <tr>
-                  <th class="text-center">No</th>
+                  <th class="text-center">No.</th>
                   <th class="text-center">Code Categorie</th>
                   <th class="text-center">Libellé</th>
                   <th class="text-center">Actions</th>
