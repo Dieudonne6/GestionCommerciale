@@ -49,103 +49,53 @@ class TransfertMagasinController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'idMagSource' => 'required|different:idMagDestination|exists:magasins,idMag',
-            'idMagDestination' => 'required|exists:magasins,idMag',
-            'dateTransfert' => 'required|date',
+            'idMagSource' => 'required|different:idMagDestination',
+            'idMagDestination' => 'required',
             'produits' => 'required|string',
-            'motif' => 'required|string|max:255'
+            'motif' => 'required'
         ]);
-        
+
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
-            
-            $user = auth()->user();
-            $entrepriseId = $user->idE;
-            
-            // Décoder les produits depuis le JSON
             $produits = json_decode($request->produits, true);
-            
-            if (empty($produits)) {
-                return back()->with('erreur', 'Aucun produit spécifié pour le transfert')->withInput();
-            }
-            
-            // Vérifier que les magasins appartiennent à l'entreprise
-            $magasinSource = Magasin::where('idMag', $request->idMagSource)
-                ->where('idE', $entrepriseId)
-                ->firstOrFail();
-            
-            $magasinDestination = Magasin::where('idMag', $request->idMagDestination)
-                ->where('idE', $entrepriseId)
-                ->firstOrFail();
-            
-            // Créer le transfert
+
             $transfert = TransfertMagasin::create([
                 'dateTransfert' => $request->dateTransfert,
                 'referenceTransfert' => $this->genererReference(),
-                'idMag' => $request->idMagDestination, // Magasin de destination
-                'idMagSource' => $request->idMagSource, // Magasin source
+                'idMag' => $request->idMagDestination,
+                'idMagSource' => $request->idMagSource,
             ]);
-            
-            $totalTransfere = 0;
-            
-            // Traiter chaque produit
-            foreach ($produits as $produitData) {
-                $quantite = $produitData['quantite'];
-                $idPro = $produitData['idPro'];
-                
-                // Vérifier le stock disponible dans le magasin source
-                $stockSource = Stocke::where('idPro', $idPro)
+
+            foreach ($produits as $p) {
+
+                $stock = Stocke::where('idStocke', $p['idStocke'])
                     ->where('idMag', $request->idMagSource)
-                    ->first();
-                
-                if (!$stockSource || $stockSource->qteStocke < $quantite) {
-                    DB::rollBack();
-                    return back()->with('erreur', 'Stock insuffisant pour le produit ID: ' . $idPro . '. Disponible: ' . ($stockSource ? $stockSource->qteStocke : 0) . ', Demandé: ' . $quantite);
-                }
-                
-                // Déduire du stock source
-                $stockSource->qteStocke -= $quantite;
-                $stockSource->save();
-                
-                // Ajouter au stock destination
-                $stockDestination = Stocke::where('idPro', $idPro)
-                    ->where('idMag', $request->idMagDestination)
-                    ->first();
-                
-                if ($stockDestination) {
-                    $stockDestination->qteStocke += $quantite;
-                    $stockDestination->save();
-                } else {
-                    // Créer le stock s'il n'existe pas
-                    Stocke::create([
-                        'idPro' => $idPro,
-                        'idMag' => $request->idMagDestination,
-                        'qteStocke' => $quantite,
-                        'CUMP' => $stockSource->CUMP ?? 0,
-                    ]);
-                }
-                
-                // Créer le détail du transfert
+                    ->firstOrFail();
+
+                //  LE TRANSFERT
+                $stock->idMag = $request->idMagDestination;
+                $stock->save();
+
                 DetailTransfertMagasin::create([
-                    'qteTransferer' => $quantite,
-                    'idPro' => $idPro,
+                    'idStocke' => $stock->idStocke,
+                    'idPro' => $stock->idPro,
+                    'qteTransferer' => $stock->qteStocke, 
                     'idTransMag' => $transfert->idTransMag,
                 ]);
-                
-                $totalTransfere += $quantite;
             }
-            
+
             DB::commit();
-            
+
             return redirect()->route('transferts.index')
-                ->with('status', "Transfert effectué avec succès. Référence: {$transfert->referenceTransfert}. Total produits transférés: $totalTransfere");
-                
+                ->with('status', 'Transfert effectué avec succès');
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('erreur', 'Une erreur est survenue lors du transfert: ' . $e->getMessage())
-                ->withInput();
+            return back()->with('erreur', $e->getMessage());
         }
     }
+
     
     public function show($idTransMag)
     {

@@ -237,7 +237,6 @@
               <tr>
                 <th>Produit</th>
                 <th class="text-center">Stock Disponible</th>
-                <th class="text-center">Quantité à transférer</th>
                 <th class="text-center">Action</th>
               </tr>
             </thead>
@@ -389,111 +388,72 @@ function showProductModal() {
 
 function displayStocksTable(stocks) {
     const tbody = document.getElementById('stocksTableBody');
-    
+
     if (stocks.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Aucun produit disponible dans ce magasin</td></tr>';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="text-center">Aucun stock</td>
+          </tr>`;
         return;
     }
-    
+
     tbody.innerHTML = stocks.map(stock => `
-        <tr>
-            <td>
-                <strong>${stock.libelle}</strong>
-                <div class="stock-info">CUMP: ${stock.CUMP} </div>
-            </td>
-            <td class="text-center">
-                <span class="badge bg-primary">${stock.qteStocke}</span>
-            </td>
-            <td class="text-center">
-                <input type="number" class="form-control form-control-sm" 
-                       id="qty-${stock.idPro}" 
-                       min="1" max="${stock.qteStocke}" 
-                       placeholder="Qté">
-            </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-sm btn-success" 
-                        onclick="addProductToTransfer(${stock.idPro}, '${stock.libelle}', ${stock.qteStocke})">
-                    <i class="fas fa-plus"></i> Ajouter
-                </button>
-            </td>
-        </tr>
+      <tr>
+        <td><strong>${stock.libelle}</strong></td>
+        <td class="text-center">
+          <span class="badge bg-info">${stock.qteStocke}</span>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-success btn-sm"
+            onclick="addProductToTransfer(${stock.idStocke}, '${stock.libelle}')">
+            Transférer
+          </button>
+        </td>
+      </tr>
     `).join('');
 }
 
-function addProductToTransfer(idPro, libelle, stockDisponible) {
-    const quantity = parseInt(document.getElementById(`qty-${idPro}`).value);
-    
-    if (!quantity || quantity <= 0) {
-        alert('Veuillez spécifier une quantité valide.');
+
+function addProductToTransfer(idStocke, libelle) {
+
+    if (selectedProducts.find(p => p.idStocke === idStocke)) {
+        alert('Produit déjà ajouté');
         return;
     }
-    
-    if (quantity > stockDisponible) {
-        alert(`Quantité supérieure au stock disponible (${stockDisponible}).`);
-        return;
-    }
-    
-    // Vérifier si le produit est déjà ajouté
-    if (selectedProducts.find(p => p.idPro === idPro)) {
-        alert('Ce produit est déjà ajouté au transfert.');
-        return;
-    }
-    
+
     selectedProducts.push({
-        idPro: idPro,
-        libelle: libelle,
-        quantite: quantity,
-        stockDisponible: stockDisponible
+        idStocke: idStocke,
+        libelle: libelle
     });
-    
+
     updateProductsList();
-    
-    // Fermer le modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+
+    const modal = bootstrap.Modal.getInstance(
+        document.getElementById('productModal')
+    );
     modal.hide();
-    
-    // Activer le bouton de soumission
+
     document.getElementById('submitBtn').disabled = false;
 }
 
 function updateProductsList() {
     const container = document.getElementById('productsList');
-    
+
     if (selectedProducts.length === 0) {
-        container.innerHTML = `
-            <div class="text-center text-muted py-3" id="emptyMessage">
-                <i class="fas fa-box fa-2x mb-2"></i>
-                <p>Aucun produit ajouté. Cliquez sur "Ajouter un produit" pour commencer.</p>
-            </div>
-        `;
+        container.innerHTML = `<p class="text-muted text-center">Aucun produit</p>`;
         document.getElementById('submitBtn').disabled = true;
         return;
     }
-    
-    container.innerHTML = selectedProducts.map((product, index) => `
-        <div class="product-item">
-            <button type="button" class="btn btn-sm btn-danger remove-product" 
-                    onclick="removeProduct(${index})">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="row">
-                <div class="col-md-6">
-                    <strong>${product.libelle}</strong>
-                    <div class="stock-info">Stock disponible: ${product.stockDisponible}</div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Quantité:</label>
-                    <input type="number" class="form-control" value="${product.quantite}" 
-                           min="1" max="${product.stockDisponible}"
-                           onchange="updateProductQuantity(${index}, this.value)">
-                </div>
-                <div class="col-md-3 d-flex align-items-center">
-                    <span class="badge bg-info">Qté: ${product.quantite}</span>
-                </div>
-            </div>
-        </div>
+
+    container.innerHTML = selectedProducts.map((p, i) => `
+      <div class="product-item">
+        <button class="btn btn-danger btn-sm remove-product"
+          onclick="removeProduct(${i})">✕</button>
+        <strong>${p.libelle}</strong>
+      </div>
     `).join('');
 }
+
 
 function removeProduct(index) {
     selectedProducts.splice(index, 1);

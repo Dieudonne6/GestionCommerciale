@@ -94,7 +94,7 @@
       <h6><i class="fas fa-info-circle"></i> Information</h6>
       <p class="mb-0">
         Ce transfert a été effectué le {{ \Carbon\Carbon::parse($transfert->dateTransfert)->format('d/m/Y à H:i') }}.
-        Les produits ont été déduits du stock source et ajoutés au stock de destination.
+        Les produits ont été retirés du magasin source et enrégistrés dans le magasin de destination.
       </p>
     </div>
   </div>
