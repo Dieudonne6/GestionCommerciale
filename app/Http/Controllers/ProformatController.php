@@ -50,7 +50,7 @@ class ProformatController extends Controller
         $numProforma = $this->genererNumeroProforma();
         $exerciceActif = Exercice::where('statutExercice', 1)->firstOrFail();
         $allProforma = Proforma::where('idExercice', $exerciceActif->idExercice)
-            ->with('client', 'detailVente', 'factureNormalise')
+            ->with('client', 'detailProforma')
             ->get();
 
         $user = auth()->user();
@@ -89,12 +89,19 @@ class ProformatController extends Controller
             ->firstOrFail()
             ->idExercice;
 
-        dd($lignes);
+        // dd($lignes, $nomClient, $telClient, $reference, $dateOperation, $totalHT, $totalTTC);
+
+        if ($regimeEntreprise == 'TPS') {
+            $TotalTVA = 0;
+        } else {
+            $TotalTVA = -(ceil($totalTTC / 1.18) - $totalTTC);
+        }
 
         // Debut de la transaction
         DB::transaction(function () use (
             $dateOperation,
             $totalTTC,
+            $TotalTVA,
             $nomClient,
             $telClient,
             $userId,
@@ -111,6 +118,7 @@ class ProformatController extends Controller
             $proforma = new Proforma();
             $proforma->dateOperation = $dateOperation;
             $proforma->montantTotal = intval($totalTTC);
+            $proforma->TotalTVA = intval($TotalTVA);
             $proforma->reference = $reference;
             $proforma->nomClient = $nomClient;
             $proforma->telClient = $telClient;
@@ -126,22 +134,18 @@ class ProformatController extends Controller
                 DetailProforma::create([
                     'qteProforma' => intval($article['qte']),
                     'prixUnit' => intval($article['prixU']),
-                    'montantHT' => intval($article['montantht']),
+                    'montantHT' => ceil($article['montantht']),
                     'montantTTC' => intval($article['montantttc']),
                     'idPro' => intval($article['idP']),
-                    'idProforma' => $proforma->idV,
+                    'idProforma' => $proforma->idProforma,
                 ]);
             }
 
         });
 
-        if ($regimeEntreprise == 'TPS') {
-            $TotalTVA = 0;
-        } else {
-            $TotalTVA = -(ceil($totalTTC / 1.18) - $totalTTC);
-        }
 
-        return view('pages.Facturation.facturevente', [
+
+        return view('pages.Fournisseur&Achat.test', [
             // 'fileNameqrcode' => $fileNameqrcode,
             'reference' => $reference,
             'nomcompletClient' => $nomClient,
@@ -151,6 +155,7 @@ class ProformatController extends Controller
             'regime' => $regimeEntreprise,
             'montanttotal' => $totalTTC,
             'TotalTVA' => $TotalTVA,
+            'TotalHT' => ceil($totalTTC - $TotalTVA),
             'dateOperation' => $dateOperation,
             'nomEntreprise' => $nomEntreprise,
             'adresseEntreprise' => $adresseEntreprise,
@@ -160,4 +165,54 @@ class ProformatController extends Controller
         ]);
 
    } 
+
+   public function deleteProforma(Request $request, $idProforma) {
+
+        Proforma::where('idProforma', $idProforma)->delete();
+
+        return back()->with('status', "Le proforma a été supprimé avec success.");
+
+   }
+
+   public function duplicataproformat($idProforma) {
+
+        $infoProforma = Proforma::where('idProforma', $idProforma)
+        ->with('detailProforma')
+        ->first();
+
+        $user = auth()->user();
+        $userId = $user->idU;
+        $entrepriseId = $user->idE;
+        $entreprise = $user->entreprise;
+        $ifuEntreprise = $entreprise->IFU;
+        $tokenEntreprise = $entreprise->token;
+        $regimeEntreprise = $entreprise->regime;
+        $nomEntreprise = $entreprise->nom;
+        $telEntreprise = $entreprise->telephone;
+        $adresseEntreprise = $entreprise->adresse;
+        $mailEntreprise = $entreprise->mail;
+        $logoUrl = $entreprise->logo;
+        $lignes = $infoProforma->detailProforma;
+
+        return view('pages.Fournisseur&Achat.test', [
+            // 'fileNameqrcode' => $fileNameqrcode,
+            'reference' => $infoProforma->reference,
+            'nomcompletClient' => $infoProforma->nomClient,
+            'telClient' => $infoProforma->telClient,
+            'logoUrl' => $logoUrl,
+            'lignes' => $lignes,
+            'regime' => $regimeEntreprise,
+            'montanttotal' => $infoProforma->montantTotal,
+            'TotalTVA' => $infoProforma->TotalTVA,
+            'TotalHT' => ceil(($infoProforma->montantTotal) - ($infoProforma->TotalTVA)),
+            'dateOperation' => $infoProforma->dateOperation,
+            'nomEntreprise' => $nomEntreprise,
+            'adresseEntreprise' => $adresseEntreprise,
+            'telEntreprise' => $telEntreprise,
+            'mailEntreprise' => $mailEntreprise,
+            'IFUEntreprise' => $ifuEntreprise,
+        ]);
+
+        // dd($idProforma);
+   }
 }

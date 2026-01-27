@@ -101,12 +101,37 @@
                             <i class="iconoir-wallet menu-icon"></i>
                             <span>Ventes & Factures</span>
                         </a>
-                        <div class="collapse" id="menuVentes">
-                            <ul class="nav flex-column">
+                        {{-- <div class="collapse" id="menuVentes"> --}}
+                            {{-- <ul class="nav flex-column">
                                 <li class="nav-item"><a class="nav-link" href="{{ url('ventes') }}">Ventes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('facturation') }}">Liste des Factures</a></li>
-                                 <li class="nav-item"><a class="nav-link" href="{{ url('proformat') }}">Facture Pro Format</a></li>
+                            </ul> --}}
+
+                            <div class="collapse"
+                                 id="menuVentes">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link {{ Route::is('ventes', 'ajouterVente.store') ? 'active' : '' }}"
+                                    href="{{ url('ventes') }}">
+                                        Ventes
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link {{ Route::is('facturation', 'duplicatafacture') ? 'active' : '' }}"
+                                    href="{{ url('facturation') }}">
+                                        Liste des Factures
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link {{ Route::is('ajouterproforma', 'proforma', 'duplicataproforma') ? 'active' : '' }}"
+                                    href="{{ url('proforma') }}">
+                                        Proforma
+                                    </a>
+                                </li>
                             </ul>
+
                         </div>
                     </li>
 

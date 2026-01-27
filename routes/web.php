@@ -312,9 +312,10 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/get-produit-info/{id}', [VenteController::class, 'getProduitInfo']);
      Route::get('duplicatafacture/{id}', [VenteController::class, 'duplicatafacture'])->name('duplicatafacture');
 
-     Route::get('proformat', [ProformatController::class, 'index'])->name('proformat');
-     Route::post('ajouterproformat', [ProformatController::class, 'storeProforma'])->name('storeProforma');
-     Route::post('/deleteproformat/{idProforma}', [ProformatController::class, 'deleteProforma'])->name('deleteproforma');
+     Route::get('proforma', [ProformatController::class, 'index'])->name('proformat');
+     Route::get('duplicataproforma/{idProforma}', [ProformatController::class, 'duplicataproformat'])->name('duplicataproforma');
+     Route::post('ajouterproforma', [ProformatController::class, 'storeProforma'])->name('storeProforma');
+     Route::post('/deleteproforma/{idProforma}', [ProformatController::class, 'deleteProforma'])->name('deleteProforma');
 
      // Produits
      Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);

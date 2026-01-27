@@ -11,8 +11,21 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="card-title">Liste des factures Pro Formats</h4><br>
+                            <h4 class="card-title">Liste des factures Proformat</h4><br>
                         </div>
+                        @if (Session::has('status'))
+                            <br>
+                            <div class="alert alert-success alert-dismissible">
+                            {{Session::get('status')}}
+                            </div>
+                            @endif
+
+                            @if (Session::has('erreur'))
+                            <br>
+                            <div class="alert alert-danger alert-dismissible">
+                            {{Session::get('erreur')}}
+                            </div>
+                        @endif
                         <div class="col-auto">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoaModal">
                                 <i class="fa-solid fa-plus me-1"></i> Créer une facture pro format
@@ -40,13 +53,18 @@
                                             <td>{{ $proforma->reference }}</td>
                                             <td>{{ $proforma->nomClient ?: ($proforma->client ? $proforma->client->identiteCl : 'Non défini') }}</td>
                                             <td>{{ $proforma->dateOperation }}</td>
-                                            <td>{{ $proforma->montantTotal }}</td>
+                                            <td>{{ number_format($proforma->montantTotal  , 0, ',', '.') }}</td>
                                             <td>
                                                 {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#ModifyBoardModal{{ $vente->idV }}"> Modifier</button> --}}
                                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteBoardModal{{ $proforma->idV }}">
+                                                    data-bs-target="#deleteBoardModal{{ $proforma->idProforma }}">
                                                     Supprimer</button>
+
+                                                    <a href=" {{ route('duplicataproforma', $proforma->idProforma) }} " class="btn btn-secondary" >Imprimer</a>
+                                                {{-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteBoardModal{{ $proforma->idProforma }}">
+                                                    Imprimer</button> --}}
                                             </td>
                                         </tr>
 
@@ -94,7 +112,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Créer une facture pro format</h5>
+                    <h5 class="modal-title">Créer une facture Proforma</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
