@@ -1,5 +1,12 @@
 @extends('layouts.master')
 @section('content')
+
+    <style>
+        .hidden{
+            display: none;
+        }
+    </style>
+
     <div class="container-xxl">
         <div class="row">
             <div class="col-12">
@@ -47,7 +54,7 @@
                                                     data-bs-target="#detailReceptionModal{{ $rec->idRecep }}" title="Détails">
                                                     <i class="fa-solid fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
+                                                <button class="btn btn-sm btn-primary me-1 hidden" data-bs-toggle="modal"
                                                     data-bs-target="#editReceptionModal{{ $rec->idRecep }}" title="Modifier"
                                                     {{ $rec->statutRecep === 'complète' ? 'disabled' : '' }}>
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -365,7 +372,7 @@
                                     <input type="number"
                                         name="details[${i}][qteReceptionne]"
                                         class="form-control qteReceptionneInput"
-                                        min="1"
+                                        min="0"
                                         max="${d.qteRestante}"
                                         required>
                                     <input type="hidden"

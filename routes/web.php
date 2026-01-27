@@ -26,6 +26,7 @@ use App\Http\Controllers\InventaireController;
 use App\Http\Controllers\FermetureController;
 use App\Http\Controllers\ProduitStockController;
 use App\Http\Controllers\TransfertMagasinController;
+use App\Http\Controllers\ProformatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -310,6 +311,8 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/get-nouvelle-reference', [VenteController::class, 'getNouvelleReference']);
      Route::get('/get-produit-info/{id}', [VenteController::class, 'getProduitInfo']);
      Route::get('duplicatafacture/{id}', [VenteController::class, 'duplicatafacture'])->name('duplicatafacture');
+
+     Route::get('proformat', [ProformatController::class, 'index'])->name('proformat');
 
      // Produits
      Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);

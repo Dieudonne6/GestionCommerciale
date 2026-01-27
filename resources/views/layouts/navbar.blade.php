@@ -105,6 +105,7 @@
                             <ul class="nav flex-column">
                                 <li class="nav-item"><a class="nav-link" href="{{ url('ventes') }}">Ventes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('facturation') }}">Liste des Factures</a></li>
+                                 <li class="nav-item"><a class="nav-link" href="{{ url('proformat') }}">Facture Pro Format</a></li>
                             </ul>
                         </div>
                     </li>

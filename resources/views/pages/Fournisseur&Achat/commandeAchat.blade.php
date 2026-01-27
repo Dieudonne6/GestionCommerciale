@@ -1,5 +1,10 @@
 @extends('layouts.master')
 @section('content')
+<style>
+    .tva{
+        display: none;
+    }
+</style>
     <div class="container-xxl">
         <div class="row">
             <div class="col-12">
@@ -126,7 +131,7 @@
                                     <th>Produit</th>
                                     <th>Quantité</th>
                                     <th>Montant HT</th>
-                                    <th>tva (%)</th>
+                                    <th class="tva">tva (%)</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -205,7 +210,7 @@
                                         <th>Produit</th>
                                         <th>Quantité</th>
                                         <th>Montant HT</th>
-                                        <th>tva (%)</th>
+                                        <th  class="tva">tva (%)</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -224,7 +229,7 @@
                                                 <input type="hidden" name="lignes[{{ $index }}][idMag]" value="{{ $l->idMag }}">
                                             </td>
 
-                                            <td>
+                                            <td >
                                                 <select name="lignes[{{ $index }}][idPro]" class="form-select produit-select" onchange="gettva(this)">
                                                     <option value="{{ $l->idPro }}" data-tva="{{ $tvaValeur }}" selected>
                                                         {{ $l->produit?->libelle ?? 'Produit supprimé' }}
@@ -240,7 +245,7 @@
                                                 <input type="number" name="lignes[{{ $index }}][montantHT]" class="form-control" value="{{ $l->montantHT }}">
                                             </td>
 
-                                            <td>
+                                            <td  class="tva">
                                                 <input type="number" name="lignes[{{ $index }}][tva]" class="form-control" value="{{ $tvaValeur }}" readonly>
                                             </td>
 
@@ -367,7 +372,7 @@
                         class="form-control" min="0" step="0.01" required onchange="updateTotaux()">
                 </td>
 
-                <td>
+                <td  class="tva">
                     <input type="number" name="lignes[${nextIndex}][tva]" 
                         class="form-control" readonly>
                 </td>
