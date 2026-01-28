@@ -28,7 +28,7 @@
                 <div class="card">
                     <div class="card-header text-center position-relative">
                         <h4 class="mb-0">
-                            <strong>Facture Pro Forma N° NFPF-002</strong>
+                            <strong>Facture Pro Forma N° {{ $reference }} </strong>
                         </h4>
                         <button class="btn btn-secondary btn-sm no-print position-absolute end-0 top-50 translate-middle-y me-2"
                                 onclick="window.print()">
@@ -42,24 +42,24 @@
                                 <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="max-width:80px;">
                             </div>
                             <div class="col-9 text-end">
-                                <strong>MA BOUTIQUE</strong><br>
-                                Email : boutique@email.com<br>
-                                Tél : +229 90 00 00 00<br>
-                                Adresse : Cotonou, Bénin
+                                <strong> {{ $nomEntreprise }} </strong><br>
+                                Email : {{ $mailEntreprise }} <br>
+                                Tél : {{ $telEntreprise }} <br>
+                                Adresse : {{ $adresseEntreprise }}
                             </div>
                         </div>
 
                         <hr class="my-2">
 
                         <div class="mb-1 text-end">
-                            <strong>{{ now()->format('d/m/Y H:i') }}</strong>
+                            <strong>{{ $dateOperation }}</strong>
                         </div>
 
                         <!-- Infos facture -->
                         <div class="row mb-3">
                             <div class="col-md-6 ">
-                                <p> <strong>Client :</strong> Client Test</p>
-                                <p> <strong>Contact :</strong> 01 23 45 67</p>
+                                <p> <strong>Client :</strong> {{ $nomcompletClient }} </p>
+                                <p> <strong>Contact :</strong> {{ $telClient }} </p>
                             </div>
                         </div>
 
@@ -76,20 +76,15 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            @foreach ($lignes as $ligne)    
                                 <tr>
-                                    <td>Produit A</td>
-                                    <td class="text-center">2</td>
-                                    <td class="text-end">10 000</td>
-                                    <td class="text-end">20 000</td>
-                                    <td class="text-end">23 600</td>
+                                    <td> {{ $ligne['libelle'] }} </td>
+                                    <td class="text-center">{{ $ligne['qte'] }}</td>
+                                    <td class="text-end"> {{ number_format($ligne['prixU']  , 0, ',', '.') }} </td>
+                                    <td class="text-end"> {{ number_format(ceil($ligne['montantht'])  , 0, ',', '.') }} </td>
+                                    <td class="text-end"> {{ number_format($ligne['montantttc']  , 0, ',', '.') }} </td>
                                 </tr>
-                                <tr>
-                                    <td>Produit B</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-end">50 000</td>
-                                    <td class="text-end">50 000</td>
-                                    <td class="text-end">59 000</td>
-                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
 
@@ -99,15 +94,15 @@
                                 <table class="table">
                                     <tr>
                                         <th>Total HT</th>
-                                        <td class="text-end">70 000</td>
+                                        <td class="text-end"> {{ number_format($TotalHT  , 0, ',', '.') }} </td>
                                     </tr>
                                     <tr>
                                         <th>Total TVA</th>
-                                        <td class="text-end">70 000</td>
+                                        <td class="text-end"> {{ number_format($TotalTVA  , 0, ',', '.') }} </td>
                                     </tr>
                                     <tr>
                                         <th>Total TTC</th>
-                                        <td class="text-end fw-bold">82 600</td>
+                                        <td class="text-end fw-bold"> {{ number_format($montanttotal  , 0, ',', '.') }} </td>
                                     </tr>
                                 </table>
                             </div>

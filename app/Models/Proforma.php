@@ -16,6 +16,9 @@ class Proforma extends Model
     protected $fillable = [
         'dateOperation',
         'reference',
+        'nomClient',
+        'telClient',
+        'montantTotal',
         'idC',
         'idExercice',
     ];
