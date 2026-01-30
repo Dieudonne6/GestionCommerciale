@@ -165,10 +165,11 @@
                 <!-- Sélection de la Famille -->
                 <div class="col-md-6 form-group">
                   <label for="idFamPro">Famille Produit</label>
-                  <select id="idFamPro" name="idFamPro" class="form-control @error('idFamPro') is-invalid @enderror">
-                    <option value="0" selected>Aucune</option>
+                  <select id="idFamPro" name="idFamPro" class="familleSelectModify form-control @error('idFamPro') is-invalid @enderror">
+                    <option value="0" data-coef="" selected>Aucune</option>
                     @foreach ($allFamilleProduits as $allFamilleProduit)
-                      <option value="{{ $allFamilleProduit->idFamPro }}" 
+                      <option value="{{ $allFamilleProduit->idFamPro }}"                               
+                        data-coef="{{ $allFamilleProduit->coeff }}"
                         {{ $allProduit->idFamPro == $allFamilleProduit->idFamPro ? 'selected' : '' }}>
                         {{ $allFamilleProduit->libelle }}
                       </option>
@@ -197,55 +198,58 @@
               </div>
             </div>
 
-            {{-- <div class="mb-2">
-              <label for="qteStocke">Quantité en Stock</label>
-              <input type="number" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ optional($allProduit->stocke)->qteStocke ?? 0 }}">
-              @error('qteStocke')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div> --}}
-
-            {{-- <div class="row mb-2">
+            <!-- Radio (modification) : name unique par produit -->
+            <div class="row mb-2">
               <div class="col-md-12">
                 <label class="form-label">Mode de fixation du prix</label>
 
-
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="price_mode" id="priceManualModify" value="manualModify" checked>
-                  <label class="form-check-label" for="priceManualModify">
+                  <input id="priceManualModify_{{ $allProduit->idPro }}" class="form-check-input priceManualModify" type="radio"
+                        name="price_mode_{{ $allProduit->idPro }}" value="manual" checked>
+                  <label for="priceManualModify_{{ $allProduit->idPro }}" class="form-check-label">
                     Fixer manuellement le prix de vente
                   </label>
                 </div>
 
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="price_mode" id="priceAutoModify" value="autoModify">
-                  <label class="form-check-label" for="priceAutoModify">
+                  <input id="priceAutoModify_{{ $allProduit->idPro }}" class="form-check-input priceAutoModify" type="radio"
+                        name="price_mode_{{ $allProduit->idPro }}" value="auto">
+                  <label for="priceAutoModify_{{ $allProduit->idPro }}" class="form-check-label">
                     Prix de vente dynamique en fonction du prix d'achat et de la marge
                   </label>
                 </div>
-
               </div>
-            </div> --}}
+            </div>
 
-            {{-- <div class="row mb-2" id="autoPriceFieldsModify">
+            <!-- Champs auto (avec classes, non-unique names ok si inputs dans modal) -->
+            <div class="row mb-2 autoPriceFieldsModify" style="display:none;">
               <div class="col-md-6 form-group">
-                <label for="prixAchatModify">Prix d'achat théorique</label>
-                <input type="number" step="0.01" class="form-control" id="prixAchatModify" name="prixAchat" value="{{ $allProduit->prixAchatTheorique }}">
+                <label>Prix d'achat théorique</label>
+                <input type="number" step="0.01" class="form-control prixAchatModify" name="prixAchat"
+                      value="{{ $allProduit->prixAchatTheorique ?? '' }}">
               </div>
 
               <div class="col-md-6 form-group">
-                <label for="margeModify">Marge (%)</label>
-                <input type="number" step="0.01" class="form-control" id="margeModify" name="marge" value="{{ $allProduit->marge }}">
+                <label>Marge (%)</label>
+                <input type="number" step="0.01" class="form-control margeModify" name="marge"
+                      value="{{ $allProduit->marge ?? ''}}">
               </div>
-            </div> --}}
-            
+            </div>
+
+            <!-- Prix (utiliser une classe pour ciblage) -->
             <div class="mb-2">
+              <label>Prix</label>
+              <input type="number" class="form-control prixAddModify" name="prix" value="{{ $allProduit->prix }}">
+            </div>
+
+            
+            {{-- <div class="mb-2">
               <label for="prix">Prix</label>
               <input type="number" class="form-control @error('prix') is-invalid @enderror" id="prixAddModify" name="prix" value="{{ $allProduit->prix }}">
               @error('prix')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
-            </div>
+            </div> --}}
 
             <div class="mb-2">
               <label for="desc">Description</label>
@@ -349,13 +353,18 @@
               <div class="col-md-6 form-group">
                 <label for="idFamProAdd">Famille Produit</label>
                 <select id="idFamProAdd" name="idFamPro" class="form-control @error('idFamPro') is-invalid  @enderror">
-                  <option value="" >Aucune</option>
-                  @foreach ($allFamilleProduits as $allFamilleProduit)
-                    <option value="{{ $allFamilleProduit->idFamPro }}">
-                      {{ $allFamilleProduit->libelle }}
-                    </option>
-                  @endforeach
+                    <option value="" data-coef="">Aucune</option>
+
+                    @foreach ($allFamilleProduits as $famille)
+                        <option 
+                            value="{{ $famille->idFamPro }}"
+                            data-coef="{{ $famille->coeff }}"
+                        >
+                            {{ $famille->libelle }}
+                        </option>
+                    @endforeach
                 </select>
+
                 @error('idFamPro')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -425,7 +434,7 @@
 
               <div class="col-md-6 form-group">
                 <label for="marge">Marge (%)</label>
-                <input type="number" step="0.01" class="form-control" id="marge" value="40" name="marge">
+                <input type="number" step="0.01" class="form-control" id="marge"  name="marge">
               </div>
             </div>
 
@@ -482,50 +491,149 @@
   
   @endsection
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const familleSelect = document.getElementById('idFamProAdd');
+    const margeInput = document.getElementById('marge');
+    const priceAutoRadio = document.getElementById('priceAuto');
+    const prixAchat = document.getElementById('prixAchat');
+    const prixVente = document.getElementById('prixAdd');
+
+    function recalculerPrix() {
+        if (!priceAutoRadio.checked) return;
+
+        const achat = parseFloat(prixAchat.value) || 0;
+        const taux = parseFloat(margeInput.value) || 0;
+
+        const prix = Math.ceil(achat + (achat * taux / 100));
+        prixVente.value = prix;
+    }
+
+    familleSelect.addEventListener('change', function () {
+
+        const selectedOption = this.options[this.selectedIndex];
+        const coef = selectedOption.dataset.coef;
+
+        // reset marge
+        margeInput.value = 0;
+
+        if (coef !== undefined && coef !== '') {
+            margeInput.value = coef;
+        }
+
+        // 🔥 recalcul automatique du prix
+        recalculerPrix();
+    });
+
+});
+</script>
+
+
+
+
 <script>
 
 
-// pour la modification
+  // pour la modification
+
+
+
+  // pour la modification
   document.addEventListener('DOMContentLoaded', function () {
 
-    const priceAutoModify = document.getElementById('priceAutoModify');
-    const priceManualModify = document.getElementById('priceManualModify');
-    const autoFieldsModify = document.getElementById('autoPriceFieldsModify');
+ // Sélectionne toutes les modales de modification qui ont un id commençant par ModifyBoardModal
+  document.querySelectorAll('div.modal[id^="ModifyBoardModal"]').forEach(modalEl => {
+    // Bootstrap: écoute l'événement d'ouverture de la modale
+    modalEl.addEventListener('shown.bs.modal', function (event) {
 
-    const prixVenteModify = document.getElementById('prixAddModify');
-    const prixAchatModify = document.getElementById('prixAchatModify');
-    const margeModify = document.getElementById('margeModify');
+      // éléments dans la modale courante
+      const priceAuto = modalEl.querySelector('.priceAutoModify');
+      const priceManual = modalEl.querySelector('.priceManualModify');
+      const autoFields = modalEl.querySelector('.autoPriceFieldsModify');
+      const prixVente = modalEl.querySelector('.prixAddModify');
+      const prixAchat = modalEl.querySelector('.prixAchatModify');
+      const marge = modalEl.querySelector('.margeModify');
+      const familleSelect = modalEl.querySelector('.familleSelectModify');
 
-    // état initial
-    autoFieldsModify.style.display = 'none';
-    prixVenteModify.removeAttribute('readonly');
 
-    priceAutoModify.addEventListener('change', function () {
-      if (this.checked) {
-        autoFieldsModify.style.display = 'flex';
-        prixVenteModify.setAttribute('readonly', true);
-        calculerPrixVenteModify();
+
+
+      // Défaut : si éléments introuvables, on sort
+      if (!prixVente || (!priceAuto && !priceManual)) {
+        return;
       }
+
+      // initialisation de l'état selon radio (si auto est coché)
+      function initState() {
+        // si priceAuto existe et est checked -> mode auto
+        if (priceAuto && priceAuto.checked) {
+          if (autoFields) autoFields.style.display = 'flex';
+          prixVente.setAttribute('readonly', true);
+          recalc();
+        } else {
+          if (autoFields) autoFields.style.display = 'none';
+          prixVente.removeAttribute('readonly');
+        }
+      }
+
+      // calcul prix de vente si besoin
+      function recalc() {
+        if (!prixAchat || !marge || !prixVente) return;
+        const achat = parseFloat(prixAchat.value) || 0;
+        const taux = parseFloat(marge.value) || 0;
+        const prix =  Math.ceil(achat + (achat * taux / 100));
+        prixVente.value = prix ? prix : '';
+      }
+
+      // attacher listeners
+      if (priceAuto) {
+        priceAuto.addEventListener('change', function () {
+          if (this.checked) {
+            if (autoFields) autoFields.style.display = 'flex';
+            prixVente.setAttribute('readonly', true);
+            recalc();
+          }
+        });
+      }
+
+      if (priceManual) {
+        priceManual.addEventListener('change', function () {
+          if (this.checked) {
+            if (autoFields) autoFields.style.display = 'none';
+            prixVente.removeAttribute('readonly');
+          }
+        });
+      }
+
+
+      if (familleSelect) {
+        familleSelect.addEventListener('change', function () {
+
+          const selectedOption = this.options[this.selectedIndex];
+          const coef = selectedOption.dataset.coef;
+
+          if (coef !== undefined && coef !== '') {
+            marge.value = coef;
+          } else {
+            marge.value = 0;
+          }
+
+          recalc(); // 🔥 recalcul immédiat
+        });
+      }
+
+      if (prixAchat) prixAchat.addEventListener('input', recalc);
+      if (marge) marge.addEventListener('input', recalc);
+
+      // initial state on show
+      initState();
     });
 
-    priceManualModify.addEventListener('change', function () {
-      if (this.checked) {
-        autoFieldsModify.style.display = 'none';
-        prixVenteModify.removeAttribute('readonly');
-        prixVenteModify.value = '';
-      }
-    });
+    // Optionnel: on hide, detach handlers if tu veux éviter doublons — sinon ok car elements détruits/reattachés
+  });
 
-    function calculerPrixVenteModify() {
-      const achatModify = parseFloat(prixAchatModify.value) || 0;
-      const tauxModify = parseFloat(margeModify.value) || 0;
-
-      const prixModify = achatModify + (achatModify * tauxModify / 100);
-      prixVenteModify.value = prixModify.toFixed(2);
-    }
-
-    prixAchatModify.addEventListener('input', calculerPrixVenteModify);
-    margeModify.addEventListener('input', calculerPrixVenteModify);
 
   });
 
@@ -567,8 +675,8 @@
       const achat = parseFloat(prixAchat.value) || 0;
       const taux = parseFloat(marge.value) || 0;
 
-      const prix = achat + (achat * taux / 100);
-      prixVente.value = prix.toFixed(2);
+      const prix =  Math.ceil(achat + (achat * taux / 100));
+      prixVente.value = prix;
     }
 
     prixAchat.addEventListener('input', calculerPrixVente);

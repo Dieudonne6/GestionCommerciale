@@ -90,6 +90,8 @@ public function ajouterProduit(ProduitRequest $request)
             $modifProduit->libelle = $request->input('libelle');
             $modifProduit->idCatPro = $request->input('idCatPro');
             $modifProduit->idFamPro = $request->input('idFamPro');
+            $modifProduit->prixAchatTheorique = $request->input('prixAchat');
+            $modifProduit->marge = $request->input('marge');
             $modifProduit->prix = $request->input('prix');
             $modifProduit->desc = $request->input('desc');
             $modifProduit->stockAlert = $request->input('stockAlert');
