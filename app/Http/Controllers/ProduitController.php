@@ -44,7 +44,9 @@ public function ajouterProduit(ProduitRequest $request)
         $Produit->idFamPro = $request->input('idFamPro') ;
         /* $Produit->idMag = $request->input('idMag'); */
         $Produit->prix = $request->input('prix');
-        $Produit->desc = $request->input('desc');
+        $Produit->prix = $request->input('prix');
+        $Produit->prixAchatTheorique = $request->input('prixAchat');
+        $Produit->marge = $request->input('marge');
         $Produit->stockAlert = $request->input('stockAlert');
         $Produit->stockMinimum = $request->input('stockMinimum');
         $imageContent = file_get_contents($request->file('image')->getRealPath());

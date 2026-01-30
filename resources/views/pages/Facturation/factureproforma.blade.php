@@ -52,7 +52,9 @@
                         <hr class="my-2">
                         
                         <div class="mb-1 text-end">
-                            <strong>{{ $dateOperation }}</strong>
+                            <strong>    
+                                {{ \Carbon\Carbon::parse($dateOperation)->format('d/m/Y') }}
+                            </strong>                        
                         </div>
 
                         <!-- Infos facture -->
@@ -71,8 +73,12 @@
                                     <th>Article</th>
                                     <th class="text-center">Qté</th>
                                     <th class="text-end">Prix Unitaire</th>
-                                    <th class="text-end">Montant HT</th>
-                                    <th class="text-end">Montant TTC</th>
+                                    @if ($regime == 'TVA')
+                                        <th class="text-end">Montant HT</th>
+                                        <th class="text-end">Montant TTC</th>
+                                    @else
+                                        <th class="text-end">Montant</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,9 +87,13 @@
                                     <td> {{ $ligne['libelle'] }} </td>
                                     <td class="text-center">{{ $ligne['qte'] }}</td>
                                     <td class="text-end"> {{ number_format($ligne['prixU']  , 0, ',', '.') }} </td>
-                                    <td class="text-end"> {{ number_format(ceil($ligne['montantht'])  , 0, ',', '.') }} </td>
-                                    <td class="text-end"> {{ number_format($ligne['montantttc']  , 0, ',', '.') }} </td>
-                                </tr>
+                                    @if ($regime == 'TVA')
+                                        <td class="text-end"> {{ number_format(ceil($ligne['montantht'])  , 0, ',', '.') }} </td>
+                                        <td class="text-end"> {{ number_format($ligne['montantttc']  , 0, ',', '.') }} </td>
+                                    @else
+                                        <td class="text-end"> {{ number_format($ligne['montantttc']  , 0, ',', '.') }} </td>
+                                    @endif
+                                    </tr>
                             @endforeach
                             </tbody>
                         </table>
@@ -91,20 +101,32 @@
                         <!-- Totaux -->
                         <div class="row justify-content-end mt-3">
                             <div class="col-md-4">
-                                <table class="table">
-                                    <tr>
-                                        <th>Total HT</th>
-                                        <td class="text-end"> {{ number_format($TotalHT  , 0, ',', '.') }} </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total TVA</th>
-                                        <td class="text-end"> {{ number_format($TotalTVA  , 0, ',', '.') }} </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total TTC</th>
-                                        <td class="text-end fw-bold"> {{ number_format($montanttotal  , 0, ',', '.') }} </td>
-                                    </tr>
-                                </table>
+                                @if ($regime == 'TVA')
+                                    <table class="table">
+
+                                        
+
+                                        <tr>
+                                            <th>Total HT</th>
+                                            <td class="text-end"> {{ number_format($TotalHT  , 0, ',', '.') }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total TVA</th>
+                                            <td class="text-end"> {{ number_format($TotalTVA  , 0, ',', '.') }} </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total TTC</th>
+                                            <td class="text-end fw-bold"> {{ number_format($montanttotal  , 0, ',', '.') }} </td>
+                                        </tr>
+                                    </table>
+                                @else
+                                    <table class="table">
+                                        <tr>
+                                            <th>Total</th>
+                                            <td class="text-end"> {{ number_format($montanttotal  , 0, ',', '.') }} </td>
+                                        </tr>
+                                    </table>
+                                @endif
                             </div>
                         </div>
 

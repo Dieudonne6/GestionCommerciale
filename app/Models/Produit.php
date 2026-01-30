@@ -24,6 +24,8 @@ class Produit extends Model
     protected $fillable = [
         'libelle',
         'prix',
+        'marge',
+        'prixAchatTheorique',
         'desc',
         'image',
         'stockAlert',

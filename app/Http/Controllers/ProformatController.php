@@ -145,7 +145,7 @@ class ProformatController extends Controller
 
 
 
-        return view('pages.Fournisseur&Achat.test', [
+        return view('pages.Facturation.factureproforma', [
             // 'fileNameqrcode' => $fileNameqrcode,
             'reference' => $reference,
             'nomcompletClient' => $nomClient,
@@ -194,7 +194,7 @@ class ProformatController extends Controller
         $logoUrl = $entreprise->logo;
         $lignes = $infoProforma->detailProforma;
 
-        return view('pages.Fournisseur&Achat.test', [
+        return view('pages.Facturation.duplicataproforma', [
             // 'fileNameqrcode' => $fileNameqrcode,
             'reference' => $infoProforma->reference,
             'nomcompletClient' => $infoProforma->nomClient,

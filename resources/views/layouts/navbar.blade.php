@@ -107,7 +107,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ url('facturation') }}">Liste des Factures</a></li>
                             </ul> --}}
 
-                            <div class="collapse"
+                            <div class="collapse {{ Route::is('ventes', 'ajouterVente.store', 'facturation', 'duplicatafacture', 'storeProforma', 'proformat', 'duplicataproforma') ? 'show' : '' }}"
                                  id="menuVentes">
                             <ul class="nav flex-column">
                                 <li class="nav-item">
@@ -125,7 +125,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link {{ Route::is('ajouterproforma', 'proforma', 'duplicataproforma') ? 'active' : '' }}"
+                                    <a class="nav-link {{ Route::is('storeProforma', 'proformat', 'duplicataproforma') ? 'active' : '' }}"
                                     href="{{ url('proforma') }}">
                                         Proforma
                                     </a>
