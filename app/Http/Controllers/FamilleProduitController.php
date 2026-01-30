@@ -46,6 +46,7 @@ class FamilleProduitController extends Controller
             $FamilleProduit->libelle = $request->input('libelle');
             $FamilleProduit->TVA = $request->input('TVA');
             $FamilleProduit->groupe = $request->input('groupe');
+            $FamilleProduit->coeff = $request->input('coeff');
             $FamilleProduit->save();
 
             return back()->with("status", "La famille de produit a été creer avec succes");
@@ -81,6 +82,7 @@ class FamilleProduitController extends Controller
             $modifFamilleProduit->codeFamille = $request->input('codeFamille');
             $modifFamilleProduit->libelle = $request->input('libelle');
             $modifFamilleProduit->TVA = $request->input('TVA');
+            $modifFamilleProduit->coeff = $request->input('coeff');
             $modifFamilleProduit->update();  
             return back()->with("status", "La famille de produit a été modifier avec succes");
 

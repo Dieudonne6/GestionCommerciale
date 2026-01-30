@@ -7,10 +7,10 @@
                 display: none !important;
             }
 
-            @page {
-                size: A5;
+            /* @page {
+                size: A5 landscape;
                 margin: 10mm;
-            }
+            } */
 
             body {
                 font-size: 12px;
@@ -50,7 +50,7 @@
                         </div>
 
                         <hr class="my-2">
-                        
+
                         <div class="mb-1 text-end">
                             <strong>    
                                 {{ \Carbon\Carbon::parse($dateOperation)->format('d/m/Y') }}
@@ -131,7 +131,7 @@
                         </div>
 
                         <!-- Mention -->
-                        <div class="mt-4 text-center text-muted">
+                        <div class="mt-1 text-center text-muted">
                             <em>Cette facture est une facture pro forma et ne constitue pas une facture définitive.</em>
                         </div>
                     </div>

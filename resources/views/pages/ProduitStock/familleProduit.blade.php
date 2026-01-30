@@ -16,7 +16,7 @@
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
-              <h4 class="card-title">Listes des Famille de Produit</h4>
+              <h4 class="card-title">Listes des Familles de Produit</h4>
             </div><!--end col-->
 
             @if (Session::has('status'))
@@ -123,7 +123,13 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                    
+                            <div class="mb-2">
+                              <label for="coeff">Coefficient (Marge à percevoir sur chaque produit.)</label>
+                              <input type="number" class="form-control @error('coeff') is-invalid @enderror" min="0" max="100" id="coeff" name="coeff" value="{{ $allFamilleProduit->coeff }}" >
+                              @error('coeff')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                             <div class="mb-2">
                               <label for="TVA">TVA</label>
                                 <select class="form-control @error('TVA') is-invalid @enderror" id="TVA_{{ $allFamilleProduit->idFamPro }}" name="TVA" onchange="updateGroupe_{{ $allFamilleProduit->idFamPro }}(this.value)">
@@ -245,7 +251,13 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-            
+                    <div class="mb-2">
+                      <label for="coeff">Coefficient (Marge à percevoir sur chaque produit.)</label>
+                      <input type="number" class="form-control @error('coeff') is-invalid @enderror" min="0" max="100" id="coeff" name="coeff" value="{{ old('coeff') }}" >
+                      @error('coeff')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <div class="mb-2">
                       <label for="TVA">TVA</label>
                         <select class="form-control @error('TVA') is-invalid @enderror" id="TVA" name="TVA" onchange="updateGroupe(this.value)">

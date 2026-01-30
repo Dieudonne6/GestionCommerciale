@@ -44,6 +44,7 @@ class FamilleProduitRequest extends FormRequest
             ],
 
             'TVA' => 'nullable',
+            'coeff' => 'nullable',
         ];
         
 
