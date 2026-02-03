@@ -18,6 +18,8 @@ class DetailReceptionCmdAchat extends Model
         'prixUnit',
         'idRecep',
         'idDetailCom',
+        'expiration',
+        'alert',
     ];
 
     public function detailCommandeAchat() {

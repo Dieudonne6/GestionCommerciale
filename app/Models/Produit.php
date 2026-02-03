@@ -30,6 +30,7 @@ class Produit extends Model
         'stockMinimum',
         'idCatPro',
         'idFamPro',
+        'prixReelAchat',
     ];
 
     public function categorieProduit() {

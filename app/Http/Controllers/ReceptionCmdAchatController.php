@@ -87,6 +87,8 @@ class ReceptionCmdAchatController extends Controller
                         'qteRestante' => $detail->qteRestante,
                         'prixUnit' => $detail->prixUnit,
                         'idMag' => $magasin, 
+                        'expiration' => null,
+                        'alert'=> null,
                     ];
                 })
                 ->values();
@@ -152,9 +154,13 @@ class ReceptionCmdAchatController extends Controller
                 'idCommande' => 'required|exists:commande_achats,idCommande',
                 'details' => 'required|array|min:1',
                 // 'details.*.idDetailCom' => 'required|exists:detail_commande_achats,idDetailCom',
-                'details.*.qteReceptionne' => 'required|numeric|min:1',
+                'details.*.qteReceptionne' => 'required|numeric|min:0',
                 'details.*.prixUnit' => 'required|numeric|min:0',
                 'details.*.iddetailcom' => 'required|numeric|min:0',
+                'details.*.expiration' => 'nullable|date|after:today',
+                'details.*.alert' => 'nullable|date|required_with:details.*.expiration',
+
+
                 // 'details.*.idMag' => 'required|exists:magasins,idMag',
             ]);
 
@@ -199,6 +205,8 @@ class ReceptionCmdAchatController extends Controller
                         'idDetailCom' => $d['iddetailcom'],
                         'qteReceptionne' => $d['qteReceptionne'],
                         'prixUnit' => $d['prixUnit'],
+                        'expiration' => $d['expiration'] ?? null,
+                        'alert' => $d['alert'] ?? null,
                     ]);
 
                     // maj qteRestante

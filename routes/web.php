@@ -185,7 +185,8 @@ Route::get('/Produits', [ProduitController::class, 'Produits']);
 Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
 Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
 Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifProduit');
-
+Route::get('/produit/{idPro}/detail', [ProduitController::class, 'detail'])
+    ->name('produit.detail');
 
 Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
 Route::get('/get-tables/{databaseName}', [ParamController::class, 'getTables']);
@@ -332,7 +333,9 @@ Route::middleware(['auth'])->group(function () {
      Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
      Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
      Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
-     
+     Route::get('/produit/{idPro}/detail', [ProduitController::class, 'detail'])
+      ->name('produit.detail');
+
      // inventaire
      // Route::get('/inventaire', [InventaireController::class, 'inventaire']);
      Route::get('/inventaires', [InventaireController::class, 'index'])->name('inventaires');

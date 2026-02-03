@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Schema;
 // use App\Models\Exercice;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\DetailReceptionCmdAchat;
+use App\Models\DetailVente;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -22,43 +25,131 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+    // public function boot(): void
+    // {
+    //     // Partager la variable dans toutes les vues
+    //     // $exerciceAct = Exercice::where('statut', 1)->first();
+    //     // $exerciceActif = $exerciceAct ? $exerciceAct->annee : null;
+
+    //     // View::share('exerciceActif', $exerciceActif);
+
+    //     View::composer('*', function ($view) {
+
+    //         $notifications = DB::table('stockes')
+    //             ->join('produits', 'produits.idPro', '=', 'stockes.idPro')
+    //             ->select(
+    //                 'produits.libelle',
+    //                 'produits.stockMinimum',
+    //                 'stockes.qteStocke'
+    //             )
+    //             ->get()
+    //             ->filter(function ($item) {
+    //                 return $item->qteStocke <= $item->stockMinimum;
+    //             })
+    //         ->map(function ($item) {
+
+    //                 if ($item->qteStocke == 0) {
+    //                     $item->type = 'rupture';
+    //                     $item->texte = "est en rupture de stock";
+    //                 } else {
+    //                     $item->type = 'risque';
+    //                     $item->texte = "est en risque de rupture de stock";
+    //                 }
+
+    //                 return $item;
+    //             });
+
+    //         $view->with('stockNotifications', $notifications);
+    //     }); 
+    // }
+
     public function boot(): void
     {
-        // Partager la variable dans toutes les vues
-        // $exerciceAct = Exercice::where('statut', 1)->first();
-        // $exerciceActif = $exerciceAct ? $exerciceAct->annee : null;
-
-        // View::share('exerciceActif', $exerciceActif);
-
         View::composer('*', function ($view) {
 
-        $notifications = DB::table('stockes')
-            ->join('produits', 'produits.idPro', '=', 'stockes.idPro')
-            ->select(
-                'produits.libelle',
-                'produits.stockMinimum',
-                'stockes.qteStocke'
-            )
-            ->get()
-            ->filter(function ($item) {
-                return $item->qteStocke <= $item->stockMinimum;
-            })
-          ->map(function ($item) {
+            /* ============================
+            1️ ALERTES STOCK MINIMUM
+            ============================ */
+            $stockMinNotifications = DB::table('stockes')
+                ->join('produits', 'produits.idPro', '=', 'stockes.idPro')
+                ->select(
+                    'produits.libelle',
+                    'produits.stockMinimum',
+                    'stockes.qteStocke'
+                )
+                ->get()
+                ->filter(fn ($item) => $item->qteStocke <= $item->stockMinimum)
+                ->map(function ($item) {
+                    $item->type = ($item->qteStocke == 0) ? 'rupture' : 'risque';
+                    $item->texte = ($item->qteStocke == 0)
+                        ? "est en rupture de stock"
+                        : "est en risque de rupture de stock";
+                    return $item;
+                });
 
-                if ($item->qteStocke == 0) {
-                    $item->type = 'rupture';
-                    $item->texte = "est en rupture de stock";
-                } else {
-                    $item->type = 'risque';
-                    $item->texte = "est en risque de rupture de stock";
+            /* ============================
+            2️ ALERTES PRODUITS PÉRISSABLES
+            ============================ */
+            $today = Carbon::today();
+            $peremptionNotifications = collect();
+
+            $lots = DetailReceptionCmdAchat::with('detailCommandeAchat.produit')
+                ->whereDate('alert', $today)
+                ->get();
+Carbon::setLocale('fr');
+
+            foreach ($lots as $lot) {
+
+                $detailCom = $lot->detailCommandeAchat;
+                if (!$detailCom) continue;
+
+                $idPro     = $detailCom->idPro;
+                $libelle   = $detailCom->produit->libelle;
+                $qteCible  = $lot->qteReceptionne;
+                $dateLot   = $lot->created_at;
+                $expiration= $lot->expiration;
+
+                // Nombre de produits réceptionnés
+                $npr = DetailReceptionCmdAchat::whereIn('idDetailCom', function ($q) use ($idPro, $dateLot) {
+                        $q->select('idDetailCom')
+                        ->from('detail_commande_achats')
+                        ->where('idPro', $idPro)
+                        ->whereBetween('created_at', [$dateLot, now()]);
+                    })
+                    ->sum('qteReceptionne');
+
+                // Nombre de produits vendus
+                $npv = DetailVente::where('idPro', $idPro)
+                    ->whereBetween('created_at', [$dateLot, now()])
+                    ->sum('qte');
+
+                $recepVendu = $npr - $npv;
+                $nprApres   = $npr - $qteCible;
+
+                if ($recepVendu > $nprApres) {
+
+                    $reste = $recepVendu - $nprApres;
+
+                    $peremptionNotifications->push((object)[
+    'libelle'        => $libelle,
+    'type'           => 'peremption',
+    'qte'            => $qteCible,
+    'date_reception' => $dateLot->translatedFormat('d F Y'),
+    'date_expiration'=> Carbon::parse($expiration)->translatedFormat('d F Y'),
+    'reste'          => $reste,
+]);
+
                 }
+            }
 
-                return $item;
-            });
+            /* ============================
+            3️ FUSION DES NOTIFICATIONS
+            ============================ */
+            $allNotifications = $stockMinNotifications
+                ->merge($peremptionNotifications);
 
-        $view->with('stockNotifications', $notifications);
-    }); 
+            $view->with('stockNotifications', $allNotifications);
+        });
     }
-
 
 }
