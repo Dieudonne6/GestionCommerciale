@@ -30,27 +30,29 @@ class ProduitController extends Controller
         return view('pages.ProduitStock.produit', compact('allProduits', 'allCategorieProduits', 'allFamilleProduits', 'magasins'));
     }   
 
-    public function ajouterProduit(ProduitRequest $request)
-    {
-        $request->validated();
-        // $ProduitExiste = Produit::where('libelle', $request->input('libelle'))->exists();
-        // if ($ProduitExiste) {
-        //     return back()->with(['erreur' => 'Ce produit existe déjà.']);
-        // }
-        try {
-            $Produit = new Produit();
-            $Produit->libelle = $request->input('libelle');
-            $Produit->idCatPro = $request->input('idCatPro') ;
-            $Produit->idFamPro = $request->input('idFamPro') ;
-            /* $Produit->idMag = $request->input('idMag'); */
-            $Produit->prix = $request->input('prix');
-            $Produit->desc = $request->input('desc');
-            $Produit->stockAlert = $request->input('stockAlert');
-            $Produit->stockMinimum = $request->input('stockMinimum');
-            $imageContent = file_get_contents($request->file('image')->getRealPath());
-            $Produit->image = $imageContent;      
-            $Produit->prixReelAchat = $request->input('prixReelAchat');
-            $Produit->save();
+public function ajouterProduit(ProduitRequest $request)
+{
+    $request->validated();
+    // $ProduitExiste = Produit::where('libelle', $request->input('libelle'))->exists();
+    // if ($ProduitExiste) {
+    //     return back()->with(['erreur' => 'Ce produit existe déjà.']);
+    // }
+    try {
+        $Produit = new Produit();
+        $Produit->libelle = $request->input('libelle');
+        $Produit->idCatPro = $request->input('idCatPro') ;
+        $Produit->idFamPro = $request->input('idFamPro') ;
+        /* $Produit->idMag = $request->input('idMag'); */
+        $Produit->prix = $request->input('prix');
+          $Produit->desc = $request->input('desc');
+        $Produit->prixAchatTheorique = $request->input('prixAchat');
+        $Produit->marge = $request->input('marge');
+        $Produit->stockAlert = $request->input('stockAlert');
+        $Produit->stockMinimum = $request->input('stockMinimum');
+        $imageContent = file_get_contents($request->file('image')->getRealPath());
+        $Produit->image = $imageContent;
+        $Produit->prixReelAchat = $request->input('prixReelAchat');
+        $Produit->save();
 
             // Création de l'entrée dans la table Stockes
             Stocke::create([
@@ -89,6 +91,8 @@ class ProduitController extends Controller
             $modifProduit->libelle = $request->input('libelle');
             $modifProduit->idCatPro = $request->input('idCatPro');
             $modifProduit->idFamPro = $request->input('idFamPro');
+            $modifProduit->prixAchatTheorique = $request->input('prixAchat');
+            $modifProduit->marge = $request->input('marge');
             $modifProduit->prix = $request->input('prix');
             $modifProduit->desc = $request->input('desc');
             $modifProduit->stockAlert = $request->input('stockAlert');

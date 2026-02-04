@@ -139,81 +139,78 @@
           @csrf
           @method('PUT')
           <div class="modal-body">
-            <div class="mb-2">
-              <label for="libelle">Libelle</label>
-              <input type="text" class="form-control @error('libelle') is-invalid @enderror" id="libelle" name="libelle" value="{{ $allProduit->libelle }}">
-              @error('libelle')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-            
-            <!-- Sélection de la Catégorie -->
-            <div class="form-group">
-              <label for="idCatPro">Catégorie Produit</label>
-              <select id="idCatPro" name="idCatPro" class="form-control @error('idCatPro') is-invalid @enderror">
-                <option value="0" selected>Aucune</option>
-                @foreach ($allCategorieProduits as $allCategorieProduit)
-                  <option value="{{ $allCategorieProduit->idCatPro }}" 
-                    {{ $allProduit->idCatPro == $allCategorieProduit->idCatPro ? 'selected' : '' }}>
-                    {{ $allCategorieProduit->libelle }}
-                  </option>
-                @endforeach
-              </select>
-              @error('idCatPro')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <!-- Sélection de la Famille -->
-            <div class="form-group">
-              <label for="idFamPro">Famille Produit</label>
-              <select id="idFamPro" name="idFamPro" class="form-control @error('idFamPro') is-invalid @enderror">
-                <option value="0" selected>Aucune</option>
-                @foreach ($allFamilleProduits as $allFamilleProduit)
-                  <option value="{{ $allFamilleProduit->idFamPro }}" 
-                    {{ $allProduit->idFamPro == $allFamilleProduit->idFamPro ? 'selected' : '' }}>
-                    {{ $allFamilleProduit->libelle }}
-                  </option>
-                @endforeach
-              </select>
-              @error('idFamPro')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <div class="form-group">
-              <label for="idMag">Magasin</label>
-              <select id="idMag" name="idMag" class="form-control @error('idMag') is-invalid  @enderror">
-                <option value="0" selected>Aucune</option>
-                @foreach ($magasins as $magasin)
-                  <option value="{{ $magasin->idMag }}"
-                    {{ optional($allProduit->stocke)->idMag == $magasin->idMag ? 'selected' : '' }}>
-                    {{ $magasin->libelle }}
-                  </option>
-                @endforeach
-              </select>
-              @error('idMag')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>    
-
-            <div class="mb-2">
-              <label for="prix">Prix</label>
-              <input type="number" class="form-control @error('prix') is-invalid @enderror" id="prix" name="prix" value="{{ $allProduit->prix }}">
-              @error('prix')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
             <div class="row">
-              <div class="col-md-6 mb-2">
+              <div class="col-md-6 mb-2">              
+                <label for="libelle">Libelle</label>
+                <input type="text" class="form-control @error('libelle') is-invalid @enderror" id="libelle" name="libelle" value="{{ $allProduit->libelle }}">
+                @error('libelle')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+              </div>
+
+              <div class="col-md-6 mb-2 form-group">
+                  <label for="idMag">Magasin</label>
+                  <select id="idMag" name="idMag" class="form-control @error('idMag') is-invalid  @enderror">
+                    <option value="0" selected>Aucune</option>
+                    @foreach ($magasins as $magasin)
+                      <option value="{{ $magasin->idMag }}"
+                        {{ optional($allProduit->stocke)->idMag == $magasin->idMag ? 'selected' : '' }}>
+                        {{ $magasin->libelle }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('idMag')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+              </div> 
+            </div> 
+            
+            <div class="row mb-2">
+                <!-- Sélection de la Catégorie -->
+                <div class="col-md-6 form-group">
+                  <label for="idCatPro">Catégorie Produit</label>
+                  <select id="idCatPro" name="idCatPro" class="form-control @error('idCatPro') is-invalid @enderror">
+                    <option value="0" selected>Aucune</option>
+                    @foreach ($allCategorieProduits as $allCategorieProduit)
+                      <option value="{{ $allCategorieProduit->idCatPro }}" 
+                        {{ $allProduit->idCatPro == $allCategorieProduit->idCatPro ? 'selected' : '' }}>
+                        {{ $allCategorieProduit->libelle }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('idCatPro')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+
+                <!-- Sélection de la Famille -->
+                <div class="col-md-6 form-group">
+                  <label for="idFamPro">Famille Produit</label>
+                  <select id="idFamPro" name="idFamPro" class="familleSelectModify form-control @error('idFamPro') is-invalid @enderror">
+                    <option value="0" data-coef="" selected>Aucune</option>
+                    @foreach ($allFamilleProduits as $allFamilleProduit)
+                      <option value="{{ $allFamilleProduit->idFamPro }}"                               
+                        data-coef="{{ $allFamilleProduit->coeff }}"
+                        {{ $allProduit->idFamPro == $allFamilleProduit->idFamPro ? 'selected' : '' }}>
+                        {{ $allFamilleProduit->libelle }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('idFamPro')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+            </div>  
+
+            <div class="row  mb-2">
+              <div class="col-md-6">
                 <label for="stockAlert">Seuil d'Alert</label>
                 <input type="number" class="form-control @error('stockAlert') is-invalid @enderror" id="stockAlert" name="stockAlert" value="{{ $allProduit->stockAlert ?? 0 }}">
                 @error('stockAlert')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
-              <div class="col-md-6 mb-2">
+              <div class="col-md-6">
                 <label for="stockMinimum">Stock Minimum</label>
                 <input type="number" class="form-control @error('stockMinimum') is-invalid @enderror" id="stockMinimum" name="stockMinimum" value="{{ $allProduit->stockMinimum ?? 0 }}">
                 @error('stockMinimum')
@@ -223,10 +220,56 @@
                 <input type="hidden" class="form-control @error('prixReelAchat') is-invalid @enderror" id="prixReelAchat" name="prixReelAchat" value="{{ $allProduit->prixReelAchat }}">
                
             </div>
+
+            <!-- Radio (modification) : name unique par produit -->
+            <div class="row mb-2">
+              <div class="col-md-12">
+                <label class="form-label">Mode de fixation du prix</label>
+
+                <div class="form-check">
+                  <input id="priceManualModify_{{ $allProduit->idPro }}" class="form-check-input priceManualModify" type="radio"
+                        name="price_mode_{{ $allProduit->idPro }}" value="manual" checked>
+                  <label for="priceManualModify_{{ $allProduit->idPro }}" class="form-check-label">
+                    Fixer manuellement le prix de vente
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input id="priceAutoModify_{{ $allProduit->idPro }}" class="form-check-input priceAutoModify" type="radio"
+                        name="price_mode_{{ $allProduit->idPro }}" value="auto">
+                  <label for="priceAutoModify_{{ $allProduit->idPro }}" class="form-check-label">
+                    Prix de vente dynamique en fonction du prix d'achat et de la marge
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Champs auto (avec classes, non-unique names ok si inputs dans modal) -->
+            <div class="row mb-2 autoPriceFieldsModify" style="display:none;">
+              <div class="col-md-6 form-group">
+                <label>Prix d'achat théorique</label>
+                <input type="number" step="0.01" class="form-control prixAchatModify" name="prixAchat"
+                      value="{{ $allProduit->prixAchatTheorique ?? '' }}">
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>Marge (%)</label>
+                <input type="number" step="0.01" class="form-control margeModify" name="marge"
+                      value="{{ $allProduit->marge ?? ''}}">
+              </div>
+            </div>
+
+            <!-- Prix (utiliser une classe pour ciblage) -->
+            <div class="mb-2">
+              <label>Prix</label>
+              <input type="number" class="form-control prixAddModify" name="prix" value="{{ $allProduit->prix }}">
+            </div>
+
+            
             {{-- <div class="mb-2">
-              <label for="qteStocke">Quantité en Stock</label>
-              <input type="number" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStocke" name="qteStocke" value="{{ optional($allProduit->stocke)->qteStocke ?? 0 }}">
-              @error('qteStocke')
+              <label for="prix">Prix</label>
+              <input type="number" class="form-control @error('prix') is-invalid @enderror" id="prixAddModify" name="prix" value="{{ $allProduit->prix }}">
+              @error('prix')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div> --}}
@@ -304,10 +347,11 @@
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
+
               <div class="col-md-6 mb-2">
-                <label for="prixAdd">Prix</label>
-                <input type="number" class="form-control @error('prix') is-invalid @enderror" id="prixAdd" name="prix" value="{{ old('prix') }}">
-                @error('prix')
+                <label for="qteStockeAdd">Quantité</label>
+                <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStockeAdd" value="0" readonly>
+                @error('qteStocke')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
@@ -332,13 +376,18 @@
               <div class="col-md-6 form-group">
                 <label for="idFamProAdd">Famille Produit</label>
                 <select id="idFamProAdd" name="idFamPro" class="form-control @error('idFamPro') is-invalid  @enderror">
-                  <option value="" >Aucune</option>
-                  @foreach ($allFamilleProduits as $allFamilleProduit)
-                    <option value="{{ $allFamilleProduit->idFamPro }}">
-                      {{ $allFamilleProduit->libelle }}
-                    </option>
-                  @endforeach
+                    <option value="" data-coef="">Aucune</option>
+
+                    @foreach ($allFamilleProduits as $famille)
+                        <option 
+                            value="{{ $famille->idFamPro }}"
+                            data-coef="{{ $famille->coeff }}"
+                        >
+                            {{ $famille->libelle }}
+                        </option>
+                    @endforeach
                 </select>
+
                 @error('idFamPro')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -361,8 +410,8 @@
                 @enderror
               </div>
             </div> 
-            <div class="row">
-              <div class="col-md-6 form-group">
+            <div class="row mb-2">
+              <div class="col-md-12 form-group">
                 <label for="idMagAdd">Magasin</label>
                 <select id="idMagAdd" name="idMag" class="form-control @error('idMag') is-invalid  @enderror" required>
                   <option value="0">Aucune</option>
@@ -376,11 +425,55 @@
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>                  
+            </div>   
+              
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <label class="form-label">Mode de fixation du prix</label>
 
-              <div class="col-md-6 mb-2">
-                <label for="qteStockeAdd">Quantité</label>
-                <input type="number" name="qteStocke" class="form-control @error('qteStocke') is-invalid @enderror" id="qteStockeAdd" value="0" readonly>
-                @error('qteStocke')
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="price_mode" id="priceManual" value="manual" checked>
+                    <label class="form-check-label" for="priceManual">
+                      Fixer manuellement le prix de vente
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="price_mode" id="priceAuto" value="auto">
+                    <label class="form-check-label" for="priceAuto">
+                      Prix de vente dynamique en fonction du prix d'achat et de la marge
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+
+            <div class="row mb-2" id="autoPriceFields">
+              <div class="col-md-6 form-group">
+                <label for="prixAchat">Prix d'achat théorique</label>
+                <input type="number" step="0.01" class="form-control" id="prixAchat" name="prixAchat">
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label for="marge">Marge (%)</label>
+                <input type="number" step="0.01" class="form-control" id="marge"  name="marge">
+              </div>
+            </div>
+
+
+            <div class="row mb-2">
+              <div class="col-md-12 form-group">
+                <label for="prixAdd">Prix Vente</label>
+                <input type="text" class="form-control @error('prix') is-invalid @enderror" id="prixAdd" name="prix" value="{{ old('prix') }}">
+                {{-- <input type="number"
+                  class="form-control @error('prix') is-invalid @enderror"
+                  id="prixAdd"
+                  name="prix"
+                  value="{{ old('prix') }}"
+                  readonly> --}}
+
+                @error('prix')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
@@ -394,12 +487,14 @@
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
-            <div class="col-md-12">
-              <label for="descAdd">Description</label>
-              <textarea class="form-control @error('desc') is-invalid @enderror" id="descAdd" name="desc" rows="4">{{ old('desc') }}</textarea>
-              @error('desc')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
+            <div class="row mb-2">
+              <div class="col-md-12">
+                <label for="descAdd">Description</label>
+                <textarea class="form-control @error('desc') is-invalid @enderror" id="descAdd" name="desc" rows="4">{{ old('desc') }}</textarea>
+                @error('desc')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+              </div>
             </div>
             <!-- Zone de prévisualisation -->
             <div class="mb-2 text-center">
@@ -417,7 +512,204 @@
   
   @endsection
 
-  <script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const familleSelect = document.getElementById('idFamProAdd');
+    const margeInput = document.getElementById('marge');
+    const priceAutoRadio = document.getElementById('priceAuto');
+    const prixAchat = document.getElementById('prixAchat');
+    const prixVente = document.getElementById('prixAdd');
+
+    function recalculerPrix() {
+        if (!priceAutoRadio.checked) return;
+
+        const achat = parseFloat(prixAchat.value) || 0;
+        const taux = parseFloat(margeInput.value) || 0;
+
+        const prix = Math.ceil(achat + (achat * taux / 100));
+        prixVente.value = prix;
+    }
+
+    familleSelect.addEventListener('change', function () {
+
+        const selectedOption = this.options[this.selectedIndex];
+        const coef = selectedOption.dataset.coef;
+
+        // reset marge
+        margeInput.value = 0;
+
+        if (coef !== undefined && coef !== '') {
+            margeInput.value = coef;
+        }
+
+        // 🔥 recalcul automatique du prix
+        recalculerPrix();
+    });
+
+});
+</script>
+
+
+
+
+<script>
+
+
+  // pour la modification
+
+
+
+  // pour la modification
+  document.addEventListener('DOMContentLoaded', function () {
+
+ // Sélectionne toutes les modales de modification qui ont un id commençant par ModifyBoardModal
+  document.querySelectorAll('div.modal[id^="ModifyBoardModal"]').forEach(modalEl => {
+    // Bootstrap: écoute l'événement d'ouverture de la modale
+    modalEl.addEventListener('shown.bs.modal', function (event) {
+
+      // éléments dans la modale courante
+      const priceAuto = modalEl.querySelector('.priceAutoModify');
+      const priceManual = modalEl.querySelector('.priceManualModify');
+      const autoFields = modalEl.querySelector('.autoPriceFieldsModify');
+      const prixVente = modalEl.querySelector('.prixAddModify');
+      const prixAchat = modalEl.querySelector('.prixAchatModify');
+      const marge = modalEl.querySelector('.margeModify');
+      const familleSelect = modalEl.querySelector('.familleSelectModify');
+
+
+
+
+      // Défaut : si éléments introuvables, on sort
+      if (!prixVente || (!priceAuto && !priceManual)) {
+        return;
+      }
+
+      // initialisation de l'état selon radio (si auto est coché)
+      function initState() {
+        // si priceAuto existe et est checked -> mode auto
+        if (priceAuto && priceAuto.checked) {
+          if (autoFields) autoFields.style.display = 'flex';
+          prixVente.setAttribute('readonly', true);
+          recalc();
+        } else {
+          if (autoFields) autoFields.style.display = 'none';
+          prixVente.removeAttribute('readonly');
+        }
+      }
+
+      // calcul prix de vente si besoin
+      function recalc() {
+        if (!prixAchat || !marge || !prixVente) return;
+        const achat = parseFloat(prixAchat.value) || 0;
+        const taux = parseFloat(marge.value) || 0;
+        const prix =  Math.ceil(achat + (achat * taux / 100));
+        prixVente.value = prix ? prix : '';
+      }
+
+      // attacher listeners
+      if (priceAuto) {
+        priceAuto.addEventListener('change', function () {
+          if (this.checked) {
+            if (autoFields) autoFields.style.display = 'flex';
+            prixVente.setAttribute('readonly', true);
+            recalc();
+          }
+        });
+      }
+
+      if (priceManual) {
+        priceManual.addEventListener('change', function () {
+          if (this.checked) {
+            if (autoFields) autoFields.style.display = 'none';
+            prixVente.removeAttribute('readonly');
+          }
+        });
+      }
+
+
+      if (familleSelect) {
+        familleSelect.addEventListener('change', function () {
+
+          const selectedOption = this.options[this.selectedIndex];
+          const coef = selectedOption.dataset.coef;
+
+          if (coef !== undefined && coef !== '') {
+            marge.value = coef;
+          } else {
+            marge.value = 0;
+          }
+
+          recalc(); // 🔥 recalcul immédiat
+        });
+      }
+
+      if (prixAchat) prixAchat.addEventListener('input', recalc);
+      if (marge) marge.addEventListener('input', recalc);
+
+      // initial state on show
+      initState();
+    });
+
+    // Optionnel: on hide, detach handlers if tu veux éviter doublons — sinon ok car elements détruits/reattachés
+  });
+
+
+  });
+
+
+
+  // pour l'ajout
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const priceAuto = document.getElementById('priceAuto');
+    const priceManual = document.getElementById('priceManual');
+    const autoFields = document.getElementById('autoPriceFields');
+
+    const prixVente = document.getElementById('prixAdd');
+    const prixAchat = document.getElementById('prixAchat');
+    const marge = document.getElementById('marge');
+
+    // état initial
+    autoFields.style.display = 'none';
+    // prixVente.removeAttribute('readonly');
+
+    priceAuto.addEventListener('change', function () {
+      if (this.checked) {
+        autoFields.style.display = 'flex';
+        prixVente.setAttribute('readonly', true);
+        calculerPrixVente();
+      }
+    });
+
+    priceManual.addEventListener('change', function () {
+      if (this.checked) {
+        autoFields.style.display = 'none';
+        prixVente.removeAttribute('readonly');
+        prixVente.value = '';
+      }
+    });
+
+    function calculerPrixVente() {
+      const achat = parseFloat(prixAchat.value) || 0;
+      const taux = parseFloat(marge.value) || 0;
+
+      const prix =  Math.ceil(achat + (achat * taux / 100));
+      prixVente.value = prix;
+    }
+
+    prixAchat.addEventListener('input', calculerPrixVente);
+    marge.addEventListener('input', calculerPrixVente);
+
+  });
+</script>
+
+
+
+
+<script>
   document.addEventListener('DOMContentLoaded', function () {
       @if (session()->has('errorModalId'))
           var modalId = "{{ session('errorModalId') }}";
@@ -493,5 +785,8 @@
           preview.style.display = 'none';
       }
   }
-  </script>
+</script>
   
+
+
+
