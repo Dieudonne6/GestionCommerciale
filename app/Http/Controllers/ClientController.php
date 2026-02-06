@@ -41,7 +41,7 @@ class ClientController extends Controller
     //     ]);
 
     //     if ($validator->fails()) {
-    //         return redirect()->route('clients.index')
+    //         return redirect()->route('clients')
     //             ->withErrors($validator)
     //             ->withInput()
     //             ->with('showAddClientModal', true);
@@ -49,10 +49,10 @@ class ClientController extends Controller
 
     //     try {
     //         Client::create($request->only(['IFU', 'nom', 'adresse', 'telephone', 'mail', 'idCatCl']));
-    //         return redirect()->route('clients.index')
+    //         return redirect()->route('clients')
     //             ->with('status', 'Le client a été créé avec succès');
     //     } catch (\Exception $e) {
-    //         return redirect()->route('clients.index')
+    //         return redirect()->route('clients')
     //             ->with('erreur', 'Une erreur est survenue lors de la création du client');
     //     }
     // }
@@ -95,7 +95,7 @@ class ClientController extends Controller
 
     // 4. Gestion des erreurs
     if ($validator->fails()) {
-        return redirect()->route('clients.index')
+        return redirect()->route('clients')
             ->withErrors($validator)
             ->withInput()
             ->with('showAddClientModal', true);
@@ -105,12 +105,12 @@ class ClientController extends Controller
     // 5. Création du client
     try {
         Client::create($validator->validated());
-        return redirect()->route('clients.index')
+        return redirect()->route('clients')
             ->with('status', 'Le client a été créé avec succès');
     } catch (\Exception $e) {
         // Vous pouvez logger $e->getMessage() si besoin
         // dd($e->getMessage());
-        return redirect()->route('clients.index')
+        return redirect()->route('clients')
             ->with('erreur', 'Une erreur est survenue lors de la création du client');
     }
 }
@@ -164,7 +164,7 @@ public function update(Request $request, $idC)
     // 4) Gestion des erreurs
     if ($validator->fails()) {
         session()->flash('showModifyClientModal', $idC);
-        return redirect()->route('clients.index')
+        return redirect()->route('clients')
             ->withErrors($validator)
             ->withInput()
             ->with('showModifyClientModal', true);
@@ -176,11 +176,11 @@ public function update(Request $request, $idC)
     // 5) Mise à jour
     try {
         $client->update($validator->validated());
-        return redirect()->route('clients.index')
+        return redirect()->route('clients')
             ->with('status', 'Le client a été modifié avec succès');
     } catch (\Exception $e) {
         // Vous pouvez logger $e->getMessage() si besoin
-        return redirect()->route('clients.index')
+        return redirect()->route('clients')
             ->with('erreur', 'Une erreur est survenue lors de la modification du client');
     }
 }
@@ -191,10 +191,10 @@ public function update(Request $request, $idC)
         try {
             $client = Client::findOrFail($idC);
             $client->delete();
-            return redirect()->route('clients.index')
+            return redirect()->route('clients')
                 ->with('status', 'Le client a été supprimé avec succès');
         } catch (\Exception $e) {
-            return redirect()->route('clients.index')
+            return redirect()->route('clients')
                 ->with('erreur', 'Une erreur est survenue lors de la suppression du client');
         }
     }

@@ -19,6 +19,24 @@ use Illuminate\Support\Facades\Validator;
 class CommandeAchatController extends Controller
 {
 
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->middleware('can_menu:commandeAchat,view')
+            ->only(['index', 'show']);
+
+        $this->middleware('can_menu:commandeAchat,create')
+            ->only(['create', 'store']);
+
+        $this->middleware('can_menu:commandeAchat,edit')
+            ->only(['edit', 'update']);
+
+        $this->middleware('can_menu:commandeAchat,delete')
+            ->only(['destroy']);
+    }
+
     public function index()
     {
         $user = auth()->user();

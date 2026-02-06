@@ -45,7 +45,7 @@
               <h4 class="card-title">Ajustement des Stocks</h4>
             </div>
             <div class="col-auto">
-              <a href="{{ route('stocks.consulter') }}" class="btn btn-primary">
+              <a href="{{ route('consulterStocks') }}" class="btn btn-primary">
                 <i class="fa-solid fa-eye me-1"></i> Consulter les Stocks
               </a>
             </div>

@@ -20,6 +20,11 @@ class DetailVente extends Model
         'montantTTC',
         'idV',
         'idPro',
+        'prix_unitaire_brut',
+        'total_ligne_brut',
+        'reduction_ligne',
+        'total_ligne_net',
+        'prix_unitaire_net'
     ];
 
 

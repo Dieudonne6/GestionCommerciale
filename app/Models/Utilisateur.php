@@ -45,10 +45,7 @@ class Utilisateur extends Authenticatable
         return 'idU';
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'idRole');
-    }
+
 
     public function entreprise()
     {
@@ -68,5 +65,41 @@ class Utilisateur extends Authenticatable
     public function receptionCmdAchat()
     {
         return $this->hasMany(ReceptionCmdAchat::class, 'idU');
+    }
+
+
+
+    // role
+
+   public function role()
+    {
+        return $this->belongsTo(\App\Models\Role::class, 'idRole');
+    }
+
+    public function hasRole($role)
+    {
+        if (!$this->role) return false;
+        return strtolower(trim($this->role->libelle)) === strtolower(trim($role));
+    }
+
+    public function hasAnyRole(array $roles)
+    {
+        if (!$this->role) return false;
+        $lib = strtolower(trim($this->role->libelle));
+        $roles = array_map(fn($r) => strtolower(trim($r)), $roles);
+        return in_array($lib, $roles, true);
+    }
+
+
+    public function canAnyMenu(array $menus, string $action = 'view'): bool
+    {
+        if (!$this->role) return false;
+
+        return \App\Models\Menu::whereIn('code', $menus)
+            ->whereHas('roles', function ($q) use ($action) {
+                $q->where('roles.idRole', $this->idRole)
+                ->where("can_$action", 1);
+            })
+            ->exists();
     }
 }

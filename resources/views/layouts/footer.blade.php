@@ -1,21 +1,23 @@
-<footer class="footer text-center text-sm-start d-print-none">
-  <div class="container-xxl">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-0 rounded-bottom-0">
-                <div class="card-body">
-                    <p class="text-muted mb-0">
-                        ©
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>
-                        Gestion Commerciale
-                        <span class="text-muted d-none d-sm-inline-block float-end">
-                            Tous droits réservés</span>
-                    </p>
-                </div>
+<footer class="footer">
+    <div class="card mb-0 rounded-bottom-0">
+        <div class="card-body">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+
+                <!-- Gauche -->
+                <span class="text-muted text-center text-sm-start">
+                    ©
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                    Gestion Commerciale
+                </span>
+
+                <!-- Droite -->
+                <span class="text-muted text-center text-sm-end mt-1 mt-sm-0">
+                    Tous droits réservés
+                </span>
+
             </div>
         </div>
     </div>
-</div>
 </footer>

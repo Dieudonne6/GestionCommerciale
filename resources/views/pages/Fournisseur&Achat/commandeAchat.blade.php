@@ -299,6 +299,7 @@
         </div>
     @endforeach
 
+    
     <script>
        let nextIndex = Date.now();
       

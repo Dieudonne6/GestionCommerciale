@@ -248,6 +248,8 @@ class ParamController extends Controller
         return view('pages.exporterTable.exporttable', ['tables' => $tableNames, 'dbNames' => $dbNames]);
     }
 
+
+
     // Export d'une table donnée
     // public function Export(Request $request)
     // {
@@ -261,4 +263,7 @@ class ParamController extends Controller
     // public function entrepriseExport() {
     //     return Excel::download(new EntreprisesExport, 'entreprises.xlsx');
     // }
+
+
+
 }

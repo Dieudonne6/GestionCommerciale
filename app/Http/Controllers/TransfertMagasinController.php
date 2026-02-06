@@ -87,7 +87,7 @@ class TransfertMagasinController extends Controller
 
             DB::commit();
 
-            return redirect()->route('transferts.index')
+            return redirect()->route('transferts')
                 ->with('status', 'Transfert effectué avec succès');
 
         } catch (\Exception $e) {
