@@ -153,6 +153,8 @@
                                 </li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/modepaiement')}}">Modes de Paiement</a>
                                 </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/delaiAlert')}}">Paramétrages</a>
+                                </li>
                                 <li class="nav-item">
                                     <form action="{{ route('fermeture.journee') }}" method="POST" class="d-inline">
                                         @csrf

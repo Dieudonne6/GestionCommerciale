@@ -94,9 +94,11 @@ class AppServiceProvider extends ServiceProvider
             $peremptionNotifications = collect();
 
             $lots = DetailReceptionCmdAchat::with('detailCommandeAchat.produit')
-                ->whereDate('alert', $today)
+                ->whereDate('expiration', '>=', $today)
                 ->get();
-Carbon::setLocale('fr');
+
+            
+            Carbon::setLocale('fr');
 
             foreach ($lots as $lot) {
 
@@ -130,14 +132,19 @@ Carbon::setLocale('fr');
 
                     $reste = $recepVendu - $nprApres;
 
-                    $peremptionNotifications->push((object)[
-    'libelle'        => $libelle,
-    'type'           => 'peremption',
-    'qte'            => $qteCible,
-    'date_reception' => $dateLot->translatedFormat('d F Y'),
-    'date_expiration'=> Carbon::parse($expiration)->translatedFormat('d F Y'),
-    'reste'          => $reste,
-]);
+                   $reste = $recepVendu - $nprApres;
+
+                    if ($reste > 0) {
+                        $peremptionNotifications->push((object)[
+                            'libelle'        => $libelle,
+                            'type'           => 'peremption',
+                            'qte'            => $qteCible,
+                            'date_reception' => $dateLot->translatedFormat('d F Y'),
+                            'date_expiration'=> Carbon::parse($expiration)->translatedFormat('d F Y'),
+                            'reste'          => $reste,
+                        ]);
+                    }
+
 
                 }
             }

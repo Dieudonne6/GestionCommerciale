@@ -27,6 +27,7 @@ use App\Http\Controllers\FermetureController;
 use App\Http\Controllers\ProduitStockController;
 use App\Http\Controllers\TransfertMagasinController;
 use App\Http\Controllers\ProformatController;
+use App\Http\Controllers\ParamsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,7 +109,6 @@ Route::middleware('auth')->get(
     '/magasin/{idMag}/produits',
     [CommandeAchatController::class, 'getProduitsByMagasin']
 );
-
 
 
 // Route AJAX pour suppression d'une ligne
@@ -210,6 +210,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Toutes les autres routes sont protégées par le middleware auth
 Route::middleware(['auth'])->group(function () {
+
+     //Paramétrages
+     Route::get('/delaiAlert', [ParamsController::class, 'index'])->name('delaiAlert');
+     Route::post('/params', [ParamsController::class, 'store'])->name('params.store');
+
+
      // Route racine
      Route::get('/', function () {
           return redirect('/tableaudebord');
