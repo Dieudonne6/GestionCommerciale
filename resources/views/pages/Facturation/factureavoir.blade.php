@@ -56,8 +56,11 @@
         <hr>
         <div class="totals">
             <div><span class="label">Total</span> <span class="value"> - {{number_format( $montanttotal , 0, ',', '.')}} </span></div>
-            <div><span class="label">Total H.T. [B] (18 %)</span> <span class="value"> -{{number_format( ($montanttotal - $TotalTVA)  , 0, ',', '.')}} </span></div>
+            <div><span class="label">Total H.T. [B] (18 %)</span> <span class="value"> -{{number_format( ($montanttotal - $TotalTVA - $montantaib)  , 0, ',', '.')}} </span></div>
             <div><span class="label">Total TVA [B](18 %)</span> <span class="value"> -{{ number_format($TotalTVA , 0, ',', '.')}} </span></div>
+            @if ($montantaib > 0)
+                <div><span class="label" style="font-weight: bold">AIB 1%</span> <span class="value"> -{{ number_format($montantaib , 0, ',', '.')}} </span></div>                
+            @endif
             <div><span class="label"> {{ $libellModepaie }}</span> <span class="value"> -{{number_format( $montanttotal , 0, ',', '.')}}</span></div>
         </div>
     @else
@@ -77,6 +80,9 @@
         <div class="totals">
             <div><span class="label">Total</span> <span class="value"> -{{ number_format($montanttotal , 0, ',', '.')}} </span></div>
             <div><span class="label">REGIME TPS [E]</span> <span class="value"> -{{ number_format($montanttotal , 0, ',', '.')}} </span></div>
+            @if ($montantaib > 0)
+                <div><span class="label" style="font-weight: bold">AIB 1%</span> <span class="value"> -{{ number_format($montantaib , 0, ',', '.')}} </span></div>                
+            @endif
             <div><span class="label"> {{ $libellModepaie }} </span> <span class="value"> -{{ number_format($montanttotal , 0, ',', '.')}}</span></div>
         </div>
     @endif

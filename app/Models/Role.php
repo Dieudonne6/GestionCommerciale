@@ -18,4 +18,11 @@ class Role extends Model
     public function utilisateur() {
         return $this->hasMany(Utilisateur::class, 'idRole');
     }
+
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'menu_role', 'idRole', 'menu_id')
+            ->withPivot(['can_view','can_create','can_edit','can_delete'])
+            ->withTimestamps();
+    }
 }

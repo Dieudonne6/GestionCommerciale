@@ -30,6 +30,7 @@ class Vente extends Model
         'idExercice',
         'idModPaie',
         'idE',
+        'categorie_tarifaire_id',
         'IFUClient',
         'nomClient',
         'telClient',
@@ -61,5 +62,10 @@ class Vente extends Model
 
     public function factureNormalise() {
         return $this->hasOne(FactureNormalisee::class, 'idV');
+    }
+
+    public function categorieTarifaire()
+    {
+        return $this->belongsTo(CategorieTarifaire::class);
     }
 }

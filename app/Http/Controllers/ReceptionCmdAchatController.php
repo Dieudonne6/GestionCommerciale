@@ -19,6 +19,24 @@ use Carbon\Carbon;
 
 class ReceptionCmdAchatController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->middleware('can_menu:receptions,view')
+            ->only(['index', 'show']);
+
+        $this->middleware('can_menu:receptions,create')
+            ->only(['create', 'store']);
+
+        $this->middleware('can_menu:receptions,edit')
+            ->only(['edit', 'update']);
+
+        $this->middleware('can_menu:receptions,delete')
+            ->only(['destroy']);
+    }
+
     public function index()
     {
         try {

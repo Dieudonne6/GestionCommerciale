@@ -59,7 +59,7 @@ class FermetureController extends Controller
 
         if ($existe) {
             return redirect()
-            ->route('fermeture.index')
+            ->route('fermetures')
             ->with('error', 'La fermeture de cette journée est déjà effectuée, donc les ventes enrégistrées après la première fermeture ne seront pas comptabilisées dans certaines situations.');
         }
 
@@ -83,7 +83,7 @@ class FermetureController extends Controller
         });
 
         return redirect()
-            ->route('fermeture.index')
+            ->route('fermetures')
             ->with('success', 'Fermeture de la journée effectuée avec succès ! ');
 
     }

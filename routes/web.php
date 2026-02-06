@@ -19,7 +19,7 @@ use App\Http\Controllers\CommandeAchatController;
 use App\Http\Controllers\MagasinController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ReceptionCmdAchatController;
+use App\Http\Controllers\ReceptionCmdAchatController; 
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModePaiementController;
 use App\Http\Controllers\InventaireController;
@@ -28,6 +28,8 @@ use App\Http\Controllers\ProduitStockController;
 use App\Http\Controllers\TransfertMagasinController;
 use App\Http\Controllers\ProformatController;
 use App\Http\Controllers\ParamsController;
+use App\Http\Controllers\MenuPermissionController;
+use App\Http\Controllers\CategorieTarifaireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,154 +48,13 @@ Route::get('/', function () {
      return redirect('/login');
 });
 
-//fournisseurcontroller
-Route::get('/fournisseur', [FournisseurController::class, 'fournisseur'])->name('fournisseur');
-Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseurs.ajouterFournisseur');
-Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
-Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
 
-// clientcontroller
-Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
-Route::put('/clients/{idC}', [ClientController::class, 'update'])->name('clients.update');
-Route::delete('/clients/{idC}', [ClientController::class, 'destroy'])->name('clients.destroy');
+// Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
+// Route::get('/get-tables/{databaseName}', [ParamController::class, 'getTables']);
+// Route::get('/export-form',  [ParamController::class, 'Export'])->name('export');
 
-// categorieclientcontroller
-Route::get('/categorieclient', [CatClientController::class, 'categorieclient'])->name('categorieclient');
-Route::post('/categorieclient/ajouter', [CatClientController::class, 'ajouterCategoryclient'])->name('categorieclient.ajouter');
-Route::delete('/categorieclient/supprimer/{idCatCl}', [CatClientController::class, 'deletecategorieclient'])->name('categorieclient.supprimer');
-Route::put('/categorieclient/modifier/{idCatCl}', [CatClientController::class, 'updatecategorieclient'])->name('categorieclient.modifier');
-
-// Exercicecontroller
-Route::get('/exercice', [ExerciceController::class, 'exercice']);
-Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
-// Route::delete('suppClient/{id}', [ExerciceController::class, 'deleteClient']);
-Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
-
-Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
-Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
-Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
-Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name('categories.edit');
-
-//Fournisseur
-Route::get('/categoriesFournisseur', [CategorieFournisseurController::class, 'index'])->name('categoriesF');
-Route::post('/categorieFournisseur/store', [CategorieFournisseurController::class, 'store'])->name('categoriesF.store');
-Route::delete('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'destroy'])->name('categoriesF.destroy');
-Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'update'])->name('categoriesF.update');
-Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit');
-
-// Magasin
-Route::get('/magasins', [MagasinController::class, 'index'])->name('magasins');
-Route::post('/ajouterMagasin', [MagasinController::class, 'ajouterMagasin'])->name('magasins.ajouterMagasin');
-Route::delete('suppMagasin/{id}', [MagasinController::class, 'destroy'])->name('magasins.destroy');
-Route::post('addProduct/{idMag}', [MagasinController::class, 'addProduct'])->name('magasins.addProduct');
-//Route::put('modifMagasin/{id}', [MagasinController::class, 'updateMagasin'])->name('magasins.updateMagasin');
-
-// Route pour traiter l'ajout d'une nouvelle catégorie (la méthode store)
-Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
-Route::get('/client', [FournisseurController::class, 'client'])->name('client');
-
-
-// ApprovisionnementController
-// Route::get('/commandeAchat', [ApprovisionnementController::class, 'commandeAchat'])->name('commandeAchat');
-// Route::get('/commandeAchat/ajouter', [ApprovisionnementController::class, 'ajoutercommande'])->name('commande.ajouter');
-// Route::post('/commandeAchat/store', [ApprovisionnementController::class, 'storeCommande'])->name('commande.store');
-// Route::put('/commandeAchat/{idCommande}', [ApprovisionnementController::class, 'updateCommande'])->name('commande.update');
-// Route::delete('/commandeAchat/{idCommande}', [ApprovisionnementController::class, 'destroyCommande'])->name('commande.destroy');
-// Route::delete('/ligne-commande/{idDetailCom}', [ApprovisionnementController::class, 'deleteLigneCommande'])->name('ligne-commande.destroy');
-
-// CommandeAchatController
-// Resource principale sur "commandeAchat" pour coller à votre nom de vue
-Route::resource('commandeAchat', CommandeAchatController::class)->middleware('auth');
-Route::middleware('auth')->get(
-    '/magasin/{idMag}/produits',
-    [CommandeAchatController::class, 'getProduitsByMagasin']
-);
-
-
-// Route AJAX pour suppression d'une ligne
-Route::delete('commandeAchat/ligne/{id}', [CommandeAchatController::class, 'deleteLigne'])
-     ->name('commandeAchat.ligne.destroy');
-Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
-     ->name('commandeAchat.produit.tva');
-
-Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
-Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
-Route::post('/caisses', [Controller::class, 'store'])->name('caisses.store');
-Route::put('/caisses/{id}', [Controller::class, 'update'])->name('caisses.update');
-Route::delete('/caisses/{id}', [Controller::class, 'destroy'])->name('caisses.destroy');
-
-
-Route::get('/utilisateurs', [ParamController::class, 'utilisateurs'])->name('utilisateurs.utilisateurs');
-Route::post('/utilisateurs', [ParamController::class, 'enregistre'])->name('utilisateurs.enregistre');
-Route::post('/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('utilisateurs.modifie');
-Route::delete('/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('utilisateurs.supprime');
-
-Route::get('/parametres/entreprise', [ParamController::class, 'entreprise'])->name('entreprise.entreprise');
-Route::post('/parametres/entreprise', [ParamController::class, 'storeEntreprise'])->name('entreprise.storeEntreprise');
-
-
-// Entreprise
-Route::get('/entreprise', [ParamController::class, 'entreprise'])->name('entreprise');
-Route::post('/ajouterEntreprise', [ParamController::class, 'ajouterEntreprise'])->name('ajouterEntreprise');
-Route::put('modifierEntreprise/{idE}', [ParamController::class, 'modifEntreprise'])->name('modifEntreprise');
-Route::delete('suppEntreprise/{idE}', [ParamController::class, 'supprimerEntreprise'])->name('supprimerEntreprise');
-
-Route::get('/roles', [RolesController::class, 'role'])->name('role');
-Route::post('/roles/store', [RolesController::class, 'storeRole'])->name('storeRole');
-Route::put('/roles/update/{id}', [RolesController::class, 'updateRole'])->name('updateRole');
-Route::delete('/roles/delete/{id}', [RolesController::class, 'deleteRole'])->name('deleteRole');
-
-// Reception
-// Route::get('/receptions', [Controller::class, 'indexReception'])->name('receptions.index');
-// Route::post('/receptions', [Controller::class, 'storeReception'])->name('receptions.store');
-// Route::put('/receptions/{idReception}', [Controller::class, 'updateReception'])->name('receptions.update');
-// Route::delete('/receptions/{idReception}', [Controller::class, 'destroyReception'])->name('receptions.destroy');
-
-// Route::post('/ajouterCmd', [Controller::class, 'storeCmd'])->name('ajouterCmd.store');
-// Route::delete('/commande/{idCmd}', [Controller::class, 'destroyCommande'])->name('commande.destroy');
-// Route::put('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
-// Route::get('modifCmd/{idCmd}', [Controller::class, 'updateCmd']);
-// Route::delete('/deleteLigneCommande/{id}', [Controller::class, 'deleteLigneCommande']);
-// -------------------------------
-Route::post('/ajouterVente', [Controller::class, 'storeVente'])->name('ajouterVente.store');
-// Route::put('/ajouterVente/{idV}', [Controller::class, 'updateVente'])->name('ajouterVente.update');
-Route::delete('/vente/{idV}', [Controller::class, 'destroyVente'])->name('Vente.destroy');
-Route::put('modifVente/{idV}', [Controller::class, 'updateVente']);
-Route::get('modifVente/{idV}', [Controller::class, 'updateVente']);
-Route::delete('/deleteLigneVente/{id}', [Controller::class, 'deleteLigneVente']);
-
-// Vente 
-// Route::get('ventes', [VenteController::class, 'vente'])->name('ventes');
-
-
-
-//familleProduitController
-Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);
-Route::post('/ajouterFamilleProduit', [FamilleProduitController::class, 'ajouterFamilleProduit'])->name('ajouterFamilleProduit');
-Route::delete('suppFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'supprimerFamilleProduit']);
-Route::put('modifFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'modifierFamilleProduit'])->name('modifierFamilleProduit');
-
-//categorieProduitController
-Route::get('/categorieProduit', [CategorieProduitController::class, 'categorieProduit']);
-Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit');
-Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit']);
-Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit');
-
-//ProduitController
-Route::get('/Produits', [ProduitController::class, 'Produits']);
-Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
-Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
-Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifProduit');
-Route::get('/produit/{idPro}/detail', [ProduitController::class, 'detail'])
-    ->name('produit.detail');
-
-Route::get('/export-entreprises', [ParamController::class, 'Exporttable']);
-Route::get('/get-tables/{databaseName}', [ParamController::class, 'getTables']);
-Route::get('/export-form',  [ParamController::class, 'Export'])->name('export');
-
-Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
-Route::post('/export-form',  [ParamController::class, 'Export'])->name('export');
+// Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
+// Route::post('/export-form',  [ParamController::class, 'Export'])->name('export');
 // Route::get('/export-entreprises', function () {
 //     return Excel::download(new EntreprisesExport, 'entreprises.xlsx');
 // });
@@ -208,8 +69,165 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Toutes les autres routes sont protégées par le middleware auth
-Route::middleware(['auth'])->group(function () {
+
+
+
+
+
+// routes tableau de bord 
+// Route::get('/tableaudebord', [TableauController::class, 'tableaudebord'])
+//     ->middleware(['auth', 'role:Administrateur,Vendeus/Caissier,Magasinier'])
+//     ->name('tableaudebord');
+
+
+// Route tableau de bord et Profil commune a tous les roles
+
+// Route::middleware(['auth', 'role:Administrateur,Magasinier,Vendeus/Caissier'])->group(function () {
+     Route::get('/tableaudebord', [TableauController::class, 'tableaudebord'])->name('tableaudebord')->middleware('auth','can_menu:tableaudebord,view');
+    
+     // profile, password, etc.
+     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile')->middleware('auth','can_menu:profile,view');
+     Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update')->middleware('auth','can_menu:profile,edit');
+     Route::get('/password/change', [AuthController::class, 'showChangePasswordForm'])->name('password.change')->middleware('auth','can_menu:profile,view');
+     Route::post('/password/change', [AuthController::class, 'changePassword'])->name('password.update')->middleware('auth','can_menu:profile,edit');
+// });
+
+
+// Route commune a l'admin et au magasinier 
+// Route::middleware(['auth', 'role:Administrateur,Magasinier'])->group(function () {
+     //Cayegorie Fournisseur
+     Route::get('/categoriesFournisseur', [CategorieFournisseurController::class, 'index'])->name('categoriesF')->middleware('auth','can_menu:categoriesF,view');
+     Route::post('/categorieFournisseur/store', [CategorieFournisseurController::class, 'store'])->name('categoriesF.store')->middleware('auth','can_menu:categoriesF,create');
+     Route::delete('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'destroy'])->name('categoriesF.destroy')->middleware('auth','can_menu:categoriesF,delete');
+     Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'update'])->name('categoriesF.update')->middleware('auth','can_menu:categoriesF,edit');
+     Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit')->middleware('auth','can_menu:categoriesF,view');
+
+     //Fournisseur
+     Route::get('/fournisseur', [FournisseurController::class, 'fournisseur'])->name('fournisseur')->middleware('auth','can_menu:fournisseur,view');
+     Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseurs.ajouterFournisseur')->middleware('auth','can_menu:fournisseur,create');
+     Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur'])->middleware('auth','can_menu:fournisseur,delete');
+     Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update')->middleware('auth','can_menu:fournisseur,edit');
+
+     // Magasin
+     Route::get('/magasins', [MagasinController::class, 'index'])->name('magasins')->middleware('auth','can_menu:magasins,view');
+     Route::post('/ajouterMagasin', [MagasinController::class, 'ajouterMagasin'])->name('magasins.ajouterMagasin')->middleware('auth','can_menu:magasins,create');
+     Route::delete('suppMagasin/{id}', [MagasinController::class, 'destroy'])->name('magasins.destroy')->middleware('auth','can_menu:magasins,delete');
+     Route::post('addProduct/{idMag}', [MagasinController::class, 'addProduct'])->name('magasins.addProduct')->middleware('auth','can_menu:magasins,create');
+     Route::put('modifMagasin/{id}', [MagasinController::class, 'updateMagasin'])->name('magasins.updateMagasin')->middleware('auth','can_menu:magasins,edit');
+
+      // CommandeAchat
+     Route::resource('commandeAchat', CommandeAchatController::class);
+     Route::delete('commandeAchat/ligne/{id}', [CommandeAchatController::class, 'deleteLigne'])
+          ->name('commandeAchat.ligne.destroy');
+     Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
+          ->name('commandeAchat.produit.tva');
+     /* Route::get('/get-nouvelle-reference', [CommandeAchatController::class, 'getNouvelleReference']);           */
+
+
+      // Produits
+     Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit'])->name('familleProduit')->middleware('auth','can_menu:familleProduit,view');
+     Route::post('/ajouterFamilleProduit', [FamilleProduitController::class, 'ajouterFamilleProduit'])->name('ajouterFamilleProduit')->middleware('auth','can_menu:familleProduit,create');
+     Route::delete('suppFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'supprimerFamilleProduit'])->middleware('auth','can_menu:familleProduit,delete');
+     Route::put('modifFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'modifierFamilleProduit'])->name('modifierFamilleProduit')->middleware('auth','can_menu:familleProduit,edit');
+
+
+     Route::get('/categorieProduit', [CategorieProduitController::class, 'categorieProduit'])->name('categorieProduit')->middleware('auth','can_menu:categorieProduit,view');
+     Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit')->middleware('auth','can_menu:categorieProduit,create');
+     Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit'])->middleware('auth','can_menu:categorieProduit,delete');
+     Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit')->middleware('auth','can_menu:categorieProduit,edit');
+
+
+     Route::get('/Produits', [ProduitController::class, 'Produits'])->name('Produits')->middleware('auth','can_menu:Produits,view');
+     Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit')->middleware('auth','can_menu:Produits,create');
+     Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit'])->middleware('auth','can_menu:Produits,delete');
+     Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit')->middleware('auth','can_menu:Produits,edit');
+     
+     // inventaire
+     // Route::get('/inventaire', [InventaireController::class, 'inventaire']);
+     Route::get('/inventaires', [InventaireController::class, 'index'])->name('inventaires')->middleware('auth','can_menu:inventaires,view');
+     Route::post('/inventaires', [InventaireController::class, 'search'])->name('inventaires.search')->middleware('auth','can_menu:inventaires,create');
+     // Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
+
+
+     // Reception
+     Route::resource('receptions', ReceptionCmdAchatController::class);
+     Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])
+          ->name('receptions.commande-details');
+     Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])->name('receptions.commande-details');
+
+
+     // Gestion des stocks
+     Route::get('/consulter-stocks', [ProduitStockController::class, 'consulterStocks'])->name('consulterStocks')->middleware('auth','can_menu:consulterStocks,view');
+     Route::get('/ajuster-stocks', [ProduitStockController::class, 'ajusterStocks'])->name('stocks.ajuster')->middleware('auth','can_menu:consulterStocks,view');
+     Route::post('/ajuster-stock', [ProduitStockController::class, 'ajusterStock'])->name('stocks.ajuster.stock')->middleware('auth','can_menu:consulterStocks,create');
+     Route::get('/stock-details/{idStocke}', [ProduitStockController::class, 'getStockDetails'])->name('stocks.details')->middleware('auth','can_menu:consulterStocks,view');
+     Route::get('/produit-image/{idPro}', [ProduitStockController::class, 'getProduitImage'])->name('produits.image')->middleware('auth','can_menu:consulterStocks,view');
+     
+     // Transferts entre magasins
+     Route::get('/transferts', [TransfertMagasinController::class, 'index'])->name('transferts')->middleware('auth','can_menu:transferts,view');
+     Route::post('/transferts', [TransfertMagasinController::class, 'store'])->name('transferts.store')->middleware('auth','can_menu:transferts,create');
+     Route::get('/transferts/{idTransMag}', [TransfertMagasinController::class, 'show'])->name('transferts.show')->middleware('auth','can_menu:transferts,view');
+     Route::get('/transferts/{idTransMag}/details', [TransfertMagasinController::class, 'showDetails'])->name('transferts.details')->middleware('auth','can_menu:transferts,view');
+     Route::get('/transferts/stocks/{idMag}', [TransfertMagasinController::class, 'getStocksByMagasin'])->name('transferts.stocks.magasin')->middleware('auth','can_menu:transferts,view');
+
+     // Pour le bail de fermeture de journée
+     Route::get('/fermetures', [FermetureController::class, 'index'])
+         ->name('fermetures')->middleware('auth','can_menu:fermetures,view');
+     // Route::get('/fermeture-journee', [FermetureController::class, 'store'])
+     //     ->name('fermeture.journee');
+     Route::post('/fermeture-journee', [FermetureController::class, 'store'])
+         ->name('fermeture.journee')->middleware('auth','can_menu:fermetures,create');
+
+
+
+// });
+
+
+// Route commune au roles administrateur et Vendeus/Caissier
+// Route::middleware(['auth', 'role:Administrateur,Vendeus/Caissier'])->group(function () {
+     // Ventes et factures
+     Route::post('/ajouterVente', [VenteController::class, 'storeVente'])->name('ajouterVente.store')->middleware('auth','can_menu:ventes,create');
+     Route::post('/deletevente/{idFacture}', [VenteController::class, 'deletevente'])->name('deletevente')->middleware('auth','can_menu:ventes,delete');
+     Route::put('modifVente/{idV}', [VenteController::class, 'updateVente'])->middleware('auth','can_menu:ventes,edit');
+     Route::get('modifVente/{idV}', [VenteController::class, 'updateVente'])->middleware('auth','can_menu:ventes,view');
+     Route::delete('/deleteLigneVente/{id}', [VenteController::class, 'deleteLigneVente'])->middleware('auth','can_menu:ventes,view');
+     Route::get('ventes', [VenteController::class, 'vente'])->name('ventes')->middleware('auth','can_menu:ventes,view');
+
+     Route::get('facturation', [VenteController::class, 'facturation'])->name('facturation')->middleware('auth','can_menu:facturation,view');
+     Route::get('/get-nouvelle-reference', [VenteController::class, 'getNouvelleReference'])->middleware('auth','can_menu:facturation,view');
+     Route::get('/get-produit-info/{id}', [VenteController::class, 'getProduitInfo'])->middleware('auth','can_menu:facturation,view');
+     Route::get('duplicatafacture/{id}', [VenteController::class, 'duplicatafacture'])->name('duplicatafacture')->middleware('auth','can_menu:facturation,view');
+
+     // proforma
+     Route::get('proforma', [ProformatController::class, 'index'])->name('proformat')->middleware('auth','can_menu:proformat,view');
+     Route::get('duplicataproforma/{idProforma}', [ProformatController::class, 'duplicataproformat'])->name('duplicataproforma')->middleware('auth','can_menu:proformat,view');
+     Route::post('ajouterproforma', [ProformatController::class, 'storeProforma'])->name('storeProforma')->middleware('auth','can_menu:proformat,create');
+     Route::post('/deleteproforma/{idProforma}', [ProformatController::class, 'deleteProforma'])->name('deleteProforma')->middleware('auth','can_menu:proformat,delete');
+
+
+     // clientcontroller
+     Route::get('/clients', [ClientController::class, 'index'])->name('clients')->middleware('auth','can_menu:clients,view');
+     Route::post('/clients', [ClientController::class, 'store'])->name('clients.store')->middleware('auth','can_menu:clients,create');
+     Route::put('/clients/{idC}', [ClientController::class, 'update'])->name('clients.update')->middleware('auth','can_menu:clients,edit');
+     Route::delete('/clients/{idC}', [ClientController::class, 'destroy'])->name('clients.destroy')->middleware('auth','can_menu:clients,delete');
+// });
+
+
+// Routes pour le role Administrateur seul 
+// Route::middleware(['auth', 'role:Administrateur'])->group(function () {
+
+
+// });
+
+//   les routes de l'admin
+
+   
+     // Export
+     Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
+     Route::post('/export-form', [ParamController::class, 'Export'])->name('export');
+
+
+     Route::middleware(['auth', 'role:Administrateur'])->group(function () {
 
      //Paramétrages
      Route::get('/delaiAlert', [ParamsController::class, 'index'])->name('delaiAlert');
@@ -221,173 +239,52 @@ Route::middleware(['auth'])->group(function () {
           return redirect('/tableaudebord');
      });
 
-     // Routes du profil
-     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
-     Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
-     Route::get('/password/change', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
-     Route::post('/password/change', [AuthController::class, 'changePassword'])->name('password.update');
+          Route::get('/menu-permissions', [MenuPermissionController::class, 'index'])->name('menupermissions');
+          Route::post('/admin/menu-permissions', [MenuPermissionController::class, 'updatePermissions'])->name('menupermissions.update');
 
-     //fournisseurcontroller
-     Route::get('/fournisseur', [FournisseurController::class, 'fournisseur'])->name('fournisseur');
-     Route::post('/ajouterFournisseur', [FournisseurController::class, 'ajouterFournisseur'])->name('fournisseurs.ajouterFournisseur');
-     Route::delete('suppFournisseur/{id}', [FournisseurController::class, 'deleteFournisseur']);
-     Route::put('modifFournisseur/{id}', [FournisseurController::class, 'updateFournisseur'])->name('fournisseur.update');
-
-     // clientcontroller
-     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-     Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
-     Route::put('/clients/{idC}', [ClientController::class, 'update'])->name('clients.update');
-     Route::delete('/clients/{idC}', [ClientController::class, 'destroy'])->name('clients.destroy');
-
-     // categorieclientcontroller
-     Route::get('/categorieclient', [CatClientController::class, 'categorieclient'])->name('categorieclient');
-     Route::post('/categorieclient/ajouter', [CatClientController::class, 'ajouterCategoryclient'])->name('categorieclient.ajouter');
-     Route::delete('/categorieclient/supprimer/{idCatCl}', [CatClientController::class, 'deletecategorieclient'])->name('categorieclient.supprimer');
-     Route::put('/categorieclient/modifier/{idCatCl}', [CatClientController::class, 'updatecategorieclient'])->name('categorieclient.modifier');
-
-     // Exercicecontroller
-     Route::get('/exercice', [ExerciceController::class, 'exercice']);
-     Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
-     Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
-
-     // Categories
-     Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
-     Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
-     Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
-     Route::get('/categories/edit/{id}', [CategoriesController::class, 'edit'])->name('categories.edit');
-     Route::post('/categories/store', [CategoriesController::class, 'store'])->name('categories.store');
-
-     //Fournisseur
-     Route::get('/categoriesFournisseur', [CategorieFournisseurController::class, 'index'])->name('categoriesF');
-     Route::post('/categorieFournisseur/store', [CategorieFournisseurController::class, 'store'])->name('categoriesF.store');
-     Route::delete('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'destroy'])->name('categoriesF.destroy');
-     Route::put('/categoriesFournisseur/{id}', [CategorieFournisseurController::class, 'update'])->name('categoriesF.update');
-     Route::get('/categoriesFournisseur/edit/{id}', [CategorieFournisseurController::class, 'edit'])->name('categoriesF.edit');
-
-     // Magasin
-     Route::get('/magasins', [MagasinController::class, 'index'])->name('magasins');
-     Route::post('/ajouterMagasin', [MagasinController::class, 'ajouterMagasin'])->name('magasins.ajouterMagasin');
-     Route::delete('suppMagasin/{id}', [MagasinController::class, 'destroy'])->name('magasins.destroy');
-     Route::post('addProduct/{idMag}', [MagasinController::class, 'addProduct'])->name('magasins.addProduct');
-     Route::put('modifMagasin/{id}', [MagasinController::class, 'updateMagasin'])->name('magasins.updateMagasin');
-
-     // CommandeAchat
-     Route::resource('commandeAchat', CommandeAchatController::class);
-     Route::delete('commandeAchat/ligne/{id}', [CommandeAchatController::class, 'deleteLigne'])
-          ->name('commandeAchat.ligne.destroy');
-     Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
-          ->name('commandeAchat.produit.tva');
-     /* Route::get('/get-nouvelle-reference', [CommandeAchatController::class, 'getNouvelleReference']);           */
-     
-
-     // Tableau de bord
-     Route::get('/tableaudebord', [TableauController::class, 'tableaudebord']);
-
-     // Caisses
-     Route::get('/caisses', [Controller::class, 'index'])->name('caisses.index');
-     Route::post('/caisses', [Controller::class, 'store'])->name('caisses.store');
-     Route::put('/caisses/{id}', [Controller::class, 'update'])->name('caisses.update');
-     Route::delete('/caisses/{id}', [Controller::class, 'destroy'])->name('caisses.destroy');
-
-     // Utilisateurs
-     Route::get('/utilisateurs', [ParamController::class, 'utilisateurs'])->name('utilisateurs.utilisateurs');
-     Route::post('/utilisateurs', [ParamController::class, 'enregistre'])->name('utilisateurs.enregistre');
-     Route::post('/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('utilisateurs.modifie');
-     Route::delete('/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('utilisateurs.supprime');
-
-     // Entreprise
-     Route::get('/entreprise', [ParamController::class, 'entreprise'])->name('entreprise');
-     Route::post('/ajouterEntreprise', [ParamController::class, 'ajouterEntreprise'])->name('ajouterEntreprise');
-     Route::put('modifierEntreprise/{idE}', [ParamController::class, 'modifEntreprise'])->name('modifEntreprise');
-     Route::delete('suppEntreprise/{idE}', [ParamController::class, 'supprimerEntreprise'])->name('supprimerEntreprise');
-
-     // Roles
-     Route::get('/roles', [RolesController::class, 'role'])->name('role');
-     Route::post('/roles/store', [RolesController::class, 'storeRole'])->name('storeRole');
-     Route::put('/roles/update/{id}', [RolesController::class, 'updateRole'])->name('updateRole');
-     Route::delete('/roles/delete/{id}', [RolesController::class, 'deleteRole'])->name('deleteRole');
-
-     // Vente
-     Route::post('/ajouterVente', [VenteController::class, 'storeVente'])->name('ajouterVente.store');
-     Route::post('/deletevente/{idFacture}', [VenteController::class, 'deletevente'])->name('deletevente');
-     Route::put('modifVente/{idV}', [VenteController::class, 'updateVente']);
-     Route::get('modifVente/{idV}', [VenteController::class, 'updateVente']);
-     Route::delete('/deleteLigneVente/{id}', [VenteController::class, 'deleteLigneVente']);
-     Route::get('ventes', [VenteController::class, 'vente'])->name('ventes');
-     Route::get('facturation', [VenteController::class, 'facturation'])->name('facturation');
-     Route::get('/get-nouvelle-reference', [VenteController::class, 'getNouvelleReference']);
-     Route::get('/get-produit-info/{id}', [VenteController::class, 'getProduitInfo']);
-     Route::get('duplicatafacture/{id}', [VenteController::class, 'duplicatafacture'])->name('duplicatafacture');
-
-     Route::get('proforma', [ProformatController::class, 'index'])->name('proformat');
-     Route::get('duplicataproforma/{idProforma}', [ProformatController::class, 'duplicataproformat'])->name('duplicataproforma');
-     Route::post('ajouterproforma', [ProformatController::class, 'storeProforma'])->name('storeProforma');
-     Route::post('/deleteproforma/{idProforma}', [ProformatController::class, 'deleteProforma'])->name('deleteProforma');
-
-     // Produits
-     Route::get('/familleProduit', [FamilleProduitController::class, 'familleProduit']);
-     Route::post('/ajouterFamilleProduit', [FamilleProduitController::class, 'ajouterFamilleProduit'])->name('ajouterFamilleProduit');
-     Route::delete('suppFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'supprimerFamilleProduit']);
-     Route::put('modifFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'modifierFamilleProduit'])->name('modifierFamilleProduit');
-
-     Route::get('/categorieProduit', [CategorieProduitController::class, 'categorieProduit']);
-     Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit');
-     Route::delete('suppCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'supprimerCategorieProduit']);
-     Route::put('modifCategorieProduit/{idCatPro}', [CategorieProduitController::class, 'modifierCategorieProduit'])->name('modifierCategorieProduit');
-
-     Route::get('/Produits', [ProduitController::class, 'Produits']);
-     Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
-     Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit']);
-     Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit');
-     Route::get('/produit/{idPro}/detail', [ProduitController::class, 'detail'])
-      ->name('produit.detail');
-
-     // inventaire
-     // Route::get('/inventaire', [InventaireController::class, 'inventaire']);
-     Route::get('/inventaires', [InventaireController::class, 'index'])->name('inventaires');
-     Route::post('/inventaires', [InventaireController::class, 'search'])->name('inventaires.search');
-     // Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit');
+          // Modes de paiement
+          Route::get('/modepaiement', [ModePaiementController::class, 'index'])->name('modepaiement');
+          Route::post('/modepaiement', [ModePaiementController::class, 'store'])->name('modepaiement.store');
+          Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
+          Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
 
 
+          // Roles
+          Route::get('/roles', [RolesController::class, 'role'])->name('role');
+          Route::post('/roles/store', [RolesController::class, 'storeRole'])->name('storeRole');
+          Route::put('/roles/update/{id}', [RolesController::class, 'updateRole'])->name('updateRole');
+          Route::delete('/roles/delete/{id}', [RolesController::class, 'deleteRole'])->name('deleteRole');
 
-     // Export
-     Route::get('/export-entreprises', [ParamController::class, 'entrepriseExport']);
-     Route::post('/export-form', [ParamController::class, 'Export'])->name('export');
+          // Entreprise
+          Route::get('/entreprise', [ParamController::class, 'entreprise'])->name('entreprise');
+          Route::post('/ajouterEntreprise', [ParamController::class, 'ajouterEntreprise'])->name('ajouterEntreprise');
+          Route::put('modifierEntreprise/{idE}', [ParamController::class, 'modifEntreprise'])->name('modifEntreprise');
+          Route::delete('suppEntreprise/{idE}', [ParamController::class, 'supprimerEntreprise'])->name('supprimerEntreprise');
 
-     // Reception
-     Route::resource('receptions', ReceptionCmdAchatController::class);
-    Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])
-    ->name('receptions.commande-details');
+          // Caisses
+          Route::get('/caisses', [Controller::class, 'index'])->name('caisses');
+          Route::post('/caisses', [Controller::class, 'store'])->name('caisses.store');
+          Route::put('/caisses/{id}', [Controller::class, 'update'])->name('caisses.update');
+          Route::delete('/caisses/{id}', [Controller::class, 'destroy'])->name('caisses.destroy');
+
+          // Utilisateurs
+          Route::get('/utilisateurs', [ParamController::class, 'utilisateurs'])->name('utilisateurs');
+          Route::post('/utilisateurs', [ParamController::class, 'enregistre'])->name('utilisateurs.enregistre');
+          Route::post('/utilisateurs/{idU}/modifier', [ParamController::class, 'modifie'])->name('utilisateurs.modifie');
+          Route::delete('/utilisateurs/{idU}/supprimer', [ParamController::class, 'supprime'])->name('utilisateurs.supprime');
 
 
-     Route::get('/receptions/commande-details/{idCommande}', [ReceptionCmdAchatController::class, 'getCommandeDetails'])->name('receptions.commande-details');
+          // Exercicecontroller
+          Route::get('/exercice', [ExerciceController::class, 'exercice'])->name('exercice');
+          Route::post('/ajouterExercice', [ExerciceController::class, 'ajouterExercice'])->name('ajouterExercice');
+          Route::put('activerExercice/{id}', [ExerciceController::class, 'activerExercice'])->name('activerExercice');
 
-     // Modes de paiement
-     Route::get('/modepaiement', [ModePaiementController::class, 'index'])->name('modepaiement.index');
-     Route::post('/modepaiement', [ModePaiementController::class, 'store'])->name('modepaiement.store');
 
-     // Gestion des stocks
-     Route::get('/consulter-stocks', [ProduitStockController::class, 'consulterStocks'])->name('stocks.consulter');
-     Route::get('/ajuster-stocks', [ProduitStockController::class, 'ajusterStocks'])->name('stocks.ajuster');
-     Route::post('/ajuster-stock', [ProduitStockController::class, 'ajusterStock'])->name('stocks.ajuster.stock');
-     Route::get('/stock-details/{idStocke}', [ProduitStockController::class, 'getStockDetails'])->name('stocks.details');
-     Route::get('/produit-image/{idPro}', [ProduitStockController::class, 'getProduitImage'])->name('produits.image');
-     
-     // Transferts entre magasins
-     Route::get('/transferts', [TransfertMagasinController::class, 'index'])->name('transferts.index');
-     Route::post('/transferts', [TransfertMagasinController::class, 'store'])->name('transferts.store');
-     Route::get('/transferts/{idTransMag}', [TransfertMagasinController::class, 'show'])->name('transferts.show');
-     Route::get('/transferts/{idTransMag}/details', [TransfertMagasinController::class, 'showDetails'])->name('transferts.details');
-     Route::get('/transferts/stocks/{idMag}', [TransfertMagasinController::class, 'getStocksByMagasin'])->name('transferts.stocks.magasin');
-     
-     Route::put('/modepaiement/{idModPaie}', [ModePaiementController::class, 'update'])->name('modepaiement.update');
-     Route::delete('/modepaiement/{idModPaie}', [ModePaiementController::class, 'destroy'])->name('modepaiement.destroy');
+          // Categorie Tarifaire
+          Route::get('/categorie_tarifaire', [CategorieTarifaireController::class, 'CategorieTarifaire'])->name('CategorieTarifaire');
+          Route::post('/categorie_tarifaire_create', [CategorieTarifaireController::class, 'CreateCategorieTarifaire'])->name('CreateCategorieTarifaire');
+          Route::put('/categorie_tarifaire_edit/{id}', [CategorieTarifaireController::class, 'EditCategorieTarifaire'])->name('EditCategorieTarifaire');
+          Route::post('/categorie_tarifaire_activate/{id}', [CategorieTarifaireController::class, 'ActiverouDeasactiverCategorieTarifaire'])->name('DeleteCategorieTarifaire');
+
 });
 
-// Pour le bail de fermeture de journée
-Route::get('/fermetures', [FermetureController::class, 'index'])
-    ->name('fermeture.index');
-// Route::get('/fermeture-journee', [FermetureController::class, 'store'])
-//     ->name('fermeture.journee');
-Route::post('/fermeture-journee', [FermetureController::class, 'store'])
-    ->name('fermeture.journee');

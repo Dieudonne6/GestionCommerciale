@@ -52,6 +52,7 @@
                                         <th class="text-center">Nom Client</th>
                                         <th class="text-center">Date Operation</th>
                                         <th class="text-center">Montant total</th>
+                                        <th class="text-center">Montant aib</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -71,6 +72,19 @@
                                                     {{ number_format($facture->montantTotalTTC, 0, ',', '.') }}
                                                 @endif
                                             </td>
+
+                                            @if ($facture->vente->montant_aib > 0)    
+                                                <td>
+                                                    @if (str_ends_with($facture->counter, 'FA'))
+                                                        - {{ number_format($facture->vente->montant_aib, 0, ',', '.') }}
+                                                    @else
+                                                        {{ number_format($facture->vente->montant_aib, 0, ',', '.') }}
+                                                    @endif
+                                                </td>
+                                            @else
+                                            <td></td>
+                                            @endif
+
 
                                             {{-- <td>{{ $facture->montantTotalTTC }}</td> --}}
                                             <td>
