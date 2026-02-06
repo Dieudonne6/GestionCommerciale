@@ -19,7 +19,7 @@ use App\Http\Controllers\CommandeAchatController;
 use App\Http\Controllers\MagasinController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ReceptionCmdAchatController;
+use App\Http\Controllers\ReceptionCmdAchatController; 
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModePaiementController;
 use App\Http\Controllers\InventaireController;
@@ -27,6 +27,7 @@ use App\Http\Controllers\FermetureController;
 use App\Http\Controllers\ProduitStockController;
 use App\Http\Controllers\TransfertMagasinController;
 use App\Http\Controllers\ProformatController;
+use App\Http\Controllers\ParamsController;
 use App\Http\Controllers\MenuPermissionController;
 use App\Http\Controllers\CategorieTarifaireController;
 
@@ -230,6 +231,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
      Route::middleware(['auth', 'role:Administrateur'])->group(function () {
+
+     //Paramétrages
+     Route::get('/delaiAlert', [ParamsController::class, 'index'])->name('delaiAlert');
+     Route::post('/params', [ParamsController::class, 'store'])->name('params.store');
+
+
+     // Route racine
+     Route::get('/', function () {
+          return redirect('/tableaudebord');
+     });
 
           Route::get('/menu-permissions', [MenuPermissionController::class, 'index'])->name('menupermissions');
           Route::post('/admin/menu-permissions', [MenuPermissionController::class, 'updatePermissions'])->name('menupermissions.update');

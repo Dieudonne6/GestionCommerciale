@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Models\Params;
+
+use Carbon\Carbon;
 
 class ReceptionCmdAchatController extends Controller
 {
@@ -176,8 +179,6 @@ class ReceptionCmdAchatController extends Controller
                 'details.*.prixUnit' => 'required|numeric|min:0',
                 'details.*.iddetailcom' => 'required|numeric|min:0',
                 'details.*.expiration' => 'nullable|date|after:today',
-                'details.*.alert' => 'nullable|date|required_with:details.*.expiration',
-
 
                 // 'details.*.idMag' => 'required|exists:magasins,idMag',
             ]);
@@ -206,6 +207,14 @@ class ReceptionCmdAchatController extends Controller
                 ]);
 
                 // Traitement des lignes
+                $param = Params::first();
+
+                if (!$param || !$param->delai_alerte) {
+                    throw new \Exception("Le délai d’alerte n’est encore pas défini dans les paramètres.");
+                }
+
+                $delaiAlerte = $param->delai_alerte;
+
                 foreach ($request['details'] as $d) {
 
                     $dc = DetailCommandeAchat::with('produit')->findOrFail($d['iddetailcom']);
@@ -217,14 +226,23 @@ class ReceptionCmdAchatController extends Controller
                         );
                     }
 
+                    $expiration = $d['expiration'] ?? null;
+                    $alert = null;
+
+                    if ($expiration) {
+                        $alert = Carbon::parse($expiration)
+                            ->subDays($delaiAlerte)
+                            ->format('Y-m-d');
+                    }
+
                     // détail réception
                     DetailReceptionCmdAchat::create([
                         'idRecep' => $reception->idRecep,
                         'idDetailCom' => $d['iddetailcom'],
                         'qteReceptionne' => $d['qteReceptionne'],
                         'prixUnit' => $d['prixUnit'],
-                        'expiration' => $d['expiration'] ?? null,
-                        'alert' => $d['alert'] ?? null,
+                        'expiration' => $expiration,
+                        'alert' => $alert,
                     ]);
 
                     // maj qteRestante

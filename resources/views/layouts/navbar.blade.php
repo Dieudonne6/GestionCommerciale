@@ -261,6 +261,11 @@
                                         </li>
                                     @endif
 
+                                    @if($isAdmin)
+                                        <li class="nav-item"><a class="nav-link" href="{{ url('/delaiAlert')}}">Paramétrages</a>
+                                        </li>
+                                    @endif
+                                    
                                     @canMenu('fermetures','view')
                                         <li class="nav-item">
                                             <form action="{{ route('fermeture.journee') }}" method="POST" class="d-inline">

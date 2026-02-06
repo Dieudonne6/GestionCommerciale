@@ -229,13 +229,12 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Produit</th>
-                                        <th>Qté commandée</th>
-                                        <th>Date d'expiration</th>
-                                        <th>Date d'alerte</th>
+                                        <th>Qté commandée</th>                                        
                                         <th>Qté restante</th>
                                         <th>Qté réceptionnée</th>
                                         <th>Qté restante après réception</th>
                                         <th class="d-none">Prix unitaire </th>
+                                        <th>Date d'expiration (Si produit périssable)</th>
                                         <th>Magasin</th>
                                     </tr>
                                 </thead>
@@ -369,17 +368,7 @@
                             tr.innerHTML = `
                                 <td>${d.produit}</td>
                                 <td>${d.qteCmd}</td>
-                               <td>
-                                    <input type="date"
-                                        name="details[${i}][expiration]"
-                                        class="form-control expiration-input">
-                                </td>
 
-                                <td>
-                                    <input type="date"
-                                        name="details[${i}][alert]"
-                                        class="form-control alert-input d-none">
-                                </td>
                                 <td>${d.qteRestante}</td>
                                 <td>
                                     <input type="number"
@@ -398,6 +387,11 @@
                                         name="details[${i}][prixUnit]"
                                         class="form-control "
                                         value="${d.prixUnit}" readonly>
+                                </td>
+                                <td>
+                                    <input type="date"
+                                        name="details[${i}][expiration]"
+                                        class="form-control expiration-input">
                                 </td>
                                 <td>
                                     <input type="hidden" name="details[${i}][idMag]" value="${d.idMag}">

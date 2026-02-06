@@ -123,7 +123,7 @@
                                                     <div class="flex-grow-1 ms-2">
                                                         <h6 class="my-0 fw-normal text-dark fs-13">
                                                             <strong>{{ $notif->libelle }}</strong> :
-                                                            <strong>{{ $notif->qte }}</strong> produits reçus le
+                                                            <strong>les {{ $notif->qte }}</strong> reçus le
                                                             <strong>{{ $notif->date_reception }}</strong>
                                                             restent <strong>{{ $notif->reste }}</strong> en stock.
                                                             <br>

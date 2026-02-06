@@ -127,9 +127,9 @@ class AppServiceProvider extends ServiceProvider
             $peremptionNotifications = collect();
 
             $lots = DetailReceptionCmdAchat::with('detailCommandeAchat.produit')
+                ->whereDate('alert', '<=', $today)
                 ->whereDate('expiration', '>=', $today)
                 ->get();
-
             
             Carbon::setLocale('fr');
 
