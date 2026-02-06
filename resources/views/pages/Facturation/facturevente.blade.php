@@ -74,7 +74,7 @@
         <hr>
         <div class="totals">
             <div><span class="label">Total</span> <span class="value"> {{ number_format($montanttotal , 0, ',', '.')}} </span></div>
-            <div><span class="label">REGIME TPS [E]</span> <span class="value"> {{ number_format($montanttotal , 0, ',', '.')}} </span></div>
+            <div><span class="label">REGIME TPS [E]</span> <span class="value"> {{ number_format(($montanttotal - $montantaib), 0, ',', '.')}} </span></div>
             @if ($montantaib > 0)
                 <div><span class="label" style="font-weight: bold">AIB 1%</span> <span class="value"> {{ number_format($montantaib , 0, ',', '.')}} </span></div>                
             @endif

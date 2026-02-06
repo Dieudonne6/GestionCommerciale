@@ -38,10 +38,10 @@
             @endif
             <div class="col-auto">
               @if (!$Entreprises)
+              @else
               <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter une Entreprise</button>
               </div><!--end col--> 
-              @else
                   
               @endif
 
@@ -218,6 +218,16 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                          <div class="mb-2">
+                            <label for="token">Token</label>
+                            <textarea class="form-control" name="token" id="token" rows="5">{{ $allEntreprise->token }}</textarea>
+                            @error('token')
+                              <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                          </div>
+                        </div>
+
                         
                             <div class="row">
                                 <div class=" mb-2">
@@ -368,6 +378,16 @@
                             @enderror --}}
                         </div>
                     </div>
+
+                        <div class="row">
+                          <div class="mb-2">
+                            <label for="token">Token</label>
+                            <textarea class="form-control" name="token" id="token" rows="5"></textarea>
+                            @error('token')
+                              <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                          </div>
+                        </div>
                 
                     <div class="row">
                         <div class="col-md-12">

@@ -121,6 +121,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
      Route::get('/commande-achat/get-produittva/{idProduit}', [CommandeAchatController::class, 'getProduittva'])
           ->name('commandeAchat.produit.tva');
      /* Route::get('/get-nouvelle-reference', [CommandeAchatController::class, 'getNouvelleReference']);           */
+     Route::get('/magasin/{idMag}/produits',[CommandeAchatController::class, 'getProduitsByMagasin']);
 
 
       // Produits
@@ -128,7 +129,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
      Route::post('/ajouterFamilleProduit', [FamilleProduitController::class, 'ajouterFamilleProduit'])->name('ajouterFamilleProduit')->middleware('auth','can_menu:familleProduit,create');
      Route::delete('suppFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'supprimerFamilleProduit'])->middleware('auth','can_menu:familleProduit,delete');
      Route::put('modifFamilleProduit/{idFamPro}', [FamilleProduitController::class, 'modifierFamilleProduit'])->name('modifierFamilleProduit')->middleware('auth','can_menu:familleProduit,edit');
-
 
      Route::get('/categorieProduit', [CategorieProduitController::class, 'categorieProduit'])->name('categorieProduit')->middleware('auth','can_menu:categorieProduit,view');
      Route::post('/ajouterCategorieProduit', [CategorieProduitController::class, 'ajouterCategorieProduit'])->name('ajouterCategorieProduit')->middleware('auth','can_menu:categorieProduit,create');
@@ -140,7 +140,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
      Route::post('/ajouterProduit', [ProduitController::class, 'ajouterProduit'])->name('ajouterProduit')->middleware('auth','can_menu:Produits,create');
      Route::delete('suppProduit/{idPro}', [ProduitController::class, 'supprimerProduit'])->middleware('auth','can_menu:Produits,delete');
      Route::put('modifProduit/{idPro}', [ProduitController::class, 'modifierProduit'])->name('modifierProduit')->middleware('auth','can_menu:Produits,edit');
-     
+     Route::get('/produit/{idPro}/detail', [ProduitController::class, 'detail'])
+          ->name('produit.detail');
+
+          
      // inventaire
      // Route::get('/inventaire', [InventaireController::class, 'inventaire']);
      Route::get('/inventaires', [InventaireController::class, 'index'])->name('inventaires')->middleware('auth','can_menu:inventaires,view');

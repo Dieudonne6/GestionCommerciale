@@ -24,6 +24,7 @@ class EntrepriseRequest extends FormRequest
         return [
             'nom' => 'required|string|min:3',
             'IFU' => 'required|digits:13|numeric',
+            'token' => 'nullable|string',
             'adresse' => 'required|string',
             'telephone' => 'required|string',
             'mail' => 'required|string',
@@ -60,6 +61,8 @@ class EntrepriseRequest extends FormRequest
             
             'regime.required' => 'Le regime est obligatoire.',
             'regime.string' => 'Le regime  doit être une chaîne de caractères.',
+
+            'token.string' => 'Le token doit être une chaîne de caractères.',
             
             'logo.required' => 'Le logo est obligatoire.',
             'logo.file' => 'Le fichier doit être un fichier valide.',

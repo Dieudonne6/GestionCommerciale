@@ -844,6 +844,8 @@ class VenteController extends Controller
                 'libellModepaie' => $libellModepaie,
                 // 'detailvante' => $vente,
             ]);
+        } else {
+            return back()->with('erreur', 'Erreur API : token ou ifu ou item invalide ');
         }
 
     }
@@ -1203,37 +1205,37 @@ class VenteController extends Controller
                     ->update(['statut' => 0]);
 
 
-            try {
-                DB::beginTransaction();
+                try {
+                    DB::beginTransaction();
 
-                // Récupérer les lignes de la vente originale
-                $details = \App\Models\DetailVente::where('idV', $idV)->get();
+                    // Récupérer les lignes de la vente originale
+                    $details = \App\Models\DetailVente::where('idV', $idV)->get();
 
-                foreach ($details as $detail) {
-                    // Verrouiller la ligne de stock pour éviter course-condition
-                    $stock = \App\Models\Stocke::where('idPro', $detail->idPro)->lockForUpdate()->first();
+                    foreach ($details as $detail) {
+                        // Verrouiller la ligne de stock pour éviter course-condition
+                        $stock = \App\Models\Stocke::where('idPro', $detail->idPro)->lockForUpdate()->first();
 
-                    if ($stock) {
-                        // Incrémente la quantité en stock
-                        $stock->increment('qteStocke', intval($detail->qte));
-                    } else {
-                        // Si aucune ligne stock n'existe, tu peux en créer une (ou loguer l'erreur)
-                        return back()->with('erreur', "Erreur lors de la restitution du stock : ");
+                        if ($stock) {
+                            // Incrémente la quantité en stock
+                            $stock->increment('qteStocke', intval($detail->qte));
+                        } else {
+                            // Si aucune ligne stock n'existe, tu peux en créer une (ou loguer l'erreur)
+                            return back()->with('erreur', "Erreur lors de la restitution du stock : ");
+                        }
                     }
+
+                    // Marquer la vente comme annulée / A VOIR selon ta logique (tu l'as déjà fait)
+                    Vente::where('idV', $idV)->update(['statutVente' => 0]);
+
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    // log l'erreur puis retourne avec message
+                    \Log::error('Erreur restauration stock pour vente '.$idV.': '.$e->getMessage(), [
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                    return back()->with('erreur', "Erreur lors de la restitution du stock : " . $e->getMessage());
                 }
-
-                // Marquer la vente comme annulée / A VOIR selon ta logique (tu l'as déjà fait)
-                Vente::where('idV', $idV)->update(['statutVente' => 0]);
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                // log l'erreur puis retourne avec message
-                \Log::error('Erreur restauration stock pour vente '.$idV.': '.$e->getMessage(), [
-                    'trace' => $e->getTraceAsString()
-                ]);
-                return back()->with('erreur', "Erreur lors de la restitution du stock : " . $e->getMessage());
-            }
 
                 // Vente::where('idV', $idV)
                 //     ->update(['statutVente' => 0]);
@@ -1270,7 +1272,10 @@ class VenteController extends Controller
                 // 'detailvante' => $vente,
             ]);
 
-        }
+            } else {
+                return back()->with('erreur', 'Erreur API : token ou ifu ou item invalide ');
+            }
+
         } else {
             // dd('codemecef incorrect');
             return back()->with('erreur', "Le codemecef entrer ne correspond pas a celui de la facture originale.");

@@ -160,6 +160,7 @@ class ParamController extends Controller
         try {
             $entreprise = new Entreprise();
             $entreprise->IFU = $request->input('IFU');
+            $entreprise->token = $request->input('token');
             $entreprise->nom = $request->input('nom');
             $entreprise->telephone = $request->input('telephone');
             $entreprise->mail = $request->input('mail');
@@ -204,6 +205,7 @@ class ParamController extends Controller
             $modifEntreprise = Entreprise::where('idE', $idE)->firstOrFail();
             $modifEntreprise->nom = $request->input('nom');
             $modifEntreprise->IFU = $request->input('IFU');
+            $modifEntreprise->token = $request->input('token');
             $modifEntreprise->telephone = $request->input('telephone');
             $modifEntreprise->mail = $request->input('mail');
             $modifEntreprise->adresse = $request->input('adresse');
