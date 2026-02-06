@@ -89,9 +89,30 @@
                          style="width: 70px; height:70px; object-fit: cover; object-position: center;">
                   </td>                  
                   <td class="text-center">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModifyBoardModal{{$allProduit->idPro}}"> Modifier</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal{{$allProduit->idPro}}"> Supprimer</button>
+                   
+                    <a href="{{ route('produit.detail', $allProduit->idPro) }}"
+                      class="btn btn-sm btn-info"
+                      title="Détails">
+                      <i class="fa-solid fa-eye"></i>
+                    </a>
+
+                    <button type="button"
+                            class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#ModifyBoardModal{{$allProduit->idPro}}"
+                            title="Modifier">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteBoardModal{{$allProduit->idPro}}"
+                            title="Supprimer">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                   </td>
+
                 </tr>
                 @php
                     $i++;
@@ -196,6 +217,8 @@
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
+                <input type="hidden" class="form-control @error('prixReelAchat') is-invalid @enderror" id="prixReelAchat" name="prixReelAchat" value="{{ $allProduit->prixReelAchat }}">
+               
             </div>
 
             <!-- Radio (modification) : name unique par produit -->
@@ -455,16 +478,14 @@
                 @enderror
               </div>
             </div>
-
-            {{-- </div> --}}
-            <div class="row mb-2">
-              <div class="col-md-12 form-group">
-                <label for="imageAdd">Image</label>
-                <input type="file" class="form-control @error('image') is-invalid @enderror" id="imageAdd" name="image" accept="image/*" onchange="previewImage(event)" required>
-                @error('image')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
+            <input type="hidden"  class="form-control @error('prixReelAchat') is-invalid @enderror" id="prixReelAchat" name="prixReelAchat" value="0">
+       
+            <div class="col-md-12">
+              <label for="imageAdd">Image</label>
+              <input type="file" class="form-control @error('image') is-invalid @enderror" id="imageAdd" name="image" accept="image/*" onchange="previewImage(event)" required>
+              @error('image')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
             </div>
             <div class="row mb-2">
               <div class="col-md-12">

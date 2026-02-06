@@ -230,10 +230,12 @@
                                     <tr>
                                         <th>Produit</th>
                                         <th>Qté commandée</th>
+                                        <th>Date d'expiration</th>
+                                        <th>Date d'alerte</th>
                                         <th>Qté restante</th>
                                         <th>Qté réceptionnée</th>
                                         <th>Qté restante après réception</th>
-                                        <th>Prix unitaire</th>
+                                        <th class="d-none">Prix unitaire </th>
                                         <th>Magasin</th>
                                     </tr>
                                 </thead>
@@ -367,6 +369,17 @@
                             tr.innerHTML = `
                                 <td>${d.produit}</td>
                                 <td>${d.qteCmd}</td>
+                               <td>
+                                    <input type="date"
+                                        name="details[${i}][expiration]"
+                                        class="form-control expiration-input">
+                                </td>
+
+                                <td>
+                                    <input type="date"
+                                        name="details[${i}][alert]"
+                                        class="form-control alert-input d-none">
+                                </td>
                                 <td>${d.qteRestante}</td>
                                 <td>
                                     <input type="number"
@@ -380,10 +393,10 @@
                                         value="${d.idDetailCom}">
                                 </td>
                                 <td class="qteRestanteApres">${d.qteRestante}</td>
-                                <td>
+                                <td class="d-none">
                                     <input type="number"
                                         name="details[${i}][prixUnit]"
-                                        class="form-control"
+                                        class="form-control "
                                         value="${d.prixUnit}" readonly>
                                 </td>
                                 <td>
@@ -393,6 +406,25 @@
                             `;
 
                             tbody.appendChild(tr);
+
+                            const expirationInput = tr.querySelector('.expiration-input');
+                            const alertInput = tr.querySelector('.alert-input');
+
+                            expirationInput.addEventListener('change', function () {
+
+                                if (this.value) {
+                                    alertInput.classList.remove('d-none');
+                                    alertInput.required = true;
+
+                                    // l’alerte doit être AVANT expiration
+                                    alertInput.max = this.value;
+
+                                } else {
+                                    alertInput.classList.add('d-none');
+                                    alertInput.required = false;
+                                    alertInput.value = '';
+                                }
+                            });
 
                             const input = tr.querySelector('.qteReceptionneInput');
                             const restanteCell = tr.querySelector('.qteRestanteApres');
@@ -422,3 +454,9 @@
 
     @endpush
 @endsection
+
+
+
+
+
+

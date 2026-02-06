@@ -33,6 +33,7 @@ class ProduitRequest extends FormRequest
             'stockMinimum'  => 'required|integer|min:0|lt:stockAlert',
             'qteStocke' => 'nullable|integer|min:0',
             'image' => 'nullable|file|image|mimes:jpg,jpeg,png|max:2048',
+            'prixReelAchat' => 'nullable|numeric'
         ];
 
         // Pour la création (quand il n'y a pas d'ID dans la route)

@@ -145,6 +145,9 @@ class CommandeAchatController extends Controller
                         'qteRestante' => $ligne['qteCmd'],
                     ]);
 
+                     Produit::where('idPro', $ligne['idPro'])
+                        ->update(['prixReelAchat' => $prixUnit]);
+
                     $totalHT += $ht;
                     $totalTTC += $ttc;
                 }
@@ -242,6 +245,9 @@ class CommandeAchatController extends Controller
                         ]);
                     }
 
+                     Produit::where('idPro', $ligne['idPro'])
+                        ->update(['prixReelAchat' => $prixUnit]);
+                        
                     $totalHT += $ht;
                     $totalTTC += $ttc;
                 }

@@ -24,6 +24,7 @@ class ReceptionCmdAchat extends Model
         'idExercice',
         'idCommande',
         'idU',
+       
     ];
 
 

@@ -44,32 +44,33 @@ public function ajouterProduit(ProduitRequest $request)
         $Produit->idFamPro = $request->input('idFamPro') ;
         /* $Produit->idMag = $request->input('idMag'); */
         $Produit->prix = $request->input('prix');
-        $Produit->prix = $request->input('prix');
+          $Produit->desc = $request->input('desc');
         $Produit->prixAchatTheorique = $request->input('prixAchat');
         $Produit->marge = $request->input('marge');
         $Produit->stockAlert = $request->input('stockAlert');
         $Produit->stockMinimum = $request->input('stockMinimum');
         $imageContent = file_get_contents($request->file('image')->getRealPath());
         $Produit->image = $imageContent;
+        $Produit->prixReelAchat = $request->input('prixReelAchat');
         $Produit->save();
 
-        // Création de l'entrée dans la table Stockes
-        Stocke::create([
-            'qteStocke' => $request->input('qteStocke'),
-            'CUMP' => 0, // Coût unitaire moyen pondéré initial
-            'idPro' => $Produit->idPro, // ID du produit créé
-            'idMag' => $request->input('idMag'), // ID du magasin
-        ]);
+            // Création de l'entrée dans la table Stockes
+            Stocke::create([
+                'qteStocke' => $request->input('qteStocke'),
+                'CUMP' => 0, // Coût unitaire moyen pondéré initial
+                'idPro' => $Produit->idPro, // ID du produit créé
+                'idMag' => $request->input('idMag'), // ID du magasin
+            ]);
 
-        return back()->with("status", "Le produit a été créé avec succès");
-        // Nettoyer la session au cas où il resterait une ancienne erreur
-        session()->forget('errorModalId');
-    } catch (\Exception $e) {
-        return redirect()->back()
-            ->withErrors($e->getMessage())
-            ->with('errorModalId', 'addBoardModal'); // ID du modal d'ajout
-    }       
-}
+            return back()->with("status", "Le produit a été créé avec succès");
+            // Nettoyer la session au cas où il resterait une ancienne erreur
+            session()->forget('errorModalId');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors($e->getMessage())
+                ->with('errorModalId', 'addBoardModal'); // ID du modal d'ajout
+        }       
+    }
 
 
 
@@ -96,6 +97,7 @@ public function ajouterProduit(ProduitRequest $request)
             $modifProduit->desc = $request->input('desc');
             $modifProduit->stockAlert = $request->input('stockAlert');
             $modifProduit->stockMinimum = $request->input('stockMinimum');
+            $modifProduit->prixReelAchat = $request->input('prixReelAchat');
             
             // Mettre à jour l'image seulement si une nouvelle est fournie
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -122,6 +124,17 @@ public function ajouterProduit(ProduitRequest $request)
         }  
     }
     
+        public function detail($idPro)
+        {
+            $produit = Produit::with([
+                'categorieProduit',
+                'familleProduit',
+                'stocke.magasin',
+                'detailCommandeAchat'
+            ])->findOrFail($idPro);
+
+            return view('pages.ProduitStock.detail', compact('produit'));
+        }
 
 
 }
