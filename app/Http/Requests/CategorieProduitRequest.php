@@ -22,6 +22,9 @@ class CategorieProduitRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        $idCatPro = $this->route('idCatPro');
+
         return [
             // 'codeCatPro' => 'required|string|min:3|unique:categorie_produits,codeCatPro',
             'codeCatPro' => [
