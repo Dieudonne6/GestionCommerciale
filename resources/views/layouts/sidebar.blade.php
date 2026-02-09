@@ -14,8 +14,6 @@
         z-index: 1;
     }
 
-
-    /* Animation cloche */
     .bell-animate {
         animation: ring 1.5s infinite;
     }
@@ -31,7 +29,7 @@
     }
     .first i {
         color: #dd1717ff !important;      
-        font-size: 20px;    /* un peu plus présent */
+        font-size: 20px;   
     }
 
 </style>
@@ -95,6 +93,8 @@
                         aria-expanded="false">
 
                             <i class="icofont-bell-alt bell-animate"></i>
+                            <i class="icofont-bell-alt {{ $stockNotifications->count() >= 1 ? 'bell-animate' : '' }}"></i>
+
 
                             @if($stockNotifications->count() > 0)
                                 <span class="alert-badge bg-danger">
