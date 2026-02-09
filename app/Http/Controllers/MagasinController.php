@@ -78,18 +78,58 @@ class MagasinController extends Controller
     public function addProduct(Request $request, $idMag)
     {
         // Vérifier si le produit existe déjà
-        $produit = Produit::where('libelle', $request->libelle)->first();
+        // $produit = Produit::where('libelle', $request->libelle)->first();
 
         // dd($request->all(), $idMag);
 
         $validator = \Validator::make($request->all(), [
-            'libelle' => 'required|string|max:255',
+            'libelle' => 'required|string|min:5',
+            'prix' => 'required|numeric',
+            'desc' => 'nullable|string|min:10|max:1000',
+            'idCatPro' => 'required|numeric',
+            'idFamPro' => 'required|numeric',
+            'stockAlert' => 'required|integer|min:0',
+            // 'stockMinimum' => 'required|integer|min:0',
+            'stockMinimum'  => 'required|integer|min:0|lt:stockAlert',
             'qteStocke' => 'nullable|integer|min:0',
-            'idCatPro' => 'required',
-            'idFamPro' => 'required',
+            'image' => 'nullable|file|image|mimes:jpg,jpeg,png|max:2048',
+            'prixReelAchat' => 'nullable|numeric'
         ], [
-            'idCatPro.required' => 'Ce champ est obligatoire.',
-            'idFamPro.required' => 'Ce champ est obligatoire.',
+            'libelle.required' => 'Le libellé est obligatoire.',
+            'libelle.string' => 'Le libellé doit être une chaîne de caractères.',
+            'libelle.min' => 'Le libellé doit contenir au moins 5 caractères.',
+            
+            'prix.required' => 'Le prix est obligatoire.',
+            'prix.numeric' => 'Le prix doit être un nombre valide.',
+            
+            'desc.required' => 'La description est obligatoire.',
+            'desc.string' => 'La description doit être une chaîne de caractères.',
+            'desc.min' => 'La description doit contenir au moins 10 caractères.',
+            'desc.max' => 'La description ne doit pas dépasser 1000 caractères.',
+            
+            'idCatPro.integer' => 'La catégorie doit être un entier valide.',
+            'idFamPro.integer' => 'La famille doit être un entier valide.',
+            'idMag.required' => 'Le magasin est obligatoire.',
+            'idMag.integer' => 'Le magasin doit être un entier valide.',
+            
+            'stockAlert.required' => 'Le seuil d\'alerte est obligatoire.',
+            'stockAlert.integer' => 'Le seuil d\'alerte doit être un nombre entier.',
+            'stockAlert.min' => 'Le seuil d\'alerte doit être supérieur ou égal à 0.',
+            
+            'stockMinimum.required' => 'Le stock minimum est obligatoire.',
+            'stockMinimum.integer' => 'Le stock minimum doit être un nombre entier.',
+            'stockMinimum.min' => 'Le stock minimum doit être supérieur ou égal à 0.',
+            'stockMinimum.lt' => 'Le stock minimum doit être strictement inférieur au seuil d’alerte.',
+            
+            'qteStocke.required' => 'La quantité est obligatoire.',
+            'qteStocke.integer' => 'La quantité doit être un nombre entier.',
+            'qteStocke.min' => 'La quantité doit être supérieure ou égale à 0.',
+            
+            'image.required' => 'L\'image est obligatoire pour la création d\'un produit.',
+            'image.file' => 'Le fichier doit être un fichier valide.',
+            'image.image' => 'Le fichier doit être une image.',
+            'image.mimes' => 'L\'image doit avoir l\'une des extensions suivantes : jpg, jpeg, png.',
+            'image.max' => 'L\'image ne doit pas dépasser 2 Mo.',
         ]);
 
         // Vérifier si la validation a échoué
@@ -99,7 +139,7 @@ class MagasinController extends Controller
         }
 
         // dd('jojo');
-        if (!$produit) {
+        // if (!$produit) {
             // Création du produit s'il n'existe pas
             $produit = Produit::create([
                 'libelle' => $request->libelle,
@@ -109,20 +149,26 @@ class MagasinController extends Controller
                 'stockMinimum' => $request->stockMinimum,
                 'idCatPro' => $request->idCatPro,
                 'idFamPro' => $request->idFamPro,
-                'image' => file_get_contents($request->file('image')->getRealPath()),
+                'prixAchat' => $request->prixAchat,
+                'marge' => $request->marge,
+                'prixReelAchat' => $request->prixReelAchat,
+                // 'image' => file_get_contents($request->file('image')->getRealPath()),
+                'image' => $request->hasFile('image')
+                    ? file_get_contents($request->file('image')->getRealPath())
+                    : NULL,
             ]);
-        }
+        // }
 
         // Vérifier si ce produit est déjà en stock dans ce magasin
-        $stock = Stocke::where('idPro', $produit->idPro)
-                       ->where('idMag', $idMag)
-                       ->first();
+        // $stock = Stocke::where('idPro', $produit->idPro)
+        //                ->where('idMag', $idMag)
+        //                ->first();
 
-        if ($stock) {
-            // Mise à jour de la quantité existante
-            $stock->qteStocke += $request->qteStocke;
-            $stock->save();
-        } else {
+        // if ($stock) {
+        //     // Mise à jour de la quantité existante
+        //     $stock->qteStocke += $request->qteStocke;
+        //     $stock->save();
+        // } else {
             // Ajouter un nouvel enregistrement de stock
             Stocke::create([
                 'idPro' => $produit->idPro,
@@ -130,7 +176,7 @@ class MagasinController extends Controller
                 'qteStocke' => $request->qteStocke,
                 'CUMP' => 0, // Mettre à jour CUMP si nécessaire
             ]);
-        }
+        // }
 
         return redirect()->back()->with('status', 'Produit ajouté au stock avec succès !');
     } 

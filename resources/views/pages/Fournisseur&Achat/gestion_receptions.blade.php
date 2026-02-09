@@ -434,9 +434,9 @@
                                     val = max;
                                 }
 
-                                if (val < 1) {
-                                    this.value = 1;
-                                    val = 1;
+                                if (val < 0) {
+                                    this.value = 0;
+                                    val = 0;
                                 }
 
                                 restanteCell.textContent = max - val;

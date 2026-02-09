@@ -37,11 +37,11 @@
             </div>
             @endif
             <div class="col-auto">
-              @if (!$Entreprises)
+              @if ($Entreprises->isEmpty())
               <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBoardModal"><i class="fa-solid fa-plus me-1"></i> Ajouter une Entreprise</button>
               </div><!--end col--> 
-              @else
+              {{-- @else --}}
                   
               @endif
 

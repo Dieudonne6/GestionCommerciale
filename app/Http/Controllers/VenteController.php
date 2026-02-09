@@ -599,7 +599,8 @@ class VenteController extends Controller
                 $TotalTVA = 0;
             } else {
                 // HT approximé en entier : HT = intdiv(TTC * 100, 118)
-                $totalHT_after = intdiv($totalTTC_after * 100, 118);
+                // $totalHT_after = intdiv($totalTTC_after * 100, 118);
+                $totalHT_after = (int) round($totalTTC_after * 100 / 118);
                 $TotalTVA = $totalTTC_after - $totalHT_after;
             }
             

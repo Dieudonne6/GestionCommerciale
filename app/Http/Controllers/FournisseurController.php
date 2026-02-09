@@ -25,7 +25,7 @@ class FournisseurController extends Controller
             'IFU' => 'required|string|min:5|max:50|unique:fournisseurs,IFU',
             'nom' => 'required|string|min:3|max:255',
             'adresse' => 'required|string|min:5|max:255',
-            'telephone' => 'required|string|min:8|max:15|unique:fournisseurs,telephone',
+            'telephone' => 'required|string|min:8|max:45|unique:fournisseurs,telephone',
             'mail' => 'required|email|max:255|unique:fournisseurs,mail',
             'idCatFour' => 'required|exists:categorie_fournisseurs,idCatFour',
         ], [

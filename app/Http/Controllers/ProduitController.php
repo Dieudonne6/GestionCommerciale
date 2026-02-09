@@ -49,7 +49,10 @@ public function ajouterProduit(ProduitRequest $request)
         $Produit->marge = $request->input('marge');
         $Produit->stockAlert = $request->input('stockAlert');
         $Produit->stockMinimum = $request->input('stockMinimum');
-        $imageContent = file_get_contents($request->file('image')->getRealPath());
+        // $imageContent = file_get_contents($request->file('image')->getRealPath());
+        $imageContent = $request->hasFile('image')
+                    ? file_get_contents($request->file('image')->getRealPath())
+                    : NULL;
         $Produit->image = $imageContent;
         $Produit->prixReelAchat = $request->input('prixReelAchat');
         $Produit->save();
