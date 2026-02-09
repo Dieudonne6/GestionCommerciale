@@ -66,10 +66,13 @@ public function ajouterProduit(ProduitRequest $request)
             // Nettoyer la session au cas où il resterait une ancienne erreur
             session()->forget('errorModalId');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->withErrors($e->getMessage())
-                ->with('errorModalId', 'addBoardModal'); // ID du modal d'ajout
-        }       
+           session()->forget('errorModalId');
+
+        return redirect()
+            ->route('produits.index')
+            ->with('status', 'Le produit a été créé avec succès');
+
+                }       
     }
 
 

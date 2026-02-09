@@ -43,8 +43,8 @@
                                         <th class="text-center">Fournisseur</th>
                                         <th class="text-center">Date</th>
                                         <th class="text-center">Délais</th>
-                                        <th class="text-center">Montant HT</th>
                                         <th class="text-center">Montant TTC</th>
+                                        <th class="text-center">Montant HT</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -55,8 +55,8 @@
                                             <td class="text-center">{{ $cmd->fournisseur->nom }}</td>
                                             <td class="text-center">{{ $cmd->dateOp }}</td>
                                             <td class="text-center">{{ $cmd->delailivraison }}</td>
-                                            <td class="text-center">{{ $cmd->montantTotalHT }}</td>
                                             <td class="text-center">{{ $cmd->montantTotalTTC }}</td>
+                                            <td class="text-center">{{ $cmd->montantTotalHT }}</td>
                                             <td class="text-center">
                                                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
                                                     data-bs-target="#editModal{{ $cmd->idCommande }}">
@@ -130,7 +130,7 @@
                                     <th>Magasin</th>
                                     <th>Produit</th>
                                     <th>Quantité</th>
-                                    <th>Montant HT</th>
+                                    <th>Montant TTC</th>
                                     <th class="tva">tva (%)</th>
                                     <th>Action</th>
                                 </tr>
@@ -140,8 +140,8 @@
                         <button type="button" class="btn btn-secondary" onclick="addLine('tableAddLines')">
                             Ajouter une ligne
                         </button>
-                        <input type="hidden" name="montantTotalHT" value="0">
                         <input type="hidden" name="montantTotalTTC" value="0">
+                        <input type="hidden" name="montantTotalHT" value="0">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -304,34 +304,35 @@
        let nextIndex = Date.now();
       
         // Fonction pour calculer le montant TTC d'une ligne
-        function calculerMontantTTC(row) {
+        function calculerMontantHT(row) {
             const qte = parseFloat(row.querySelector('input[name$="[qteCmd]"]').value) || 0;
-            const montantHT = parseFloat(row.querySelector('input[name$="[montantHT]"]').value) || 0;
+            const montantTTC = parseFloat(row.querySelector('input[name$="[montantTTC]"]').value) || 0;
             const tva = parseFloat(row.querySelector('input[name$="[tva]"]').value) || 0;
 
-            const montantTTC = montantHT * (1 + tva / 100);
-            return montantTTC;
+            const montantHT = montantTTC * (1 - tva / 100);
+            return montantHT;
         }
 
         // Fonction pour mettre à jour les totaux
         function updateTotaux() {
-            let totalHT = 0;
             let totalTTC = 0;
+            let totalHT = 0;
 
             document.querySelectorAll('tbody[id^="table"] tr').forEach(row => {
-                const montantHT = parseFloat(row.querySelector('input[name$="[montantHT]"]').value) || 0;
-                const montantTTC = calculerMontantTTC(row);
-
-                totalHT += montantHT;
+                const montantTTC = parseFloat(row.querySelector('input[name$="[montantTTC]"]').value) || 0;
+                const montantHT = calculerMontantHT(row);
+                
                 totalTTC += montantTTC;
+                totalHT += montantHT;
+               
             });
 
             // Mettre à jour les champs de totaux si ils existent
-            const totalHTInput = document.querySelector('input[name="montantTotalHT"]');
             const totalTTCInput = document.querySelector('input[name="montantTotalTTC"]');
-
-            if (totalHTInput) totalHTInput.value = totalHT.toFixed(2);
+            const totalHTInput = document.querySelector('input[name="montantTotalHT"]');           
+            
             if (totalTTCInput) totalTTCInput.value = totalTTC.toFixed(2);
+            if (totalHTInput) totalHTInput.value = totalHT.toFixed(2);
         }
        
 
@@ -369,7 +370,7 @@
                 </td>
 
                 <td>
-                    <input type="number" name="lignes[${nextIndex}][montantHT]" 
+                    <input type="number" name="lignes[${nextIndex}][montantTTC]" 
                         class="form-control" min="0" step="0.01" required onchange="updateTotaux()">
                 </td>
 
@@ -424,8 +425,6 @@
                 });
         }
 
-
-
         function removeLine(button) {
             const row = button.closest('tr');
             row.remove();
@@ -440,10 +439,6 @@
             tvaInput.value = option?.dataset?.tva ?? 0;
             updateTotaux();
         }
-
-
-
-
 
         // Fonction pour réinitialiser les erreurs dans le modal
         function resetModalErrors(modal) {

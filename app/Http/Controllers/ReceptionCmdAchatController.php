@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Params;
 
+use Illuminate\Validation\Rule;
+
 use Carbon\Carbon;
 
 class ReceptionCmdAchatController extends Controller
@@ -164,24 +166,29 @@ class ReceptionCmdAchatController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-
         
         try {                       
-            $request->validate([
+           $request->validate([
                 'date' => 'required|date',
                 'reference' => 'required|string|max:255',
-                'numBordereauLivraison' => 'required|string|max:255|unique:reception_cmd_achats,numBordereauLivraison',
-                // 'idExercice' => 'required|exists:exercices,idExercice',
+
+                'numBordereauLivraison' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('reception_cmd_achats', 'numBordereauLivraison'),
+                ],
+
                 'idCommande' => 'required|exists:commande_achats,idCommande',
                 'details' => 'required|array|min:1',
-                // 'details.*.idDetailCom' => 'required|exists:detail_commande_achats,idDetailCom',
                 'details.*.qteReceptionne' => 'required|numeric|min:0',
                 'details.*.prixUnit' => 'required|numeric|min:0',
                 'details.*.iddetailcom' => 'required|numeric|min:0',
                 'details.*.expiration' => 'nullable|date|after:today',
-
-                // 'details.*.idMag' => 'required|exists:magasins,idMag',
+            ], [
+                'numBordereauLivraison.unique' => 'Ce numéro de bordereau existe déjà.',
             ]);
+
 
             DB::transaction(function () use ($request) {
                 // Vérification de la commande
@@ -270,14 +277,12 @@ class ReceptionCmdAchatController extends Controller
             return redirect()->route('receptions.index')
                 ->with('status', 'Réception créée avec succès.');
         } catch (ValidationException $e) {
-            return redirect()->back()
-                ->withErrors($e->validator)
-                ->withInput();
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('erreur', 'Erreur lors de la création de la réception: ' . $e->getMessage())
-                ->withInput();
-        }
+    return redirect()->back()
+        ->withErrors($e->validator)
+        ->withInput()
+        ->with('errorModalId', 'addReceptionModal');
+}
+
     }
 
     public function update(Request $request, $id)
