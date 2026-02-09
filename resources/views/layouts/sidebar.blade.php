@@ -92,7 +92,7 @@
                         aria-haspopup="false"
                         aria-expanded="false">
 
-                            <i class="icofont-bell-alt bell-animate"></i>
+                            {{-- <i class="icofont-bell-alt bell-animate"></i> --}}
                             <i class="icofont-bell-alt {{ $stockNotifications->count() >= 1 ? 'bell-animate' : '' }}"></i>
 
 
