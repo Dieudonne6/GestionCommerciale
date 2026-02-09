@@ -178,9 +178,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="errorContainer" class="alert alert-danger d-none">
-                            <ul id="errorList"></ul>
-                        </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
 
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -444,7 +451,19 @@
                         });
                     });
             });
+            
         </script>
+@if (session('errorModalId'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = new bootstrap.Modal(
+            document.getElementById('{{ session('errorModalId') }}')
+        );
+        modal.show();
+    });
+</script>
+@endif
+
 
     @endpush
 @endsection

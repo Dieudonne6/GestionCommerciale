@@ -4,6 +4,13 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @if (Session::has('success'))
+            <br>
+            <div class="alert alert-success alert-dismissible">
+                {{ Session::get('success') }}
+            </div>
+            @endif
+
             <div class="card shadow">
                 <div class="card-header">
                     <h5 class="mb-0">Définir le délai d’alerte</h5>

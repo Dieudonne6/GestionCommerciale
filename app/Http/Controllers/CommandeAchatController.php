@@ -19,24 +19,6 @@ use Illuminate\Support\Facades\Validator;
 class CommandeAchatController extends Controller
 {
 
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-
-        $this->middleware('can_menu:commandeAchat,view')
-            ->only(['index', 'show']);
-
-        $this->middleware('can_menu:commandeAchat,create')
-            ->only(['create', 'store']);
-
-        $this->middleware('can_menu:commandeAchat,edit')
-            ->only(['edit', 'update']);
-
-        $this->middleware('can_menu:commandeAchat,delete')
-            ->only(['destroy']);
-    }
-
     public function index()
     {
         $user = auth()->user();
@@ -97,7 +79,7 @@ class CommandeAchatController extends Controller
             'lignes' => 'required|array|min:1',
             'lignes.*.idPro' => 'required|exists:produits,idPro',
             'lignes.*.qteCmd' => 'required|numeric|min:1',
-            'lignes.*.montantHT' => 'required|numeric|min:0',
+            'lignes.*.montantTTC' => 'required|numeric|min:0',
             'lignes.*.tva' => 'required|numeric|min:0',
         ]);
 
@@ -129,9 +111,9 @@ class CommandeAchatController extends Controller
                 $totalTTC = 0;
 
                 foreach ($request->lignes as $ligne) {
-                    $ht = floatval($ligne['montantHT']);
+                    $ttc = floatval($ligne['montantTTC']);
                     $tvaPct = floatval($ligne['tva']);
-                    $ttc = $ht * (1 + $tvaPct / 100);
+                    $ht = $ttc * (1 - $tvaPct / 100);
                     $prixUnit = $ttc / floatval($ligne['qteCmd']);
 
                     DetailCommandeAchat::create([

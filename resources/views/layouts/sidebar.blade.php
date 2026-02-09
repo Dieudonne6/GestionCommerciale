@@ -1,3 +1,40 @@
+<style>
+   .alert-badge{
+        position: absolute;
+        top: 2px;         
+        right: -5px;        
+        color: #fff;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 50%;
+        min-width: 18px;
+        text-align: center;
+        line-height: 1.2;
+        z-index: 1;
+    }
+
+
+    /* Animation cloche */
+    .bell-animate {
+        animation: ring 1.5s infinite;
+    }
+
+    @keyframes ring {
+        0% { transform: rotate(0); }
+        5% { transform: rotate(15deg); }
+        10% { transform: rotate(-15deg); }
+        15% { transform: rotate(10deg); }
+        20% { transform: rotate(-10deg); }
+        25% { transform: rotate(0); }
+        100% { transform: rotate(0); }
+    }
+    .first i {
+        color: #dd1717ff !important;      
+        font-size: 20px;    /* un peu plus présent */
+    }
+
+</style>
 <div class="topbar d-print-none">
     <div class="container-xxl">
         <nav class="topbar-custom d-flex justify-content-between" id="topbar-custom">
@@ -22,7 +59,7 @@
                         {{-- <img src="assets/images/flags/us_flag.jpg" alt="" class="thumb-sm rounded-circle"> --}}
                     </a>
                 </li>
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#"
                         role="button" aria-haspopup="false" aria-expanded="false">
                         <img src="{{ asset('assets/images/flags/us_flag.jpg') }}" alt=""
@@ -40,7 +77,7 @@
                                 src="{{ asset('assets/images/flags/french_flag.jpg') }}" alt="" height="15"
                                 class="me-2">French</a>
                     </div>
-                </li><!--end topbar-language-->
+                </li>end topbar-language -->
 
                 <li class="topbar-item">
                     <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode">
@@ -50,14 +87,22 @@
                 </li>
 
                 <li class="dropdown topbar-item">
-                    <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#"
-                        role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="icofont-bell-alt"></i>
-                        <span class="alert-badge">
-                            {{ $stockNotifications->count() }}
-                        </span>
+                    <a class="nav-link dropdown-toggle arrow-none nav-icon position-relative first"
+                        data-bs-toggle="dropdown"
+                        href="#"
+                        role="button"
+                        aria-haspopup="false"
+                        aria-expanded="false">
 
+                            <i class="icofont-bell-alt bell-animate"></i>
+
+                            @if($stockNotifications->count() > 0)
+                                <span class="alert-badge bg-danger">
+                                    {{ $stockNotifications->count() }}
+                                </span>
+                            @endif
                     </a>
+
                     <div class="dropdown-menu stop dropdown-menu-end dropdown-lg py-0">
 
                         <h5 class="dropdown-item-text m-0 py-3 d-flex justify-content-between align-items-center">
